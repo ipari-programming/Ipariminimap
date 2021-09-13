@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".KreszActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="KRESZ az iskolában"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <LinearLayout
+            android:id="@+id/kreszLayoutRules"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Nagyon fontos, hogy betartsunk néhány szabályt, hogy mindenki gyorsan odaérjen az órájára illetve iskola után elérje a buszát.\n\nA szabályok főként a szűk folyosóra vonatkoznak, de mindenhol érdemes betartani ezeket." />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Szűk folyosó (és egyéb folyosók):\n- jobb kéz szabály van\n- előzni lehetőleg csak sűrgős esetben, ha nincs szembejövő\n- 15 percen keresztül várakozni erősen nem ajánlott\n- folyosó helyett várakozzunk máshol ha van rá lehetőség" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Iskola elhagyása:\n- 7. óra után van a csúcsidő\n- a portánál használjuk mindkét kiléptetőt\n- a széles folyosón és a labor szárnynál is vannak kiléptetők" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:onClick="kreszBtnStartExam"
+                android:text="Teszt kezdése" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/kreszLayoutExam"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Teszt"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Melyik oldalán érdemes menni a szűk folyosónak?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:id="@+id/kreszRadio1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Jobb oldalán" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Középen megyek és fellökök mindenkit" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Mikor indokolt előzni a szűk folyosón?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ugyanúgy órára megyek, mint mindenki és a fél suli jön a folyosó végéről" />
+
+                <RadioButton
+                    android:id="@+id/kreszRadio2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kobán László irodájába kell mennem és nem jönnek szembe sokan" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Hol várom a tanárt, ha az F120-ban lesz órám?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A terem előtti ajtónál" />
+
+                <RadioButton
+                    android:id="@+id/kreszRadio3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A vitrinnél a szűk folyosó előtt, hogy ne zavarjak másokat" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Mikor a legnagyobb a forgalom a suliban?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="11:15" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="13:10" />
+
+                <RadioButton
+                    android:id="@+id/kreszRadio4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="14:05" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Hogyan lehet a leggyorsabban kimenni a suliból csúcsidőben?"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Úgy, hogy minél több kijáratot használunk, akkor is ha nincs kiléptető" />
+
+                <RadioButton
+                    android:id="@+id/kreszRadio5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Úgy, ha minden kiléptetős kijáratot használunk" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A portán csak a jobb oldali kiléptetőhöz teszi oda a kártyáját mindenki" />
+            </RadioGroup>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:onClick="kreszBtnScoreClick"
+                android:text="Értékelés" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Linkek" >
+        <menu >
+            <item
+                android:icon="@drawable/ic_web"
+                android:title="Suli weboldal" />
+            <item
+                android:icon="@drawable/ic_newspaper"
+                android:title="Suli újság" />
+            <item
+                android:icon="@drawable/ic_instagram"
+                android:title="\@ipariselet" />
+            <item
+                android:icon="@drawable/ic_discord"
+                android:title="Ipari Discord" />
+            <item
+                android:icon="@drawable/ic_pdf"
+                android:title="Helyettesítés letöltése" />
+            <item
+                android:icon="@drawable/ic_computer"
+                android:title="Távoktatás infók" />
+        </menu>
+    </item>
+    <item android:title="Téma" >
+        <menu >
+            <item
+                android:icon="@drawable/ic_android"
+                android:title="Rendszer követése" />
+            <item
+                android:icon="@drawable/ic_color_lens"
+                android:title="Világos téma" />
+            <item
+                android:icon="@drawable/ic_color_lens"
+                android:title="Sötét téma" />
+        </menu>
+    </item>
+</menu>
