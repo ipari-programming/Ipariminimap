@@ -14,4 +14,15 @@ class Place() {
         this.destinations = destinations
         this.help = help
     }
+
+    fun toJSON(): String {
+        return """
+"$name": {
+    "building": "$buildingName",
+    "level": $level,
+    "destinations": "${destinations.joinToString()}",
+    "help": "$help"
+}
+        """.trimIndent()
+    }
 }

@@ -9,7 +9,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
-import com.csakitheone.ipariminimap.MainActivity
+import com.csakitheone.ipariminimap.MainOldActivity
 import com.csakitheone.ipariminimap.R
 import com.csakitheone.ipariminimap.Task
 import com.csakitheone.ipariminimap.broadcastreceivers.RingNotifCancelReceiver
@@ -34,7 +34,7 @@ class RingService : Service() {
         notifActionCancel = NotificationCompat.Action.Builder(
             R.drawable.ic_close,
             "Leállítás",
-            PendingIntent.getBroadcast(this, 2, Intent(this, RingNotifCancelReceiver::class.java), 0)
+            PendingIntent.getBroadcast(this, 2, Intent(this, RingNotifCancelReceiver::class.java), PendingIntent.FLAG_IMMUTABLE)
         ).build()
 
         notifBuilder = NotificationCompat.Builder(this, "ring")
@@ -69,7 +69,7 @@ class RingService : Service() {
             .setSmallIcon(R.drawable.ic_alarm_bell)
             .setContentTitle(Rings.getCurrentLesson())
             .setContentText(Rings.getTimeUntilNext())
-            .setContentIntent(PendingIntent.getActivity(this@RingService, 1, Intent(this@RingService, MainActivity::class.java), 0))
+            .setContentIntent(PendingIntent.getActivity(this@RingService, 1, Intent(this@RingService, MainOldActivity::class.java), PendingIntent.FLAG_IMMUTABLE))
             .setOnlyAlertOnce(true)
             .setColor(ContextCompat.getColor(this@RingService, R.color.colorPrimary))
             .addAction(notifActionCancel)

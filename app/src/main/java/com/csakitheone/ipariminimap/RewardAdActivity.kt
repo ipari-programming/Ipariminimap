@@ -10,17 +10,16 @@ import androidx.preference.PreferenceManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_reward_ad.*
 
 class RewardAdActivity : AppCompatActivity() {
     lateinit var prefs: SharedPreferences
-    lateinit var mainRewardedAd: RewardedAd
+    var mainRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,38 +38,31 @@ class RewardAdActivity : AppCompatActivity() {
         )
         MobileAds.initialize(this)
 
-        mainRewardedAd = RewardedAd(this, "ca-app-pub-5995992409743558/3639482674")
-        mainRewardedAd.loadAd(AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
-            override fun onRewardedAdFailedToLoad(p0: LoadAdError?) {
+        RewardedAd.load(this, "ca-app-pub-5995992409743558/3639482674", AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(p0: LoadAdError) {
                 finish()
             }
-            override fun onRewardedAdLoaded() {
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                mainRewardedAd = rewardedAd
                 showRewardedAd()
             }
         })
     }
 
     fun showRewardedAd() {
-        if (mainRewardedAd.isLoaded) {
-            val activityContext: Activity = this
-            val adCallback = object: RewardedAdCallback() {
-                override fun onUserEarnedReward(@NonNull reward: RewardItem) {
-                    prefs.edit().apply {
-                        putInt("mainRewardedAd.watchCount", prefs.getInt("mainRewardedAd.watchCount", 0) + 1)
-                        apply()
-                    }
-                    if (prefs.getInt("mainRewardedAd.watchCount", 0) > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
-                    if (prefs.getInt("mainRewardedAd.watchCount", 0) > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
-                }
-                override fun onRewardedAdClosed() {
-                    finish()
-                }
-            }
-            mainRewardedAd.show(activityContext, adCallback)
-        }
-        else {
+        if (mainRewardedAd == null) {
             Toast.makeText(this, "Próbáld meg egy kicsit később", Toast.LENGTH_SHORT).show()
-            mainRewardedAd.loadAd(AdRequest.Builder().build(), object : RewardedAdLoadCallback() {})
+            return
+        }
+        mainRewardedAd!!.show(this) {
+            prefs.edit().apply {
+                putInt("mainRewardedAd.watchCount", prefs.getInt("mainRewardedAd.watchCount", 0) + 1)
+                apply()
+            }
+            if (prefs.getInt("mainRewardedAd.watchCount", 0) > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
+            if (prefs.getInt("mainRewardedAd.watchCount", 0) > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
+
+            finish()
         }
     }
 }

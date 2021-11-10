@@ -1,79 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/materialCardViewFilledStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <CheckBox
-            android:id="@+id/taskCheck"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="X. óra elején telefon rezgőre." />
-
-        <ImageButton
-            android:id="@+id/taskBtnEdit"
-            style="@style/ImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:tint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_edit" />
-
-        <ImageButton
-            android:id="@+id/taskBtnRemove"
-            style="@style/ImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:tint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_close" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/taskLayoutEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/taskSpinnerCondition"
+            <CheckBox
+                android:id="@+id/taskCheck"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:entries="@array/task_conditions"
-                android:padding="16dp" />
+                android:text="X. óra elején telefon rezgőre." />
 
-            <Spinner
-                android:id="@+id/taskSpinnerAction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/task_actions"
-                android:padding="16dp" />
+            <ImageButton
+                android:id="@+id/taskBtnEdit"
+                style="@style/ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/ic_edit"
+                app:tint="@color/colorPrimary" />
 
+            <ImageButton
+                android:id="@+id/taskBtnRemove"
+                style="@style/ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="@color/colorPrimary" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/taskEditData"
+        <LinearLayout
+            android:id="@+id/taskLayoutEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Értesítés szövege (üres = nincs értesítés)"
-            android:inputType="text" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/taskSpinnerCondition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/task_conditions"
+                    android:padding="16dp" />
+
+                <Spinner
+                    android:id="@+id/taskSpinnerAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/task_actions"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/taskEditData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Értesítés szövege (üres = nincs értesítés)"
+                android:inputType="text" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

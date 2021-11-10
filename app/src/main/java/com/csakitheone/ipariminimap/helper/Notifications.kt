@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.csakitheone.ipariminimap.MainActivity
+import com.csakitheone.ipariminimap.MainOldActivity
 import com.csakitheone.ipariminimap.R
 
 class Notifications {
@@ -28,7 +28,7 @@ class Notifications {
                     .setSmallIcon(R.drawable.ic_my_location)
                     .setContentTitle("Feladat értesítés")
                     .setContentText(text)
-                    .setContentIntent(PendingIntent.getActivity(context, 1, Intent(context, MainActivity::class.java), 0))
+                    .setContentIntent(PendingIntent.getActivity(context, 1, Intent(context, MainOldActivity::class.java), PendingIntent.FLAG_IMMUTABLE))
                     .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                     .build()
             )

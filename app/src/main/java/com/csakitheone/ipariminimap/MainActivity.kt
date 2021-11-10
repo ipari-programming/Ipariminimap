@@ -2,86 +2,62 @@ package com.csakitheone.ipariminimap
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate.*
-import androidx.core.content.ContextCompat
-import androidx.core.content.edit
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.preference.PreferenceManager
-import com.csakitheone.ipariminimap.data.Timetable
-import com.csakitheone.ipariminimap.helper.Rings
-import com.csakitheone.ipariminimap.services.RingService
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.children
+import androidx.core.view.setMargins
+import androidx.core.view.setPadding
+import com.csakitheone.ipariminimap.data.DataOld
+import com.csakitheone.ipariminimap.data.Prefs
+import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_badges.*
+import kotlinx.android.synthetic.main.activity_main_bell.*
+import kotlinx.android.synthetic.main.activity_main_map.*
+import kotlinx.android.synthetic.main.activity_main_old.*
 import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
 import kotlinx.android.synthetic.main.layout_task.view.*
-import java.util.*
-import kotlin.concurrent.timerTask
 
 class MainActivity : AppCompatActivity() {
-    lateinit var prefs: SharedPreferences
-    lateinit var tasks: MutableList<Task>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        Prefs.init(this)
 
-        setNightTheme(prefs.getInt("night_mode", MODE_NIGHT_FOLLOW_SYSTEM))
+        initAds()
 
-        mainToolbar.setOnMenuItemClickListener {
+        mainNav.setOnItemSelectedListener {
+            for (subActivity in mainFrame.children) {
+                subActivity.visibility = View.GONE
+            }
+
             when (it.title) {
-                "Suli weboldal" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ipariszakkozep.hu/")))
-                "Suli újság" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://news.ipariszakkozep.hu/")))
-                "@ipariselet" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/ipariselet/")))
-                "Ipari Discord" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/TQXKTm47t4")))
-                "Helyettesítés letöltése" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ipariszakkozep.hu/content/helyettesites/aktualis.pdf")))
-                "Távoktatás infók" -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ipariszakkozep.hu/tavoktatas")))
-                "Rendszer követése" -> setNightTheme(MODE_NIGHT_FOLLOW_SYSTEM)
-                "Világos téma" -> setNightTheme(MODE_NIGHT_NO)
-                "Sötét téma" -> setNightTheme(MODE_NIGHT_YES)
-                else -> return@setOnMenuItemClickListener false
+                "Főoldal" -> mainActivityHome.visibility = View.VISIBLE
+                "Térkép" -> mainActivityMap.visibility = View.VISIBLE
+                "Csengő" -> mainActivityBell.visibility = View.VISIBLE
+                "Kitűzők" -> mainActivityBadges.visibility = View.VISIBLE
+                else -> return@setOnItemSelectedListener false
             }
             true
         }
 
-        Timer().schedule(timerTask {
-            runOnUiThread {
-                mainTextBell.text = Rings.getCurrentLesson()
-                if (Rings.getTimeUntilNext() != null) {
-                    mainTextBell.text = "${mainTextBell.text} - ${Rings.getTimeUntilNext()}"
-                }
-            }
-        }, 0, 1000L)
+        initBellTable()
+    }
 
-        mainTextSupport.text = listOf(
-            "Támogatás", "Írj, ha hibát találsz!", "Írj, ha van ötleted!", "Nézd meg a többi appom!",
-            "Legyen szép napod!", "Szerdánként infó szakkörön ott vagyok.", "Írj, ha szeretnél!",
-            "Minden segítség jól jön <3", "Mit rakjak még ebbe az appba?",
-            "Játékokat is programozok.", "Próbáld ki a Random Bot appom!",
-            "Mogyorós latte a kedvencem a büféből."
-        ).random()
-
-        mainEditNotes.addTextChangedListener {
-            prefs.edit {
-                putString("main_notes", it.toString())
-                apply()
-            }
-        }
-
+    private fun initAds() {
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
                 .setTestDeviceIds(listOf("24E9E518AB9DBE2924B9B93F22361702"))
@@ -92,70 +68,106 @@ class MainActivity : AppCompatActivity() {
         mainBannerAd.loadAd(AdRequest.Builder().build())
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshTimetable()
-        refreshTasks()
-        refreshBadges()
-        mainBtnSupport.text = "Támogatás videóval (${prefs.getInt("mainRewardedAd.watchCount", 0)})"
-
-        mainEditNotes.text = SpannableStringBuilder(prefs.getString("main_notes", ""))
-
-        mainTextSecretGame.visibility = if (Badge.userGet(this).size >= 5) View.VISIBLE else View.GONE
+    fun onBtnSearchClick(view: View) {
+        startActivity(Intent(this, SearchActivity::class.java))
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 0 && resultCode == 2 && data != null) {
-            startActivity(Intent(this, RoomActivity::class.java).putExtra("room_sign", data.getStringExtra("room_sign")!!))
+    fun onBtnMenuClick(view: View) {
+        PopupMenu(this, mainBtnMenu).apply {
+            setOnMenuItemClickListener {
+                when (it.title) {
+                    "Rendszer követése" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    "Világos téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
+                    "Sötét téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
+                    "Régi felület használata" -> startActivity(Intent(this@MainActivity, MainOldActivity::class.java))
+                    else -> return@setOnMenuItemClickListener true
+                }
+                false
+            }
+            inflate(R.menu.menu_main)
+            show()
         }
     }
 
-    fun setNightTheme(nightMode: Int) {
-        setDefaultNightMode(nightMode)
-        prefs.edit {
-            putInt("night_mode", nightMode)
-            apply()
-        }
+    //#region Home
+    //#endregion
+
+    //#region Map
+
+    fun onBtnEnteranceClick(view: View) {
+        Snackbar.make(mainFrame, "Üdv az Ipariban!", Snackbar.LENGTH_SHORT).show()
     }
 
-    // LESSONS
+    fun onSearchBtnClick(view: View) {
+        startActivity(Intent(this, SearchActivity::class.java).apply {
+            putExtra(SearchActivity.EXTRA_QUERY, (view as MaterialButton).text)
+        })
+    }
 
-    fun refreshTimetable() {
-        Timetable.load(this)
-        if (Timetable.appointments.any { it.getDayCalendar() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }) {
-            mainTextLessons.text = "Mai órák:\n"
-            for (a in Timetable.appointments.filter { it.getDayCalendar() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK) }) {
-                mainTextLessons.text = "${mainTextLessons.text}${a.toStringNoDay()}\n"
+    //#endregion
+
+    //#region Bell
+
+    private fun initBellTable() {
+        mainBellTable.removeAllViews()
+        val timetable = """
+            0. óra | 07:00 | 07:40
+            1. óra | 07:45 | 08:30
+            2. óra | 08:40 | 09:25
+            3. óra | 09:35 | 10:20
+            4. óra | 10:30 | 11:15
+            Nagyszünet | 11:15 | 11:30
+            5. óra | 11:30 | 12:15
+            6. óra | 12:25 | 13:10
+            7. óra | 13:20 | 14:05
+            8. óra | 14:15 | 15:00
+        """.trimIndent()
+
+        fun createCell(row: TableRow, content: String) {
+            TextView(this).apply {
+                text = content
+                setPadding(8.toPx.toInt())
+                gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                row.addView(this)
+                (layoutParams as TableRow.LayoutParams).apply {
+                    width = TableRow.LayoutParams.MATCH_PARENT
+                    weight = 1f
+                }
             }
         }
+
+        for (line in timetable.lines()) {
+            val row = TableRow(this)
+            mainBellTable.addView(row)
+
+            val data = line.split("|").map { r -> r.trim() }
+            createCell(row, data[0])
+            createCell(row, data[1])
+            createCell(row, data[2])
+        }
     }
 
-    fun btnEditLessonsClick(view: View) {
-        startActivity(Intent(this, TimetableActivity::class.java))
-    }
+    private var tasks = mutableListOf<Task>()
 
-    // TASKS
-
-    fun refreshTasks() {
-        tasks = prefs.getStringSet("tasks", setOf())?.map { r -> Task(r) }?.toMutableList() ?: mutableListOf()
+    private fun refreshTasks() {
+        tasks = Prefs.getTasks()
         mainLayoutTasks.removeAllViews()
         tasks.map {
             val v = it.createLayout(this)
-            v.taskBtnRemove.setOnClickListener { vi ->
+            v.taskBtnRemove.setOnClickListener { _ ->
                 tasks.remove(it)
                 saveTasks()
                 refreshTasks()
             }
             mainLayoutTasks.addView(v)
+            (v.layoutParams as LinearLayout.LayoutParams).apply { setMargins(4.toPx.toInt()) }
             it.onModified.add { saveTasks() }
         }
         saveTasks()
     }
 
-    fun saveTasks() {
-        prefs.edit().putStringSet("tasks", tasks.map { r -> r.toString() }.toSet()).apply()
+    private fun saveTasks() {
+        Prefs.setTasks(tasks)
         if (tasks.any { r -> r.state && r.condition == "minden óra elején" && r.action == "telefon rezgőre" })
         {
             Badge.userAdd(this, Badge.BADGE_JOTANULO.toString())
@@ -169,9 +181,11 @@ class MainActivity : AppCompatActivity() {
         refreshTasks()
     }
 
-    // BADGES
+    //#endregion
 
-    fun refreshBadges() {
+    //#region Badges
+
+    private fun refreshBadges() {
         mainLayoutBadges.removeAllViews()
         Badge.userGet(this).map { r -> mainLayoutBadges.addView(r.createLayout(this, true) { refreshBadges() }) }
     }
@@ -181,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         Badge.all.filter { r -> r.isVisible && !Badge.userContains(this, r.id) }.map {
             getBadges.getbadgesLayout.addView(it.createLayout(this, true))
         }
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("Kitűzők")
             .setView(getBadges)
             .setPositiveButton("Kód beváltása") { _: DialogInterface, _: Int ->
@@ -200,75 +214,5 @@ class MainActivity : AppCompatActivity() {
         refreshBadges()
     }
 
-    // BUTTONS
-
-    fun btnStartBackgroundClick(view: View) {
-        ContextCompat.startForegroundService(this, Intent(this, RingService::class.java))
-    }
-
-    fun btnSupportUnfoldClick(view: View) {
-        mainLayoutSupport.visibility = if (mainLayoutSupport.isVisible) View.GONE else View.VISIBLE
-    }
-
-    fun btnFAQClick(view: View) {
-        AlertDialog.Builder(this)
-            .setTitle("Gyakori kérdések")
-            .setMessage(
-                "Barátomnak iPhone-ja van. Ő le tudja tölteni az appot?\n\n" +
-                "Sajnos nem. 😕 Egy Apple fejlesztői fiók elég drága havidíjjal rendelkezik. " +
-                "Ezen kívül iOS fejlesztésben sincs még tapasztalatom.\n\n" +
-                "Barátomnak Huawei telefonja van. Ő honnan tudja megszerezni az appot?\n\n" +
-                "Ha nála nem elérhető a Play áruház akkor APK formájában tudja beszerezni valakitől." +
-                " Írjon nekem vagy valaki csomagoljon egy APK-t és küldje el neki, hogy tudja " +
-                "sideload-olni. Nyilván így nem fog frissülni, de legalább meglesz.\n\n" +
-                "Miért van reklám az appban? Kapsz érte valamit?\n\n" +
-                "Nagyon sok munka van az app fejlesztéssel és nem szeretnék senkitől pénzt kérni. " +
-                "Ezért döntöttem a reklámok mellett. Nyilván nem akarlak idegesíteni titeket, én " +
-                "sem szeretem a reklámokat, de szerintem így a legjobb mindenkinek.Viszont ne " +
-                "gondoljatok nagy dolgokra, jobb napokon kb. 20Ft-ot kapok maximum."
-            )
-            .create().show()
-    }
-
-    fun btnSupportClick(view: View) {
-        startActivity(Intent(this, RewardAdActivity::class.java))
-    }
-
-    fun btnRingOrderClick(view: View) {
-        mainImageBellOrder.visibility = if (mainImageBellOrder.visibility == View.GONE) View.VISIBLE else View.GONE
-    }
-
-    fun btnExploreKRESZ(view: View) {
-        startActivity(Intent(this, KreszActivity::class.java))
-    }
-
-    fun btnSawClick(view: View) {
-        AlertDialog.Builder(this)
-            .setTitle("Sawház")
-            .setMessage("Ha a széles folyosóról mész ki az udvarra, rögtön balra.\n" +
-                    "\nTilos cigizni! Pozíció küldése Kobán László igazgatóhelyettesnek...")
-            .setView(ProgressBar(this))
-            .setPositiveButton("Nem cigizni megyek!") { _: DialogInterface, _: Int -> }
-            .create().show()
-    }
-
-    fun btnEntranceClick(view: View) {
-        Toast.makeText(this, "Üdv az Ipariban! 😀", Toast.LENGTH_SHORT).show()
-    }
-
-    fun btnOpenLinkClick(view: View) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(view.tag.toString())))
-    }
-
-    fun btnSearchForTextClick(view: View) {
-        startActivityForResult(Intent(this, SearchActivity::class.java).putExtra("query", (view as Button).text.split('(')[0].trim()), 0)
-    }
-
-    fun fabSearchButtonClick(view: View) {
-        startActivityForResult(Intent(this, SearchActivity::class.java), 0)
-    }
-
-    fun btnSecretGameClick(view: View) {
-        startActivity(Intent(this, SecretGameActivity::class.java))
-    }
+    //#endregion
 }

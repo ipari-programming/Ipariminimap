@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.csakitheone.ipariminimap.data.Data
+import com.csakitheone.ipariminimap.data.DataOld
 import com.csakitheone.ipariminimap.data.Room
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_room.*
@@ -16,7 +16,7 @@ class RoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
 
-        room = Data.getRoomBySign(intent.getStringExtra("room_sign") ?: "") ?: Room("Az alkalmazás kódja", Int.MAX_VALUE)
+        room = DataOld.getRoomBySign(intent.getStringExtra("room_sign") ?: "") ?: Room("Az alkalmazás kódja", Int.MAX_VALUE)
         loadRoom()
     }
 
@@ -24,7 +24,7 @@ class RoomActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 0 && resultCode == 2 && data != null) {
-            room = Data.getRoomBySign(data.getStringExtra("room_sign")!!)!!
+            room = DataOld.getRoomBySign(data.getStringExtra("room_sign")!!)!!
             loadRoom()
         }
     }
@@ -35,12 +35,12 @@ class RoomActivity : AppCompatActivity() {
         roomTextDescription.visibility = if (room.getRoomName().isEmpty()) View.GONE else View.VISIBLE
         chipBuilding.text = room.getBuildingName()
         chipPlace.text = room.placeName
-        val level = Data.getPlaceByName(room.placeName)?.level.toString()
+        val level = DataOld.getPlaceByName(room.placeName)?.level.toString()
         roomTextBuilding.text = "Épület: "
         roomTextLevel.text = " $level. emelet"
 
-        roomTextHelp.visibility = if (Data.getPlaceByName(room.placeName)?.help.isNullOrEmpty()) View.GONE else View.VISIBLE
-        roomTextHelp.text = Data.getPlaceByName(room.placeName)?.help
+        roomTextHelp.visibility = if (DataOld.getPlaceByName(room.placeName)?.help.isNullOrEmpty()) View.GONE else View.VISIBLE
+        roomTextHelp.text = DataOld.getPlaceByName(room.placeName)?.help
 
         roomChipGroupTags.removeAllViews()
         for (tag in room.tags) {
@@ -52,7 +52,7 @@ class RoomActivity : AppCompatActivity() {
 
         roomChipGroupPlace.removeAllViews()
         val roomsHere = mutableListOf<Room>()
-        roomsHere.addAll(Data.rooms.filter { r -> r.placeName == room.placeName })
+        roomsHere.addAll(DataOld.rooms.filter { r -> r.placeName == room.placeName })
         for (r in roomsHere) {
             val chip = Chip(this)
             var roomText = r.getSign()
@@ -64,7 +64,7 @@ class RoomActivity : AppCompatActivity() {
         }
 
         roomChipGroupDestinations.removeAllViews()
-        for (d in Data.getPlaceByName(room.placeName)!!.destinations) {
+        for (d in DataOld.getPlaceByName(room.placeName)!!.destinations) {
             val chip = Chip(this)
             chip.text = d
             chip.setOnClickListener { chipClick(it) }
@@ -75,8 +75,8 @@ class RoomActivity : AppCompatActivity() {
     fun chipClick(view: View) {
         val query = (view as Chip).text.split(':')[0]
 
-        if (Data.rooms.map { r -> r.getSign() }.contains(query)) {
-            val temp = Data.getRoomBySign(query)
+        if (DataOld.rooms.map { r -> r.getSign() }.contains(query)) {
+            val temp = DataOld.getRoomBySign(query)
 
             if (temp != null) {
                 room = temp
@@ -85,6 +85,6 @@ class RoomActivity : AppCompatActivity() {
             }
         }
 
-        startActivityForResult(Intent(this, SearchActivity::class.java).putExtra("query", query), 0)
+        startActivityForResult(Intent(this, SearchOldActivity::class.java).putExtra("query", query), 0)
     }
 }

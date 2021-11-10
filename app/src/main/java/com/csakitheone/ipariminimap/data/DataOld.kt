@@ -1,6 +1,6 @@
 package com.csakitheone.ipariminimap.data
 
-class Data {
+class DataOld {
     companion object {
         val buildings = mutableListOf<Building>()
         val places = mutableListOf<Place>()
@@ -16,19 +16,19 @@ class Data {
             places.addAll(listOf(
                 Place(Building.F, "Tanári folyosó", 2, listOf("Mirelit folyosó", "Könyvtár folyosó és erkély"), "A könyvtár vagy a mirelit folyosó felől egy ajtóval elválasztva látod."),
                 Place(Building.F, "Udvar", 2, listOf("Széles folyosó", "Labor szárny földszint"), "A széles folyosón egy ajtón lehet kimenni kb. az F115-ös teremnél vagy a labor földszintjén."),
-                Place(Building.F, "Földszint és gépész folyosó", 0, listOf("Főlépcső / Vitrin"), "Itt vagy először, ha bejössz a suliba."),
-                Place(Building.F, "Széles folyosó", 1, listOf("Főlépcső / Vitrin", "Könyvtár folyosó és erkély", "Udvar")),
-                Place(Building.F, "Főlépcső / Vitrin", 1, listOf("Földszint és gépész folyosó", "Széles folyosó", "Szűk folyosó", "Labor szárny földszint", "Labor szárny emelet", "Könyvtár folyosó és erkély")),
-                Place(Building.F, "Szűk folyosó", 1, listOf("Főlépcső / Vitrin", "Mirelit folyosó", "Infó első emelet", "Híradó földszint")),
+                Place(Building.F, "Földszint és gépész folyosó", 0, listOf("Főlépcső (Vitrin)"), "Itt vagy először, ha bejössz a suliba."),
+                Place(Building.F, "Széles folyosó", 1, listOf("Főlépcső (Vitrin)", "Könyvtár folyosó és erkély", "Udvar")),
+                Place(Building.F, "Főlépcső (Vitrin)", 1, listOf("Földszint és gépész folyosó", "Széles folyosó", "Szűk folyosó", "Labor szárny földszint", "Labor szárny emelet", "Könyvtár folyosó és erkély")),
+                Place(Building.F, "Szűk folyosó", 1, listOf("Főlépcső (Vitrin)", "Mirelit folyosó", "Infó első emelet", "Híradó földszint")),
                 Place(Building.F, "Mirelit folyosó", 2, listOf("Szűk folyosó", "Tanári folyosó"), "A szűk folyosó végén van egy lépcső, ott kell fölmenni a mirelit folyosóra."),
-                Place(Building.F, "Könyvtár folyosó és erkély", 2, listOf("Főlépcső / Vitrin", "Tanári folyosó", "Széles folyosó"), "A főlépcsőn menj a 2. emeletre vagy a széles folyosón menj föl a matek tanárinál (F103)."),
-                Place(Building.L, "Labor szárny földszint", 0, listOf("Főlépcső / Vitrin", "Udvar", "Labor szárny emelet"), "Főlépcsőn ha elindulsz föl a 2. emeletre, félúton a folyosó vagy udvarról az üveges ajtó a labor szárny."),
-                Place(Building.L, "Labor szárny emelet", 1, listOf("Főlépcső / Vitrin", "Labor szárny földszint")),
-                Place(Building.I, "Infó első emelet", 1, listOf("Szűk folyosó", "Infó második emelet / tető"), "Szűk folyosón elindulsz és az első lehetőség balra."),
-                Place(Building.I, "Infó második emelet / tető", 2, listOf("Infó első emelet")),
+                Place(Building.F, "Könyvtár folyosó és erkély", 2, listOf("Főlépcső (Vitrin)", "Tanári folyosó", "Széles folyosó"), "A főlépcsőn menj a 2. emeletre vagy a széles folyosón menj föl a matek tanárinál (F103)."),
+                Place(Building.L, "Labor szárny földszint", 0, listOf("Főlépcső (Vitrin)", "Udvar", "Labor szárny emelet"), "Főlépcsőn ha elindulsz föl a 2. emeletre, félúton a folyosó vagy udvarról az üveges ajtó a labor szárny."),
+                Place(Building.L, "Labor szárny emelet", 1, listOf("Főlépcső (Vitrin)", "Labor szárny földszint")),
+                Place(Building.I, "Infó első emelet", 1, listOf("Szűk folyosó", "Infó tető"), "Szűk folyosón elindulsz és az első lehetőség balra."),
+                Place(Building.I, "Infó tető", 2, listOf("Infó első emelet")),
                 Place(Building.H, "Híradó földszint", 0, listOf("Szűk folyosó", "Híradó szakmai előadó"), "Szűk folyosón elindulsz és a második lehetőség balra."),
-                Place(Building.H, "Híradó szakmai előadó", 1, listOf("Híradó földszint", "Híradó második emelet / tető")),
-                Place(Building.H, "Híradó második emelet / tető", 2, listOf("Híradó második emelet / tető"))
+                Place(Building.H, "Híradó szakmai előadó", 1, listOf("Híradó földszint", "Híradó tető")),
+                Place(Building.H, "Híradó tető", 2, listOf("Híradó tető"))
             ))
 
             // BUILDING.F special
@@ -58,7 +58,7 @@ class Data {
             addRoomDetails("F111", "Kondi")
             addRoomDetails("F117", "Irodalom tanári")
 
-            rooms.add(Room("Főlépcső / Vitrin", 19))
+            rooms.add(Room("Főlépcső (Vitrin)", 19))
             rooms.addAll(generateRooms("Szűk folyosó", 20..35))
             addRoomDetails("F126", "DÖK szoba")
             addRoomDetails("F127", tags = listOf(Room.TAG_DRESSING))
@@ -100,9 +100,9 @@ class Data {
 
             // BUILDING.I
             rooms.add(Room("Infó első emelet", 2, "Rajz terem (hardware terem lesz)", listOf(Room.TAG_WC_NEAR)))
-            rooms.addAll(generateRooms("Infó második emelet / tető", 2..4))
-            rooms.add(Room("Infó második emelet / tető", 1, "szerver szoba"))
-            rooms.add(Room("Infó második emelet / tető", 5, "infó tanári", listOf(Room.TAG_WC_NEAR)))
+            rooms.addAll(generateRooms("Infó tető", 2..4))
+            rooms.add(Room("Infó tető", 1, "szerver szoba"))
+            rooms.add(Room("Infó tető", 5, "infó tanári", listOf(Room.TAG_WC_NEAR)))
 
             // BUILDING.H
             rooms.add(Room("Híradó földszint", 1, "akvárium"))
@@ -115,8 +115,8 @@ class Data {
             rooms.add(Room("Híradó földszint", 11, tags = listOf(Room.TAG_WC_NEAR)))
             rooms.add(Room("Híradó szakmai előadó", 1, "infó tanári"))
             rooms.add(Room("Híradó szakmai előadó", 2, "szakmai előadó terem"))
-            rooms.add(Room("Híradó második emelet / tető", 3, tags = listOf(Room.TAG_WC_NEAR)))
-            rooms.add(Room("Híradó második emelet / tető", 4))
+            rooms.add(Room("Híradó tető", 3, tags = listOf(Room.TAG_WC_NEAR)))
+            rooms.add(Room("Híradó tető", 4))
         }
 
         fun getBuildingByName(name: String) : Building? {

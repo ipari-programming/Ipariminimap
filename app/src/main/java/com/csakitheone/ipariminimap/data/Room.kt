@@ -20,18 +20,28 @@ class Room() {
     }
 
     fun getBuildingName() : String {
-        return Data.getPlaceByName(placeName)?.buildingName ?: ""
+        return DataOld.getPlaceByName(placeName)?.buildingName ?: ""
     }
 
     fun getSign() : String {
         if (number == -1) return name
         val numString = if (number < 10) "0$number" else number.toString()
-        return Data.getBuildingByName(getBuildingName())?.sign + Data.getPlaceByName(placeName)?.level.toString() + numString
+        return DataOld.getBuildingByName(getBuildingName())?.sign + DataOld.getPlaceByName(placeName)?.level.toString() + numString
     }
 
     fun containsQuery(query: String) : Boolean {
         return (getSign() + name + getBuildingName() + placeName + tags.joinToString() + userTags.joinToString() + "*")
             .toLowerCase().contains(query.toLowerCase())
+    }
+
+    fun toJSON() : String {
+        return """
+"${getSign().toLowerCase()}": {
+    "place": "$placeName",
+    "name": "$name",
+    "tags": "${tags.joinToString()}"
+}
+        """.trimIndent()
     }
 
     companion object {
