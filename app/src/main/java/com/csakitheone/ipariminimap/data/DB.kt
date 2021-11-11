@@ -4,15 +4,17 @@ import com.google.firebase.database.FirebaseDatabase
 
 class DB {
     companion object {
-        val databaseVersion = 1
+        val databaseVersion: Int = 1
 
         private var isConnected = false
         private var db = FirebaseDatabase.getInstance().reference
 
+        fun getIsConnected(): Boolean = isConnected
+
         fun connect(callback: ((Int) -> Unit)? = null) {
             db.child("meta/database-version").get().addOnCompleteListener {
-                val remoteDatabaseVersion = if (it.isSuccessful) {
-                    it.result?.value as Int? ?: -1
+                val remoteDatabaseVersion: Int = if (it.isSuccessful) {
+                    (it.result?.value as Long? ?: -1).toInt()
                 }
                 else -1
                 isConnected = databaseVersion == remoteDatabaseVersion

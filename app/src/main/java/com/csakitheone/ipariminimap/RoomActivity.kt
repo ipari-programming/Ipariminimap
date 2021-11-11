@@ -85,6 +85,6 @@ class RoomActivity : AppCompatActivity() {
             }
         }
 
-        startActivityForResult(Intent(this, SearchOldActivity::class.java).putExtra("query", query), 0)
+        startActivity(Intent(this, SearchActivity::class.java).putExtra(SearchActivity.EXTRA_QUERY, query))
     }
 }

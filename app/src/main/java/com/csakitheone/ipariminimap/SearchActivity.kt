@@ -6,7 +6,6 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.activity_search_old.*
 
 class SearchActivity : AppCompatActivity() {
     companion object {

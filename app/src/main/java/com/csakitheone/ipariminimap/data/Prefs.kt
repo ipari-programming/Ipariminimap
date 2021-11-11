@@ -25,6 +25,14 @@ class Prefs {
             }
         }
 
+        fun getIsServiceAllowed(): Boolean {
+            return prefs.getBoolean("is_service_allowed", false)
+        }
+
+        fun setIsServiceAllowed(value: Boolean) {
+            prefs.edit().putBoolean("is_service_allowed", value).apply()
+        }
+
         fun getTasks(): MutableList<Task> {
             return prefs.getStringSet("tasks", setOf())?.map { r -> Task(r) }?.toMutableList() ?: mutableListOf()
         }

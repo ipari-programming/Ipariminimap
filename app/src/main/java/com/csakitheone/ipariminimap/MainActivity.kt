@@ -2,20 +2,21 @@ package com.csakitheone.ipariminimap
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
-import com.csakitheone.ipariminimap.data.DataOld
+import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
+import com.csakitheone.ipariminimap.services.RingService
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -25,8 +26,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_badges.*
 import kotlinx.android.synthetic.main.activity_main_bell.*
+import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_map.*
-import kotlinx.android.synthetic.main.activity_main_old.*
 import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
 import kotlinx.android.synthetic.main.layout_task.view.*
 
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         Prefs.init(this)
 
         initAds()
+
+        initDatabase()
 
         mainNav.setOnItemSelectedListener {
             for (subActivity in mainFrame.children) {
@@ -57,15 +60,66 @@ class MainActivity : AppCompatActivity() {
         initBellTable()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        mainSwitchService.isChecked = Prefs.getIsServiceAllowed()
+        runServiceIfAllowed()
+
+        refreshTasks()
+        refreshBadges()
+    }
+
     private fun initAds() {
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("24E9E518AB9DBE2924B9B93F22361702"))
+                .setTestDeviceIds(listOf("A95A3A512D1FE5693AE2EF06BAFC5E42"))
                 .build()
         )
         MobileAds.initialize(this)
 
         mainBannerAd.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun initDatabase() {
+        DB.connect {
+            if (DB.getIsConnected()) {
+
+                DB.getLinks { links ->
+                    mainLayoutLinks.removeAllViews()
+                    for (pair in links) {
+                        mainLayoutLinks.addView(
+                            MaterialButton(this, null, R.attr.styleTextButton).apply {
+                                text = pair.key
+                                setOnClickListener {
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pair.value)))
+                                }
+                            }
+                        )
+                    }
+                }
+
+            }
+            else if (DB.databaseVersion != it) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Nem sikerült csatlakozni az adatbázishoz")
+                    .setMessage("""
+                        Helyi adatbázis verzió: ${DB.databaseVersion}
+                        Szerver adatbázis verzió: $it
+                        Lehet, hogy az alkalmazást frissíteni kell.
+                    """.trimIndent())
+                    .setPositiveButton("Play Áruház megnyitása") { _: DialogInterface, _: Int ->
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.csakitheone.ipariminimap")))
+                    }
+                    .create().show()
+            }
+            else {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Nem sikerült csatlakozni az adatbázishoz")
+                    .setMessage("Nincs internet? Véletlen drop-oltam az adatbázist?")
+                    .create().show()
+            }
+        }
     }
 
     fun onBtnSearchClick(view: View) {
@@ -79,7 +133,6 @@ class MainActivity : AppCompatActivity() {
                     "Rendszer követése" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     "Világos téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
                     "Sötét téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
-                    "Régi felület használata" -> startActivity(Intent(this@MainActivity, MainOldActivity::class.java))
                     else -> return@setOnMenuItemClickListener true
                 }
                 false
@@ -90,6 +143,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     //#region Home
+
+    private fun runServiceIfAllowed() {
+        if (mainSwitchService.isChecked) {
+            ContextCompat.startForegroundService(this, Intent(this, RingService::class.java))
+        }
+        else {
+            stopService(Intent(this, RingService::class.java))
+        }
+    }
+
+    fun onSwitchServiceClick(view: View) {
+        Prefs.setIsServiceAllowed(mainSwitchService.isChecked)
+        runServiceIfAllowed()
+    }
+
+    fun onBtnFAQClick(view: View) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Gyakori kérdések")
+            .setMessage(
+                "Barátomnak iPhone-ja van. Ő le tudja tölteni az appot?\n\n" +
+                        "Sajnos nem. 😕 Egy Apple fejlesztői fiók elég drága havidíjjal rendelkezik. " +
+                        "Ezen kívül iOS fejlesztésben sincs még tapasztalatom.\n\n" +
+                        "Barátomnak Huawei telefonja van. Ő honnan tudja megszerezni az appot?\n\n" +
+                        "Ha nála nem elérhető a Play áruház akkor APK formájában tudja beszerezni valakitől." +
+                        " Írjon nekem vagy valaki csomagoljon egy APK-t és küldje el neki, hogy tudja " +
+                        "sideload-olni. Nyilván így nem fog frissülni, de legalább meglesz.\n\n" +
+                        "Miért van reklám az appban? Kapsz érte valamit?\n\n" +
+                        "Nagyon sok munka van az app fejlesztéssel és nem szeretnék senkitől pénzt kérni. " +
+                        "Ezért döntöttem a reklámok mellett. Nyilván nem akarlak idegesíteni titeket, én " +
+                        "sem szeretem a reklámokat, de szerintem így a legjobb mindenkinek.Viszont ne " +
+                        "gondoljatok nagy dolgokra, jobb napokon kb. 20Ft-ot kapok maximum."
+            )
+            .create().show()
+    }
+
+    fun onBtnSupportClick(view: View) {
+        startActivity(Intent(this, RewardAdActivity::class.java))
+    }
+
+    fun onBtnExploreKRESZ(view: View) {
+        startActivity(Intent(this, KreszActivity::class.java))
+    }
+
+    fun onBtnOpenLinkClick(view: View) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(view.tag.toString())))
+    }
+
     //#endregion
 
     //#region Map

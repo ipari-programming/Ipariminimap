@@ -15,5 +15,4 @@
                 android:title="Sötét téma" />
         </menu>
     </item>
-    <item android:title="Régi felület használata" />
 </menu>

@@ -13,27 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainMapActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainHomeActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainOldActivity"
             android:exported="false" />
         <activity android:name=".RewardAdActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5995992409743558~7108648928" />
-
-        <receiver
-            android:name=".broadcastreceivers.RingNotifCancelReceiver"
-            android:enabled="true"
-            android:exported="false" />
 
         <service
             android:name=".services.RingService"
@@ -42,7 +31,6 @@
 
         <activity android:name=".KreszActivity" />
         <activity android:name=".RoomActivity" />
-        <activity android:name=".SearchOldActivity" />
         <activity
             android:name=".MainActivity"
             android:documentLaunchMode="intoExisting"

@@ -5,11 +5,15 @@
         <item name="colorOnPrimary">@color/colorDark</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/colorLight</item>
+
+        <item name="styleTextButton">@style/Widget.Material3.Button.TextButton</item>
     </style>
 
     <style name="ImageButton">
         <item name="android:padding">8dp</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
+
+    <attr name="styleTextButton" format="reference"/>
 
 </resources>

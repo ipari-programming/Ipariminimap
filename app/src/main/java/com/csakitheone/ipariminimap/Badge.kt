@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.createBitmap
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.layout_badge.view.*
 import java.lang.Exception
 
@@ -50,7 +51,7 @@ class Badge() {
         v.isFocusable = isInteractable
 
         v.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
+            val builder = MaterialAlertDialogBuilder(activity)
                 .setTitle(name)
                 .setMessage(description)
             if (icon != 0) {

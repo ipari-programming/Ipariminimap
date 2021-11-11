@@ -70,8 +70,7 @@
                 android:id="@+id/mainActivityHome"
                 layout="@layout/activity_main_home"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/mainActivityMap"
@@ -102,7 +101,7 @@
         android:id="@+id/mainBannerAd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorSurface"
+        android:background="?android:attr/colorBackground"
         app:adSize="BANNER"
         app:adUnitId="ca-app-pub-5995992409743558/9243857678"
         app:layout_constraintBottom_toTopOf="@+id/mainNav"
