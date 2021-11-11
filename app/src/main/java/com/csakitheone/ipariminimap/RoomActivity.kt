@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.csakitheone.ipariminimap.data.DataOld
-import com.csakitheone.ipariminimap.data.Room
+import com.csakitheone.ipariminimap.data.Data
+import com.csakitheone.ipariminimap.data.Data.*
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_room.*
 
@@ -15,32 +15,29 @@ class RoomActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
+    }
 
-        room = DataOld.getRoomBySign(intent.getStringExtra("room_sign") ?: "") ?: Room("Az alkalmazás kódja", Int.MAX_VALUE)
+    override fun onResume() {
+        super.onResume()
+
+        room = Data.rooms.find { r -> r.id == (intent.getStringExtra("room_sign") ?: "") } ?: Room("", placeName = "")
         loadRoom()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 0 && resultCode == 2 && data != null) {
-            room = DataOld.getRoomBySign(data.getStringExtra("room_sign")!!)!!
-            loadRoom()
-        }
-    }
-
     fun loadRoom() {
-        roomTextSign.text = room.getSign()
-        roomTextDescription.text = room.getRoomName()
-        roomTextDescription.visibility = if (room.getRoomName().isEmpty()) View.GONE else View.VISIBLE
-        chipBuilding.text = room.getBuildingName()
+        val place = Data.places.find { r -> r.name == room.placeName }
+
+        roomTextSign.text = room.id.toUpperCase()
+        roomTextDescription.text = room.name
+        roomTextDescription.visibility = if (room.name.isEmpty()) View.GONE else View.VISIBLE
+        chipBuilding.text = place?.buildingName
         chipPlace.text = room.placeName
-        val level = DataOld.getPlaceByName(room.placeName)?.level.toString()
+        val level = place?.level.toString()
         roomTextBuilding.text = "Épület: "
         roomTextLevel.text = " $level. emelet"
 
-        roomTextHelp.visibility = if (DataOld.getPlaceByName(room.placeName)?.help.isNullOrEmpty()) View.GONE else View.VISIBLE
-        roomTextHelp.text = DataOld.getPlaceByName(room.placeName)?.help
+        roomTextHelp.visibility = if (place?.help.isNullOrEmpty()) View.GONE else View.VISIBLE
+        roomTextHelp.text = place?.help
 
         roomChipGroupTags.removeAllViews()
         for (tag in room.tags) {
@@ -52,11 +49,11 @@ class RoomActivity : AppCompatActivity() {
 
         roomChipGroupPlace.removeAllViews()
         val roomsHere = mutableListOf<Room>()
-        roomsHere.addAll(DataOld.rooms.filter { r -> r.placeName == room.placeName })
+        roomsHere.addAll(Data.rooms.filter { r -> r.placeName == room.placeName })
         for (r in roomsHere) {
             val chip = Chip(this)
-            var roomText = r.getSign()
-            if (r.getRoomName().isNotEmpty()) roomText += ":${r.getRoomName()}"
+            var roomText = r.id.toUpperCase()
+            if (r.name.isNotEmpty()) roomText += ":${r.name}"
             if (r.tags.isNotEmpty()) roomText += ":${r.tags.joinToString()}"
             chip.text = roomText
             chip.setOnClickListener { chipClick(it) }
@@ -64,7 +61,7 @@ class RoomActivity : AppCompatActivity() {
         }
 
         roomChipGroupDestinations.removeAllViews()
-        for (d in DataOld.getPlaceByName(room.placeName)!!.destinations) {
+        for (d in place!!.destinations) {
             val chip = Chip(this)
             chip.text = d
             chip.setOnClickListener { chipClick(it) }
@@ -75,8 +72,8 @@ class RoomActivity : AppCompatActivity() {
     fun chipClick(view: View) {
         val query = (view as Chip).text.split(':')[0]
 
-        if (DataOld.rooms.map { r -> r.getSign() }.contains(query)) {
-            val temp = DataOld.getRoomBySign(query)
+        if (Data.rooms.map { r -> r.id }.contains(query)) {
+            val temp = Data.rooms.find { r -> r.id == query }
 
             if (temp != null) {
                 room = temp

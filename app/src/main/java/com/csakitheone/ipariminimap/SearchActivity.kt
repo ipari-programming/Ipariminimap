@@ -41,12 +41,12 @@ class SearchActivity : AppCompatActivity() {
         searchEdit.isEnabled = true
 
         searchEdit.addTextChangedListener {
+            searchLayoutRooms.removeAllViews()
             if (it.isNullOrBlank() || it.length < 2) return@addTextChangedListener
             
             searchCardImage.visibility = View.GONE
             searchScroll.visibility = View.VISIBLE
 
-            searchLayoutRooms.removeAllViews()
             for (room in Data.rooms.filter { r -> r.toString().contains(searchEdit.text, true) }) {
                 val place = Data.places.find { r -> r.name == room.placeName }
 

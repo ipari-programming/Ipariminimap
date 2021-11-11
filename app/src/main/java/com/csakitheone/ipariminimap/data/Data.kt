@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot
 
 class Data {
     data class Building(var id: String, var name: String, var sign: String = "")
-    data class Place(var name: String, var buildingName: String, var destinations: List<String> = listOf(), var level: Int = 0)
+    data class Place(var name: String, var buildingName: String, var destinations: List<String> = listOf(), var level: Int = 0, var help: String = "")
     data class Room(var id: String, var name: String = "", var placeName: String, var tags: List<String> = listOf())
 
     companion object {
@@ -29,8 +29,9 @@ class Data {
                 places.add(Place(
                     d.key ?: "",
                     d.child("building").value as String? ?: "",
-                    (d.child("destinations").value as String? ?: "").split(","),
-                    (d.child("level").value as Long? ?: 0).toInt()
+                    (d.child("destinations").value as String? ?: "").split(",").filter { r -> r.isNotBlank() },
+                    (d.child("level").value as Long? ?: 0).toInt(),
+                    d.child("help").value as String? ?: ""
                 ))
             }
 
@@ -39,7 +40,7 @@ class Data {
                     d.key ?: "",
                     d.child("name").value as String? ?: "",
                     d.child("place").value as String? ?: "",
-                    (d.child("tags").value as String? ?: "").split(",")
+                    (d.child("tags").value as String? ?: "").split(",").filter { r -> r.isNotBlank() }
                 ))
             }
 

@@ -1,5 +1,5 @@
 package com.csakitheone.ipariminimap.data
-
+/*
 class DataOld {
     companion object {
         val buildings = mutableListOf<Building>()
@@ -154,3 +154,4 @@ class DataOld {
         }
     }
 }
+*/
