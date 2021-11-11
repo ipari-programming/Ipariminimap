@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.csakitheone.ipariminimap.Task
+import com.csakitheone.ipariminimap.helper.Rings
 
 class Prefs {
     companion object {
@@ -39,6 +40,16 @@ class Prefs {
 
         fun setTasks(tasks: List<Task>) {
             prefs.edit().putStringSet("tasks", tasks.map { r -> r.toString() }.toSet()).apply()
+        }
+
+        fun getIsAdmin(): Boolean {
+            return prefs.getBoolean("is_admin", false)
+        }
+
+        fun setIsAdmin(value: Boolean, password: String = ""): Boolean {
+            if (value && password != Rings.getCurrentLesson()) return false
+            prefs.edit().putBoolean("is_admin", value).apply()
+            return true
         }
     }
 }

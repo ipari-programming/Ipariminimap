@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -85,12 +86,17 @@ class MainActivity : AppCompatActivity() {
 
         refreshTasks()
         refreshBadges()
+
+        mainBtnAdminLock.visibility = if (Prefs.getIsAdmin()) View.VISIBLE else View.GONE
     }
 
     private fun initAds() {
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("A95A3A512D1FE5693AE2EF06BAFC5E42"))
+                .setTestDeviceIds(listOf(
+                    "A95A3A512D1FE5693AE2EF06BAFC5E42",
+                    "1B0B102828598F5DC553C280FE8A3020"
+                ))
                 .build()
         )
         MobileAds.initialize(this)
@@ -296,7 +302,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun btnNewTaskClick(view: View) {
+    fun onBtnNewTaskClick(view: View) {
         tasks.add(Task())
         saveTasks()
         refreshTasks()
@@ -311,7 +317,7 @@ class MainActivity : AppCompatActivity() {
         Badge.userGet(this).map { r -> mainLayoutBadges.addView(r.createLayout(this, true) { refreshBadges() }) }
     }
 
-    fun btnGetBadgeClick(view: View) {
+    fun onBtnGetBadgeClick(view: View) {
         val getBadges = layoutInflater.inflate(R.layout.layout_get_badges_dialog, null, false)
         Badge.all.filter { r -> r.isVisible && !Badge.userContains(this, r.id) }.map {
             getBadges.getbadgesLayout.addView(it.createLayout(this, true))
@@ -333,6 +339,47 @@ class MainActivity : AppCompatActivity() {
             }
             .create().show()
         refreshBadges()
+    }
+
+    //#endregion
+
+    //#region Database
+
+    private fun showAdminDialog() {
+        val editAdmin = EditText(this)
+        editAdmin.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Admin bejelentkezés")
+            .setView(editAdmin)
+            .setPositiveButton("Belépés") { _: DialogInterface, _: Int ->
+                val isSuccess = Prefs.setIsAdmin(true, editAdmin.text.toString())
+
+                mainBtnAdminLock.visibility = if (isSuccess) {
+                    openAdminUI()
+                    View.VISIBLE
+                }
+                else {
+                    Toast.makeText(this, "A jelszó helytelen", Toast.LENGTH_SHORT).show()
+                    View.GONE
+                }
+            }
+            .setNegativeButton("Mégsem") { _: DialogInterface, _: Int -> }
+            .create().show()
+    }
+
+    private fun openAdminUI() {
+        if (!Prefs.getIsAdmin()) return
+    }
+
+    fun onBtnAdminClick(view: View) {
+        if (Prefs.getIsAdmin()) openAdminUI()
+        else showAdminDialog()
+    }
+
+    fun onBtnAdminLockClick(view: View) {
+        Prefs.setIsAdmin(false)
+        mainBtnAdminLock.visibility = View.GONE
     }
 
     //#endregion
