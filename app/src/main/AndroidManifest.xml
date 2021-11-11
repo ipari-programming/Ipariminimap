@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".SearchActivity"
             android:exported="false" />
         <activity android:name=".RewardAdActivity" />
