@@ -18,6 +18,7 @@ class Data {
         fun getIsLoaded(): Boolean = isLoaded
 
         fun loadBuildingData(result: DataSnapshot) {
+            buildings.clear()
             for (d in result.child("buildings").children) {
                 buildings.add(Building(
                     d.key ?: "",
@@ -25,7 +26,7 @@ class Data {
                     d.child("sign").value as String? ?: ""
                 ))
             }
-
+            places.clear()
             for (d in result.child("places").children) {
                 places.add(Place(
                     d.key ?: "",
@@ -35,7 +36,7 @@ class Data {
                     d.child("help").value as String? ?: ""
                 ))
             }
-
+            rooms.clear()
             for (d in result.child("rooms").children) {
                 rooms.add(Room(
                     d.key ?: "",
@@ -46,6 +47,14 @@ class Data {
             }
 
             isLoaded = true
+        }
+
+        fun clear() {
+            links.clear()
+            buildings.clear()
+            places.clear()
+            rooms.clear()
+            isLoaded = false
         }
     }
 }

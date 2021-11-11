@@ -57,7 +57,7 @@
         android:id="@+id/mainScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/mainBannerAd"
+        app:layout_constraintBottom_toTopOf="@+id/mainNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainBtnSearch">
@@ -67,7 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="128dp">
 
             <include
                 android:id="@+id/mainActivityHome"
@@ -109,7 +110,7 @@
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/mainBannerAd"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground"
         app:adSize="BANNER"
