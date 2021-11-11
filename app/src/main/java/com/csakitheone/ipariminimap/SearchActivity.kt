@@ -1,10 +1,12 @@
 package com.csakitheone.ipariminimap
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.data.DB
@@ -20,6 +22,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         checkAndDownloadData()
     }
@@ -61,7 +67,10 @@ class SearchActivity : AppCompatActivity() {
         }
 
         if (!intent.getStringExtra(EXTRA_QUERY).isNullOrEmpty()) searchEdit.text = SpannableStringBuilder(intent.getStringExtra(EXTRA_QUERY))
-        else searchEdit.requestFocus()
+
+        searchEdit.requestFocus()
+        val imm: InputMethodManager = getSystemService(InputMethodManager::class.java)
+        imm.showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
     }
 
     fun onBtnCancelClick(view: View) {
