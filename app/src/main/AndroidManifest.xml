@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity android:name=".RewardAdActivity" />
 
@@ -27,7 +28,8 @@
             android:exported="false" />
 
         <activity android:name=".KreszActivity" />
-        <activity android:name=".RoomActivity" />
+        <activity android:name=".RoomActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MainActivity"
             android:documentLaunchMode="intoExisting"

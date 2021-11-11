@@ -31,7 +31,7 @@ class Data {
                 places.add(Place(
                     d.key ?: "",
                     d.child("building").value as String? ?: "",
-                    (d.child("destinations").value as String? ?: "").split(",").filter { r -> r.isNotBlank() },
+                    (d.child("destinations").value as String? ?: "").split(",").map { r -> r.trim() }.filter { r -> r.isNotBlank() },
                     (d.child("level").value as Long? ?: 0).toInt(),
                     d.child("help").value as String? ?: ""
                 ))
@@ -42,7 +42,7 @@ class Data {
                     d.key ?: "",
                     d.child("name").value as String? ?: "",
                     d.child("place").value as String? ?: "",
-                    (d.child("tags").value as String? ?: "").split(",").filter { r -> r.isNotBlank() }
+                    (d.child("tags").value as String? ?: "").split(",").map { r -> r.trim() }.filter { r -> r.isNotBlank() }
                 ))
             }
 

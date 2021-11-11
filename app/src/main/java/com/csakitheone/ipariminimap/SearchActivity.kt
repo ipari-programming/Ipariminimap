@@ -31,7 +31,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun checkAndDownloadData() {
         if (!Data.getIsLoaded()) {
-            Toast.makeText(this, "Épület adatok letöltése...", Toast.LENGTH_SHORT).show()
             DB.downloadBuildingData {
                 if (it) initSearch()
                 else finish()

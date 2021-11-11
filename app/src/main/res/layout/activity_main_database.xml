@@ -21,4 +21,10 @@
             android:padding="16dp"
             android:text="Nem sikerült csatlakozni az adatbázishoz." />
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Ehhez a felülethez nincs hozzáférésed.\n\nAz alkalmazás adminjai itt kezelhetik a főoldalon megjelenő linkeket és az iskolai helyadatokat." />
 </LinearLayout>

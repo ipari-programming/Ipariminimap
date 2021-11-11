@@ -108,9 +108,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="onSearchBtnClick"
+                    android:text="Gazdasági iroda"
+                    app:icon="@drawable/ic_money"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="onSearchBtnClick"
+                    android:text="Igazgatói iroda"
+                    app:icon="@drawable/ic_tie"
+                    app:iconGravity="textStart" />
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="onSearchBtnClick"
                     android:text="Mosdó"
                     app:icon="@drawable/ic_wc"
                     app:iconGravity="textStart" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
