@@ -26,33 +26,47 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Nagyon fontos, hogy betartsunk néhány szabályt, hogy mindenki gyorsan odaérjen az órájára illetve iskola után elérje a buszát.\n\nA szabályok főként a szűk folyosóra vonatkoznak, de mindenhol érdemes betartani ezeket." />
+                android:layout_margin="8dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Szűk folyosó (és egyéb folyosók):\n- jobb kéz szabály van\n- előzni lehetőleg csak sűrgős esetben, ha nincs szembejövő\n- 15 percen keresztül várakozni erősen nem ajánlott\n- folyosó helyett várakozzunk máshol ha van rá lehetőség" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="Nagyon fontos, hogy betartsunk néhány szabályt, hogy mindenki gyorsan odaérjen az órájára illetve iskola után elérje a buszát.\n\nA szabályok főként a szűk folyosóra vonatkoznak, de mindenhol érdemes betartani ezeket." />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Iskola elhagyása:\n- 7. óra után van a csúcsidő\n- a portánál használjuk mindkét kiléptetőt\n- a széles folyosón és a labor szárnynál is vannak kiléptetők" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="Szűk folyosó (és egyéb folyosók):\n- jobb kéz szabály van\n- előzni lehetőleg csak sűrgős esetben, ha nincs szembejövő\n- 15 percen keresztül várakozni erősen nem ajánlott\n- folyosó helyett várakozzunk máshol ha van rá lehetőség" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="Iskola elhagyása:\n- 7. óra után van a csúcsidő\n- a portánál használjuk mindkét kiléptetőt\n- a széles folyosón és a labor szárnynál is vannak kiléptetők" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <Button
                 android:layout_width="match_parent"
@@ -70,13 +84,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="8dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Teszt"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"

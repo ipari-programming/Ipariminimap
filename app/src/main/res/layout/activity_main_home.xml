@@ -8,14 +8,20 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <Switch
-        android:id="@+id/mainSwitchService"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:onClick="onSwitchServiceClick"
-        android:padding="16dp"
-        android:text="Futtatás a háttérbeen" />
+        style="?attr/materialCardViewFilledStyle">
+
+        <Switch
+            android:id="@+id/mainSwitchService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onSwitchServiceClick"
+            android:padding="16dp"
+            android:text="Futtatás a háttérbeen\n(Az Android leállíthatja.)" />
+    </com.google.android.material.card.MaterialCardView>
 
     <Button
         android:layout_width="match_parent"
@@ -75,15 +81,25 @@
                         app:srcCompat="@drawable/ic_instagram"
                         app:tint="@color/colorPrimary" />
 
+                    <ImageButton
+                        style="@style/ImageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:onClick="onBtnOpenLinkClick"
+                        android:tag="https://play.google.com/store/apps/dev?id=5554124272482096869"
+                        app:srcCompat="@drawable/ic_android"
+                        app:tint="@color/colorPrimary" />
+
                     <Button
+                        android:id="@+id/mainBtnSupport"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:onClick="onBtnOpenLinkClick"
-                        android:tag="https://play.google.com/store/apps/dev?id=5554124272482096869"
-                        android:text="Appok és játékok"
-                        app:icon="@drawable/ic_android"
+                        android:onClick="onBtnSupportClick"
+                        android:text="Támogatás videóval"
+                        app:icon="@drawable/ic_favorite"
                         app:iconGravity="textStart" />
 
                 </LinearLayout>
@@ -94,16 +110,6 @@
                     android:layout_height="wrap_content"
                     android:onClick="onBtnFAQClick"
                     android:text="Gyakori kérdések" />
-
-                <Button
-                    android:id="@+id/mainBtnSupport"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="onBtnSupportClick"
-                    android:text="Támogatás videóval"
-                    app:icon="@drawable/ic_favorite"
-                    app:iconGravity="textStart" />
 
             </LinearLayout>
 
