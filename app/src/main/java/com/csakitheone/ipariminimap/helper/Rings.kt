@@ -50,6 +50,18 @@ class Rings {
             return times.keys.elementAt(index)
         }
 
+        fun getCurrentLessonValue(): Float {
+            val now = calToInt(Calendar.getInstance())
+            val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+
+            if (day == Calendar.SATURDAY || day == Calendar.SUNDAY || now < timeToInt(7) || now > timeToInt(15)) return -1f
+
+            val index = times.values.indexOfFirst { r -> now < r } - 1
+            var value = times.keys.elementAt(index)[0].digitToInt().toFloat()
+            if (times.keys.elementAt(index).contains("szünet")) value += .1f
+            return value
+        }
+
         fun getTimeUntilNext() : String? {
             val now = calToInt(Calendar.getInstance())
             if (times.values.any { r -> now < r }) {

@@ -17,6 +17,7 @@ import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
+import com.csakitheone.ipariminimap.helper.Rings
 import com.csakitheone.ipariminimap.services.RingService
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -32,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_map.*
 import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
 import kotlinx.android.synthetic.main.layout_task.view.*
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +73,6 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        initBellTable()
     }
 
     override fun onResume() {
@@ -80,6 +80,8 @@ class MainActivity : AppCompatActivity() {
 
         mainSwitchService.isChecked = Prefs.getIsServiceAllowed()
         runServiceIfAllowed()
+
+        initBellTable()
 
         refreshTasks()
         refreshBadges()
@@ -259,6 +261,10 @@ class MainActivity : AppCompatActivity() {
             createCell(row, data[0])
             createCell(row, data[1])
             createCell(row, data[2])
+
+            if (data[0][0].digitToIntOrNull() ?: -2 == Rings.getCurrentLessonValue().roundToInt()) {
+                row.setBackgroundColor(getColor(R.color.colorPrimaryDark))
+            }
         }
     }
 

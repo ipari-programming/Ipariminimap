@@ -70,11 +70,7 @@ class RingService : Service() {
         if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) return
 
         // Tasks
-        tasks = prefs.getStringSet("tasks", setOf())
-            ?.toList()
-            ?.map { r -> Task(r) }
-            ?.filter { r -> r.state }
-            ?: listOf()
+        tasks = (prefs.getStringSet("tasks", setOf()) ?: setOf()).toList().map { r -> Task(r) }.filter { r -> r.state }
 
         for (t in tasks) {
             if (t.condition == "minden óra elején" && Rings.isLessonStart()) {

@@ -1,6 +1,5 @@
 package com.csakitheone.ipariminimap
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -58,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
 
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
                 v.searchResultTitle.text = "${place?.buildingName} • ${room.placeName} • ${room.id}"
-                v.searchResultTags.text = room.tags.joinToString()
+                v.searchResultDesc.text = room.tags.joinToString()
                 v.setOnClickListener { 
                     startActivity(Intent(this, RoomActivity::class.java).apply { putExtra("room_sign", room.id) })
                 }
