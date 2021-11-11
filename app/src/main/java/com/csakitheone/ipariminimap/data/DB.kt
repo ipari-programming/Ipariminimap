@@ -4,7 +4,8 @@ import com.google.firebase.database.FirebaseDatabase
 
 class DB {
     companion object {
-        val databaseVersion: Int = 1
+        const val databaseVersion: Int = 1
+        var remoteDatabaseVersion: Int = -1
 
         private var isConnected = false
         private var db = FirebaseDatabase.getInstance().reference
@@ -13,7 +14,7 @@ class DB {
 
         fun connect(callback: ((Int) -> Unit)? = null) {
             db.child("meta/database-version").get().addOnCompleteListener {
-                val remoteDatabaseVersion: Int = if (it.isSuccessful) {
+                remoteDatabaseVersion = if (it.isSuccessful) {
                     (it.result?.value as Long? ?: -1).toInt()
                 }
                 else -1
@@ -31,6 +32,7 @@ class DB {
             db.child("links").get().addOnCompleteListener {
                 if (!it.isSuccessful || it.result == null) {
                     callback(mapOf())
+                    Data.links = mutableMapOf()
                     return@addOnCompleteListener
                 }
 
@@ -39,6 +41,7 @@ class DB {
                     if (!linkData.key.isNullOrBlank())
                         links[linkData.key!!] = linkData.value.toString()
                 }
+                Data.links = links
                 callback(links)
             }
         }

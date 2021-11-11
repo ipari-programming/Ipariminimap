@@ -18,4 +18,8 @@
         android:icon="@drawable/ic_done"
         android:title="Kitűzők"
         app:showAsAction="always" />
+    <item
+        android:icon="@drawable/ic_storage"
+        android:title="Adatbázis"
+        app:showAsAction="always" />
 </menu>

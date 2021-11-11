@@ -14,6 +14,7 @@ import androidx.core.view.children
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import com.csakitheone.ipariminimap.data.DB
+import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.services.RingService
@@ -26,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_badges.*
 import kotlinx.android.synthetic.main.activity_main_bell.*
+import kotlinx.android.synthetic.main.activity_main_database.*
 import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_map.*
 import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
@@ -52,6 +54,19 @@ class MainActivity : AppCompatActivity() {
                 "Térkép" -> mainActivityMap.visibility = View.VISIBLE
                 "Csengő" -> mainActivityBell.visibility = View.VISIBLE
                 "Kitűzők" -> mainActivityBadges.visibility = View.VISIBLE
+                "Adatbázis" -> {
+                    mainActivityDatabase.visibility = View.VISIBLE
+                    if (DB.getIsConnected()) {
+                        DB.downloadBuildingData {
+                            mainTextDatabaseStats.text = """
+                                Helyi adatbázis verzió: ${DB.databaseVersion}
+                                Szerver adatbázis verzió: ${DB.remoteDatabaseVersion}
+                                Linkek: ${Data.links.size}
+                                Helyadatok: ${Data.buildings.size} épület, ${Data.places.size} hely és ${Data.rooms.size} terem
+                            """.trimIndent()
+                        }
+                    }
+                }
                 else -> return@setOnItemSelectedListener false
             }
             true

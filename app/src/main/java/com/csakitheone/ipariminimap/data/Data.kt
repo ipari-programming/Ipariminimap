@@ -8,6 +8,7 @@ class Data {
     data class Room(var id: String, var name: String = "", var placeName: String, var tags: List<String> = listOf())
 
     companion object {
+        var links = mutableMapOf<String, String>()
         var buildings = mutableListOf<Building>()
         var places = mutableListOf<Place>()
         var rooms = mutableListOf<Room>()
