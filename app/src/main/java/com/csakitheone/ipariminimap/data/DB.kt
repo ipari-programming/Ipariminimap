@@ -42,5 +42,22 @@ class DB {
                 callback(links)
             }
         }
+
+        fun downloadBuildingData(callback: (Boolean) -> Unit) {
+            if (!isConnected) {
+                callback(false)
+                return
+            }
+
+            db.get().addOnCompleteListener {
+                if (!it.isSuccessful || it.result == null) {
+                    callback(false)
+                    return@addOnCompleteListener
+                }
+
+                Data.loadBuildingData(it.result!!)
+                callback(true)
+            }
+        }
     }
 }
