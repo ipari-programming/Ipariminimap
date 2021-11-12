@@ -11,8 +11,8 @@ android {
         applicationId "com.csakitheone.ipariminimap"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 16
-        versionName "1.2.2"
+        versionCode 17
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
