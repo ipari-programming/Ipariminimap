@@ -77,11 +77,12 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Az épületek, helyek és termek szerkesztése elérhető lesz egy következő verzióban." />
+            android:onClick="onBtnAdminOpenBuildingManagerClick"
+            android:text="Termek kezelése" />
 
         <Button
             android:id="@+id/mainBtnAdminLock"

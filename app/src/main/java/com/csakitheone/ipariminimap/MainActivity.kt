@@ -455,6 +455,11 @@ class MainActivity : AppCompatActivity() {
             .create().show()
     }
 
+    fun onBtnAdminOpenBuildingManagerClick(view: View) {
+        if (!Prefs.getIsAdmin()) return
+        startActivity(Intent(this, BuildingManagerActivity::class.java))
+    }
+
     fun onBtnAdminLockClick(view: View) {
         Prefs.setIsAdmin(false)
         openAdminUI()

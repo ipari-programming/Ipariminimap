@@ -14,9 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SearchActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".BuildingManagerActivity"
             android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".RewardAdActivity" />
 
         <meta-data
@@ -29,8 +32,9 @@
             android:exported="false" />
 
         <activity android:name=".KreszActivity" />
-        <activity android:name=".RoomActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".RoomActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:documentLaunchMode="intoExisting"
