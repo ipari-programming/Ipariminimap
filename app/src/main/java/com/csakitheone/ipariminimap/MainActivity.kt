@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -59,16 +61,7 @@ class MainActivity : AppCompatActivity() {
                 "Kitűzők" -> mainActivityBadges.visibility = View.VISIBLE
                 "Adatbázis" -> {
                     mainActivityDatabase.visibility = View.VISIBLE
-                    if (DB.getIsConnected()) {
-                        DB.downloadBuildingData {
-                            mainTextDatabaseStats.text = """
-                                Helyi adatbázis verzió: ${DB.databaseVersion}
-                                Szerver adatbázis verzió: ${DB.remoteDatabaseVersion}
-                                Linkek: ${Data.links.size}
-                                Helyadatok: ${Data.buildings.size} épület, ${Data.places.size} hely és ${Data.rooms.size} terem
-                            """.trimIndent()
-                        }
-                    }
+                    updateDBStats()
                 }
                 else -> return@setOnItemSelectedListener false
             }
@@ -107,21 +100,7 @@ class MainActivity : AppCompatActivity() {
     private fun initDatabase() {
         DB.connect {
             if (DB.getIsConnected()) {
-
-                DB.getLinks { links ->
-                    mainLayoutLinks.removeAllViews()
-                    for (pair in links) {
-                        mainLayoutLinks.addView(
-                            MaterialButton(this, null, R.attr.styleTextButton).apply {
-                                text = pair.key
-                                setOnClickListener {
-                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pair.value)))
-                                }
-                            }
-                        )
-                    }
-                }
-
+                refreshLinks()
             }
             else if (DB.databaseVersion != it) {
                 MaterialAlertDialogBuilder(this)
@@ -173,6 +152,45 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             stopService(Intent(this, RingService::class.java))
+        }
+    }
+
+    private fun refreshLinks() {
+        DB.getLinks { links ->
+            mainLayoutLinks.removeAllViews()
+            for (pair in links) {
+                mainLayoutLinks.addView(
+                    MaterialButton(this, null, R.attr.styleTextButton).apply {
+                        text = pair.key
+                        setOnClickListener {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(pair.value)))
+                        }
+                        setOnLongClickListener {
+                            if (!mainSwitchAdminLinks.isChecked) return@setOnLongClickListener false
+
+                            val editURL = EditText(this@MainActivity)
+                            editURL.text = SpannableStringBuilder(pair.value)
+                            MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(pair.key)
+                                .setView(editURL)
+                                .setPositiveButton("Mentés") { _: DialogInterface, _: Int ->
+                                    DB.Admin.setLinks(links.toMutableMap().apply { set(pair.key, editURL.text.toString()) }) {
+                                        refreshLinks()
+                                    }
+                                }
+                                .setNeutralButton("Mégsem") { _: DialogInterface, _: Int -> }
+                                .setNegativeButton("Törlés") { _: DialogInterface, _: Int ->
+                                    DB.Admin.setLinks(links.toMutableMap().apply { remove(pair.key) }) {
+                                        refreshLinks()
+                                    }
+                                }
+                                .create().show()
+
+                            return@setOnLongClickListener true
+                        }
+                    }
+                )
+            }
         }
     }
 
@@ -345,6 +363,22 @@ class MainActivity : AppCompatActivity() {
 
     //#region Database
 
+    private fun updateDBStats() {
+        if (!DB.getIsConnected()) {
+            mainTextDatabaseStats.text = "Nem sikerült csatlakozni az adatbázishoz."
+            return
+        }
+
+        DB.downloadBuildingData {
+            mainTextDatabaseStats.text = """
+                            Helyi adatbázis verzió: ${DB.databaseVersion}
+                            Szerver adatbázis verzió: ${DB.remoteDatabaseVersion}
+                            Linkek: ${Data.links.size}
+                            Helyadatok: ${Data.buildings.size} épület, ${Data.places.size} hely és ${Data.rooms.size} terem
+                        """.trimIndent()
+        }
+    }
+
     private fun showAdminDialog() {
         val editAdmin = EditText(this)
         editAdmin.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -355,31 +389,61 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Belépés") { _: DialogInterface, _: Int ->
                 val isSuccess = Prefs.setIsAdmin(true, editAdmin.text.toString())
 
-                mainBtnAdminLock.visibility = if (isSuccess) {
-                    openAdminUI()
-                    View.VISIBLE
-                }
-                else {
+                if (!isSuccess) {
                     Toast.makeText(this, "A jelszó helytelen", Toast.LENGTH_SHORT).show()
-                    View.GONE
                 }
+                openAdminUI()
             }
             .setNegativeButton("Mégsem") { _: DialogInterface, _: Int -> }
             .create().show()
     }
 
     private fun openAdminUI() {
-        if (!Prefs.getIsAdmin()) return
+        if (!Prefs.getIsAdmin()) {
+            mainLayoutAdminLocked.visibility = View.VISIBLE
+            mainLayoutAdminUnlocked.visibility = View.GONE
+            mainSwitchAdminLinks.isChecked = false
+            return
+        }
+        mainLayoutAdminLocked.visibility = View.GONE
+        mainLayoutAdminUnlocked.visibility = View.VISIBLE
     }
 
     fun onBtnAdminClick(view: View) {
+        if (!DB.getIsConnected()) {
+            Toast.makeText(this, "Nem vagy csatlakozva az adatbázishoz!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (Prefs.getIsAdmin()) openAdminUI()
         else showAdminDialog()
     }
 
+    fun onBtnAdminLinkAddClick(view: View) {
+        val editTitle = EditText(this).apply { hint = "Link neve" }
+        val editURL = EditText(this).apply { hint = "URL" }
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(editTitle)
+            addView(editURL)
+        }
+
+        MaterialAlertDialogBuilder(this@MainActivity)
+            .setTitle("Új link")
+            .setView(layout)
+            .setPositiveButton("Mentés") { _: DialogInterface, _: Int ->
+                DB.Admin.setLinks(Data.links.toMutableMap().apply { put(editTitle.text.toString(), editURL.text.toString()) }) {
+                    Toast.makeText(this, if (it) "Hozzáadva" else "Nem sikerült a link hozzáadása", Toast.LENGTH_SHORT).show()
+                    refreshLinks()
+                }
+            }
+            .setNegativeButton("Mégsem") { _: DialogInterface, _: Int -> }
+            .create().show()
+    }
+
     fun onBtnAdminLockClick(view: View) {
         Prefs.setIsAdmin(false)
-        mainBtnAdminLock.visibility = View.GONE
+        openAdminUI()
     }
 
     //#endregion

@@ -63,4 +63,18 @@ class DB {
             }
         }
     }
+
+    class Admin {
+        companion object {
+            fun setLinks(links: Map<String, String>, callback: ((Boolean) -> Unit)? = null) {
+                if (!Prefs.getIsAdmin()) {
+                    callback?.invoke(false)
+                    return
+                }
+                db.child("links").setValue(links).addOnCompleteListener {
+                    callback?.invoke(it.isSuccessful)
+                }
+            }
+        }
+    }
 }
