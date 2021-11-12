@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:backgroundTint="?attr/colorAccent"
+            android:backgroundTint="?attr/colorError"
             android:onClick="onBtnAdminLockClick"
             android:text="Lezárás" />
 

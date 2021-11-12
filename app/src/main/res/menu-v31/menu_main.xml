@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Téma" >
+        <menu >
+            <item
+                android:icon="@drawable/ic_android"
+                android:title="Rendszer követése" />
+            <item
+                android:icon="@drawable/ic_color_lens"
+                android:title="Világos téma" />
+            <item
+                android:icon="@drawable/ic_color_lens"
+                android:title="Sötét téma" />
+            <item
+                android:icon="@drawable/ic_color_lens"
+                android:title="Dinamikus színek" />
+        </menu>
+    </item>
+</menu>

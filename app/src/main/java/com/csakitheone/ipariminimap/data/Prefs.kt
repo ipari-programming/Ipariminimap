@@ -26,6 +26,14 @@ class Prefs {
             }
         }
 
+        fun getIsUsingDynamicColors(): Boolean {
+            return prefs.getBoolean("is_using_dynamic_colors", true)
+        }
+
+        fun setIsUsingDynamicColors(value: Boolean) {
+            prefs.edit().putBoolean("is_using_dynamic_colors", value).apply()
+        }
+
         fun getIsServiceAllowed(): Boolean {
             return prefs.getBoolean("is_service_allowed", false)
         }

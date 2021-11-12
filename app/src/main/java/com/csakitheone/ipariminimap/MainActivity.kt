@@ -2,12 +2,14 @@ package com.csakitheone.ipariminimap
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.TypedArray
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -26,6 +28,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,11 +46,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Prefs.init(this)
-
-        initAds()
-
         initDatabase()
+        initAds()
 
         mainNav.setOnItemSelectedListener {
             for (subActivity in mainFrame.children) {
@@ -135,6 +135,18 @@ class MainActivity : AppCompatActivity() {
                     "Rendszer követése" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     "Világos téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
                     "Sötét téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
+                    "Dinamikus színek" -> {
+                        MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle("Dinamikus színek")
+                            .setMessage("Android 12-től kezve az alkalmazások követhetik a háttered színeit. A változtatások csak újraindítás után lépnek életbe.")
+                            .setPositiveButton("Bekapcsolás") { _: DialogInterface, _: Int ->
+                                Prefs.setIsUsingDynamicColors(true)
+                            }
+                            .setNegativeButton("Kikapcsolás") { _: DialogInterface, _: Int ->
+                                Prefs.setIsUsingDynamicColors(false)
+                            }
+                            .create().show()
+                    }
                     else -> return@setOnMenuItemClickListener true
                 }
                 false
@@ -287,7 +299,9 @@ class MainActivity : AppCompatActivity() {
             createCell(row, data[2])
 
             if (data[0][0].digitToIntOrNull() ?: -2 == Rings.getCurrentLessonValue().roundToInt()) {
-                row.setBackgroundColor(getColor(R.color.colorPrimaryDark))
+                val colorAttribute = TypedValue()
+                theme.resolveAttribute(R.attr.colorPrimaryDark, colorAttribute, true)
+                row.setBackgroundColor(getColor(colorAttribute.resourceId))
             }
         }
     }

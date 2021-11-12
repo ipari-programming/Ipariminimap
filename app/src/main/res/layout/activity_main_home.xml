@@ -69,7 +69,7 @@
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://m.me/CsakiTheOne"
                         app:srcCompat="@drawable/ic_messenger"
-                        app:tint="@color/colorPrimary" />
+                        app:tint="?attr/colorPrimary" />
 
                     <ImageButton
                         style="@style/ImageButton"
@@ -79,7 +79,7 @@
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://www.instagram.com/nagyceg/"
                         app:srcCompat="@drawable/ic_instagram"
-                        app:tint="@color/colorPrimary" />
+                        app:tint="?attr/colorPrimary" />
 
                     <ImageButton
                         style="@style/ImageButton"
@@ -89,7 +89,7 @@
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://play.google.com/store/apps/dev?id=5554124272482096869"
                         app:srcCompat="@drawable/ic_android"
-                        app:tint="@color/colorPrimary" />
+                        app:tint="?attr/colorPrimary" />
 
                     <Button
                         android:id="@+id/mainBtnSupport"

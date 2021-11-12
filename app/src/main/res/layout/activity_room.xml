@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="F000"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="?attr/colorPrimary" />
 
     <TextView
         android:id="@+id/roomTextDescription"
