@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initDatabase()
         initAds()
 
         mainNav.setOnItemSelectedListener {
@@ -67,6 +66,8 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        refreshLinks()
     }
 
     override fun onResume() {
@@ -93,33 +94,6 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(this)
 
         mainBannerAd.loadAd(AdRequest.Builder().build())
-    }
-
-    private fun initDatabase() {
-        DB.connect {
-            if (DB.getIsConnected()) {
-                refreshLinks()
-            }
-            else if (DB.databaseVersion != it) {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Nem sikerült csatlakozni az adatbázishoz")
-                    .setMessage("""
-                        Helyi adatbázis verzió: ${DB.databaseVersion}
-                        Szerver adatbázis verzió: $it
-                        Lehet, hogy az alkalmazást frissíteni kell.
-                    """.trimIndent())
-                    .setPositiveButton("Play Áruház megnyitása") { _: DialogInterface, _: Int ->
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.csakitheone.ipariminimap")))
-                    }
-                    .create().show()
-            }
-            else {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Nem sikerült csatlakozni az adatbázishoz")
-                    .setMessage("Nincs internet? Véletlen drop-oltam az adatbázist?")
-                    .create().show()
-            }
-        }
     }
 
     fun onBtnSearchClick(view: View) {
@@ -376,17 +350,11 @@ class MainActivity : AppCompatActivity() {
     //#region Database
 
     private fun updateDBStats() {
-        if (!DB.getIsConnected()) {
-            mainTextDatabaseStats.text = "Nem sikerült csatlakozni az adatbázishoz."
-            return
-        }
-
         DB.downloadBuildingData {
             mainTextDatabaseStats.text = """
-                            Helyi adatbázis verzió: ${DB.databaseVersion}
-                            Szerver adatbázis verzió: ${DB.remoteDatabaseVersion}
+                            Adatbázis verzió: ${DB.databaseVersion}
                             Linkek: ${Data.links.size}
-                            Helyadatok: ${Data.buildings.size} épület, ${Data.places.size} hely és ${Data.rooms.size} terem
+                            Helyadatok: ${Data.buildings.size} épület, ${Data.buildings.sumOf { r -> r.places.size }} hely és ${Data.buildings.sumOf { r -> r.places.sumOf { s -> s.rooms.size } }} terem
                         """.trimIndent()
         }
     }
@@ -422,11 +390,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onBtnAdminClick(view: View) {
-        if (!DB.getIsConnected()) {
-            Toast.makeText(this, "Nem vagy csatlakozva az adatbázishoz!", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         if (Prefs.getIsAdmin()) openAdminUI()
         else showAdminDialog()
     }

@@ -20,24 +20,25 @@ class RoomActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        room = Data.rooms.find { r -> r.id == (intent.getStringExtra("room_sign") ?: "") } ?: Room("", placeName = "")
+        room = Data.getAllRooms().find { r -> r.id == (intent.getStringExtra("room_sign") ?: "") } ?: Room("")
         loadRoom()
     }
 
     fun loadRoom() {
-        val place = Data.places.find { r -> r.name == room.placeName }
+        val place = Data.getAllPlaces().find { r -> r.rooms.contains(room) } ?: Data.getAllPlaces().first()
+        val building = Data.buildings.find { r -> r.places.contains(place) } ?: Data.buildings.first()
 
         roomTextSign.text = room.id.toUpperCase()
         roomTextDescription.text = room.name
         roomTextDescription.visibility = if (room.name.isEmpty()) View.GONE else View.VISIBLE
-        chipBuilding.text = place?.buildingName
-        chipPlace.text = room.placeName
-        val level = place?.level.toString()
+        chipBuilding.text = building.name
+        chipPlace.text = place.name
+        val level = place.level.toString()
         roomTextBuilding.text = "Épület: "
         roomTextLevel.text = " $level. emelet"
 
-        roomTextHelp.visibility = if (place?.help.isNullOrEmpty()) View.GONE else View.VISIBLE
-        roomTextHelp.text = place?.help
+        roomTextHelp.visibility = if (place.help.isEmpty()) View.GONE else View.VISIBLE
+        roomTextHelp.text = place.help
 
         roomChipGroupTags.removeAllViews()
         for (tag in room.tags) {
@@ -48,9 +49,7 @@ class RoomActivity : AppCompatActivity() {
         }
 
         roomChipGroupPlace.removeAllViews()
-        val roomsHere = mutableListOf<Room>()
-        roomsHere.addAll(Data.rooms.filter { r -> r.placeName == room.placeName })
-        for (r in roomsHere) {
+        for (r in place.rooms) {
             val chip = Chip(this)
             var roomText = r.id.toUpperCase()
             if (r.name.isNotEmpty()) roomText += ":${r.name}"
@@ -72,8 +71,8 @@ class RoomActivity : AppCompatActivity() {
     fun chipClick(view: View) {
         val query = (view as Chip).text.split(':')[0]
 
-        if (Data.rooms.map { r -> r.id }.contains(query)) {
-            val temp = Data.rooms.find { r -> r.id == query }
+        if (Data.getAllRooms().map { r -> r.id }.contains(query)) {
+            val temp = Data.getAllRooms().find { r -> r.id == query }
 
             if (temp != null) {
                 room = temp

@@ -51,11 +51,9 @@ class SearchActivity : AppCompatActivity() {
             searchCardImage.visibility = View.GONE
             searchScroll.visibility = View.VISIBLE
 
-            for (room in Data.rooms.filter { r -> r.toString().contains(searchEdit.text, true) }) {
-                val place = Data.places.find { r -> r.name == room.placeName }
-
+            for (room in Data.getAllRooms().filter { r -> r.toString().contains(searchEdit.text, true) }) {
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
-                v.searchResultTitle.text = "${place?.buildingName} • ${room.placeName} • ${room.id}"
+                v.searchResultTitle.text = room.toString()
                 v.searchResultDesc.text = room.tags.joinToString()
                 v.setOnClickListener { 
                     startActivity(Intent(this, RoomActivity::class.java).apply { putExtra("room_sign", room.id) })

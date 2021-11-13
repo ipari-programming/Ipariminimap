@@ -1,34 +1,16 @@
 package com.csakitheone.ipariminimap.data
 
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 
 class DB {
     companion object {
-        const val databaseVersion: Int = 1
-        var remoteDatabaseVersion: Int = -1
+        var databaseVersion: String = "1"
 
-        private var isConnected = false
-        private var db = FirebaseDatabase.getInstance().reference
-
-        fun getIsConnected(): Boolean = isConnected
-
-        fun connect(callback: ((Int) -> Unit)? = null) {
-            db.child("meta/database-version").get().addOnCompleteListener {
-                remoteDatabaseVersion = if (it.isSuccessful) {
-                    (it.result?.value as Long? ?: -1).toInt()
-                }
-                else -1
-                isConnected = databaseVersion == remoteDatabaseVersion
-                callback?.invoke(remoteDatabaseVersion)
-            }
-        }
+        private val rtdb = FirebaseDatabase.getInstance().reference
+        private val db = rtdb.child("databases/$databaseVersion")
 
         fun getLinks(callback: (Map<String, String>) -> Unit) {
-            if (!isConnected) {
-                callback(mapOf())
-                return
-            }
-
             db.child("links").get().addOnCompleteListener {
                 if (!it.isSuccessful || it.result == null) {
                     callback(mapOf())
@@ -47,21 +29,48 @@ class DB {
         }
 
         fun downloadBuildingData(callback: (Boolean) -> Unit) {
-            if (!isConnected) {
-                callback(false)
-                return
-            }
-
             db.get().addOnCompleteListener {
                 if (!it.isSuccessful || it.result == null) {
                     callback(false)
                     return@addOnCompleteListener
                 }
 
-                Data.loadBuildingData(it.result!!)
+                loadBuildingData(it.result!!)
                 callback(true)
             }
         }
+
+        private fun loadBuildingData(result: DataSnapshot) {
+            Data.buildings.clear()
+            for (d in result.child("buildings").children) {
+                Data.buildings.add(
+                    Data.Building(
+                        d.key ?: "",
+                        d.child("name").value as String? ?: "",
+                        d.child("places").children.map { place ->
+                            Data.Place(
+                                place.key ?: "",
+                                (place.child("destinations").value as String? ?: "").split(",")
+                                    .map { r -> r.trim() }.filter { r -> r.isNotBlank() },
+                                (place.child("level").value as Long? ?: 0).toInt(),
+                                place.child("help").value as String? ?: "",
+                                place.child("rooms").children.map { room ->
+                                    Data.Room(
+                                        room.key ?: "",
+                                        room.child("name").value as String? ?: "",
+                                        (room.child("tags").value as String? ?: "").split(",")
+                                            .map { r -> r.trim() }.filter { r -> r.isNotBlank() }
+                                    )
+                                }.toMutableList()
+                            )
+                        }.toMutableList()
+                    )
+                )
+            }
+
+            Data.isLoaded = true
+        }
+
     }
 
     class Admin {
@@ -77,6 +86,10 @@ class DB {
             }
 
             fun uploadBuildingData(callback: (Boolean) -> Unit) {
+                if (!Prefs.getIsAdmin()) {
+                    callback(false)
+                    return
+                }
                 db.updateChildren(Data.getBuildingData()).addOnCompleteListener {
                     callback(it.isSuccessful)
                 }

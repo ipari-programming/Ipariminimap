@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.*
+import androidx.core.view.children
 import androidx.core.view.setPadding
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
@@ -52,7 +53,7 @@ class BuildingManagerActivity : AppCompatActivity() {
             }
 
             buildingGroupPlaceDestinations.removeAllViews()
-            for (place in Data.places) {
+            for (place in Data.getAllPlaces()) {
                 buildingGroupPlaceDestinations.addView(Chip(this).apply {
                     text = place.name
                     isCheckable = true
@@ -60,7 +61,7 @@ class BuildingManagerActivity : AppCompatActivity() {
             }
 
             buildingGroupRoomPlace.removeAllViews()
-            for (place in Data.places) {
+            for (place in Data.getAllPlaces()) {
                 buildingGroupRoomPlace.addView(RadioButton(this).apply {
                     text = place.name
                 })
@@ -84,25 +85,25 @@ class BuildingManagerActivity : AppCompatActivity() {
             view = TextView(this).apply {
                 text = building.name
                 tag = "building"
-                setPadding(16.toPx.toInt())
+                setPadding(16.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                 setOnClickListener { editItem("building", building.name) }
             }
             buildingLayoutList.addView(view)
 
-            for (place in Data.places.filter { r -> r.buildingName == building.name }) {
+            for (place in building.places) {
                 view = TextView(this).apply {
                     text = place.name
                     tag = "place"
-                    setPadding(48.toPx.toInt(), 16.toPx.toInt(), 16.toPx.toInt(), 16.toPx.toInt())
+                    setPadding(48.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                     setOnClickListener { editItem("place", place.name) }
                 }
                 buildingLayoutList.addView(view)
 
-                for (room in Data.rooms.filter { r -> r.placeName == place.name }) {
+                for (room in place.rooms) {
                     view = TextView(this).apply {
                         text = room.id
                         tag = "room"
-                        setPadding(80.toPx.toInt(), 16.toPx.toInt(), 16.toPx.toInt(), 16.toPx.toInt())
+                        setPadding(80.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                         setOnClickListener { editItem("room", room.id) }
                     }
                     buildingLayoutList.addView(view)
@@ -114,10 +115,12 @@ class BuildingManagerActivity : AppCompatActivity() {
     }
 
     private fun checkRadio(group: RadioGroup, index: Int) {
+        if (index < 0) return
         (group.getChildAt(index) as RadioButton).isChecked = true
     }
 
     private fun checkChip(group: ChipGroup, index: Int) {
+        if (index < 0) return
         (group.getChildAt(index) as Chip).isChecked = true
     }
 
@@ -136,18 +139,18 @@ class BuildingManagerActivity : AppCompatActivity() {
                 buildingCardBuilding.visibility = View.VISIBLE
             }
             "place" -> {
-                val place = Data.places.find { r -> r.name == name } ?: Data.Place("", Data.buildings.first().name)
+                val place = Data.getAllPlaces().find { r -> r.name == name } ?: Data.Place("")
                 buildingEditPlaceName.text = SpannableStringBuilder(place.name)
-                checkRadio(buildingGroupPlaceBuilding, Data.buildings.indexOfFirst { r -> r.name == place.buildingName })
-                place.destinations.map { checkChip(buildingGroupPlaceDestinations, Data.places.indexOfFirst { r -> r.name == it }) }
+                checkRadio(buildingGroupPlaceBuilding, Data.buildings.indexOfFirst { r -> r.places.contains(place) })
+                place.destinations.map { checkChip(buildingGroupPlaceDestinations, Data.getAllPlaces().indexOfFirst { r -> r.name == it }) }
                 buildingEditPlaceHelp.text = SpannableStringBuilder(place.help)
                 buildingCardPlace.visibility = View.VISIBLE
             }
             "room" -> {
-                val room = Data.rooms.find { r -> r.id == name } ?: Data.Room("", placeName = Data.places.first().name)
+                val room = Data.getAllRooms().find { r -> r.id == name } ?: Data.Room("")
                 buildingEditRoomId.text = SpannableStringBuilder(room.id)
                 buildingEditRoomName.text = SpannableStringBuilder(room.name)
-                checkRadio(buildingGroupRoomPlace, Data.places.indexOfFirst { r -> r.name == room.placeName })
+                checkRadio(buildingGroupRoomPlace, Data.getAllPlaces().indexOfFirst { r -> r.rooms.contains(room) })
                 room.tags.map { checkChip(buildingGroupRoomTags, Data.tags.indexOfFirst { r -> r == it }) }
                 buildingCardRoom.visibility = View.VISIBLE
             }
@@ -157,22 +160,34 @@ class BuildingManagerActivity : AppCompatActivity() {
     private fun saveItem() {
         when(selectedItemType) {
             "building" -> {
-
+                val building = Data.buildings.find { r -> r.id == buildingTextBuildingId.text } ?:
+                    Data.Building(buildingTextBuildingId.text.toString(), "")
+                building.name = buildingEditBuildingName.text.toString()
+                Data.buildings.removeAll { r -> r.id == buildingTextBuildingId.text }
+                Data.buildings.add(building)
             }
             "place" -> {
 
             }
             "room" -> {
-                val room = Data.rooms.find { r -> r.id == selectedItemName } ?: Data.Room("", placeName = Data.places.first().name)
-                room.id = buildingEditRoomId.text.toString()
-                room.name = buildingEditRoomName.text.toString()
-                room.placeName = Data.places[buildingGroupRoomPlace.checkedRadioButtonId].name
-                room.tags = buildingGroupRoomTags.checkedChipIds.map { r -> Data.tags[r] }
+                val placeOld = Data.getAllPlaces().find { r -> r.rooms.any { room -> room.id == selectedItemName } }
+                val place = Data.getAllPlaces().find { r -> r.name == buildingGroupRoomPlace.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
+
+                val tags = mutableListOf<String>()
+                for (chip in buildingGroupRoomTags.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
+                    tags.add(chip.text.toString())
+                }
+                val room = Data.Room(
+                    buildingEditRoomId.text.toString(),
+                    buildingEditRoomName.text.toString(),
+                    tags
+                )
+                placeOld?.rooms?.removeAll { r -> r.id == selectedItemName }
+                place?.rooms?.add(room)
             }
         }
         DB.Admin.uploadBuildingData {
             Toast.makeText(this, if (it) "Mentve" else "Nem sikerült menteni", Toast.LENGTH_SHORT).show()
-
             refreshList()
         }
     }
