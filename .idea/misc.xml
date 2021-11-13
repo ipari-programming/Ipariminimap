@@ -3,7 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_building_manager.xml" value="0.3625" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_building_manager.xml" value="0.34271099744245526" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_main_badges.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_main_bell.xml" value="0.3625" />
@@ -19,6 +19,7 @@
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/layout_search_result.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/layout_task.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu-v31/menu_main.xml" value="0.3625" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_building_manager.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_main.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_main_nav.xml" value="0.3625" />
         <entry key="..\:/Users/jocka/AndroidStudioProjects/Ipariminimap/app/src/main/res/layout/activity_building_manager.xml" value="0.33" />

@@ -79,8 +79,6 @@ class MainActivity : AppCompatActivity() {
 
         refreshTasks()
         refreshBadges()
-
-        mainBtnAdminLock.visibility = if (Prefs.getIsAdmin()) View.VISIBLE else View.GONE
     }
 
     private fun initAds() {

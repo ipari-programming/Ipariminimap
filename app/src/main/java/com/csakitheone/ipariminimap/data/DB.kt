@@ -75,6 +75,12 @@ class DB {
                     callback?.invoke(it.isSuccessful)
                 }
             }
+
+            fun uploadBuildingData(callback: (Boolean) -> Unit) {
+                db.updateChildren(Data.getBuildingData()).addOnCompleteListener {
+                    callback(it.isSuccessful)
+                }
+            }
         }
     }
 }
