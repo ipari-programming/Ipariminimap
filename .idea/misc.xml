@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.26510416666666664" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable-v26/shortcut_search.xml" value="0.26510416666666664" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26510416666666664" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable/ic_search.xml" value="0.26510416666666664" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable/shortcut_search.xml" value="0.26510416666666664" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/drawable/shortcut_search_foreground.xml" value="0.26510416666666664" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_building_manager.xml" value="0.34271099744245526" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/layout/activity_main_badges.xml" value="0.3625" />
@@ -22,6 +28,7 @@
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_building_manager.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_main.xml" value="0.3625" />
         <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/menu/menu_main_nav.xml" value="0.3625" />
+        <entry key="..\:/Coding/Android/Ipariminimap/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.26510416666666664" />
         <entry key="..\:/Users/jocka/AndroidStudioProjects/Ipariminimap/app/src/main/res/layout/activity_building_manager.xml" value="0.33" />
         <entry key="..\:/Users/jocka/AndroidStudioProjects/Ipariminimap/app/src/main/res/layout/activity_kresz.xml" value="0.2" />
         <entry key="..\:/Users/jocka/AndroidStudioProjects/Ipariminimap/app/src/main/res/layout/activity_main.xml" value="0.2" />

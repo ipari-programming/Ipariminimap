@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     //#region Home
 
     private fun runServiceIfAllowed() {
-        if (mainSwitchService.isChecked) {
+        if (Prefs.getIsServiceAllowed()) {
             ContextCompat.startForegroundService(this, Intent(this, RingService::class.java))
         }
         else {

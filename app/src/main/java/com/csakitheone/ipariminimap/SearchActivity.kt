@@ -46,7 +46,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEdit.addTextChangedListener {
             searchLayoutRooms.removeAllViews()
-            if (it.isNullOrBlank() || it.length < 2) return@addTextChangedListener
+            if (it.isNullOrBlank()) return@addTextChangedListener
             
             searchCardImage.visibility = View.GONE
             searchScroll.visibility = View.VISIBLE
