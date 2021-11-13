@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     "Rendszer követése" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     "Világos téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
                     "Sötét téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
-                    "Dinamikus színek" -> {
+                    "Dinamikus színek beállítása" -> {
                         MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle("Dinamikus színek")
                             .setMessage("Android 12-től kezve az alkalmazások követhetik a háttered színeit. A változtatások csak újraindítás után lépnek életbe.")
@@ -142,6 +142,15 @@ class MainActivity : AppCompatActivity() {
     private fun refreshLinks() {
         DB.getLinks { links ->
             mainLayoutLinks.removeAllViews()
+
+            if (links.isEmpty()) {
+                mainLayoutLinks.addView(TextView(this).apply {
+                    text = "Nem sikerült betölteni a linkeket. Ha nincs net akkor amúgy sem tudnád használni."
+                    setPadding(16.toPx.toInt())
+                })
+                return@getLinks
+            }
+
             for (pair in links) {
                 mainLayoutLinks.addView(
                     MaterialButton(this, null, R.attr.styleTextButton).apply {
@@ -251,8 +260,8 @@ class MainActivity : AppCompatActivity() {
         fun createCell(row: TableRow, content: String) {
             TextView(this).apply {
                 text = content
-                setPadding(8.toPx.toInt())
-                gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                setPadding(6.toPx.toInt())
+                gravity = Gravity.CENTER
                 row.addView(this)
                 (layoutParams as TableRow.LayoutParams).apply {
                     width = TableRow.LayoutParams.MATCH_PARENT

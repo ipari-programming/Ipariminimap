@@ -46,18 +46,19 @@ class Task() {
     fun createLayout(activity: Activity) : View {
         val l = activity.layoutInflater.inflate(R.layout.layout_task, null, false)
 
-        l.taskCheck.text = "$condition $action $data"
-        l.taskCheck.isChecked = state
+        l.taskSwitch.text = "$condition $action $data"
+        l.taskSwitch.isChecked = state
         l.taskSpinnerCondition.setSelection(conditionPos)
         l.taskSpinnerAction.setSelection(actionPos)
         l.taskEditData.text = SpannableStringBuilder(data)
 
-        l.taskCheck.setOnClickListener {
-            state = l.taskCheck.isChecked
+        l.taskSwitch.setOnClickListener {
+            state = l.taskSwitch.isChecked
             modify()
         }
         l.taskBtnEdit.setOnClickListener {
             l.taskLayoutEdit.visibility = if (l.taskLayoutEdit.visibility == View.GONE) View.VISIBLE else View.GONE
+            l.taskBtnRemove.visibility = l.taskLayoutEdit.visibility
             l.taskBtnEdit.setImageDrawable(ContextCompat.getDrawable(activity, if (l.taskLayoutEdit.visibility == View.VISIBLE) R.drawable.ic_done else R.drawable.ic_edit))
             modify()
         }
@@ -65,7 +66,7 @@ class Task() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 condition = activity.resources.getStringArray(R.array.task_conditions)[position]
                 conditionPos = position
-                l.taskCheck.text = "$condition $action $data"
+                l.taskSwitch.text = "$condition $action $data"
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
@@ -73,13 +74,13 @@ class Task() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 action = activity.resources.getStringArray(R.array.task_actions)[position]
                 actionPos = position
-                l.taskCheck.text = "$condition $action $data"
+                l.taskSwitch.text = "$condition $action $data"
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
         l.taskEditData.addTextChangedListener {
             data = it.toString()
-            l.taskCheck.text = "$condition $action $data"
+            l.taskSwitch.text = "$condition $action $data"
         }
 
         return l

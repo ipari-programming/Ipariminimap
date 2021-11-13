@@ -232,7 +232,7 @@ class BuildingManagerActivity : AppCompatActivity() {
                 setOnMenuItemClickListener {
                     when (it.title) {
                         "Mentés" -> saveItem()
-                        "Visszalépés mentés nélkül" -> refreshList()
+                        "Elvetés" -> refreshList()
                         "Törlés" -> deleteItem()
                         else -> return@setOnMenuItemClickListener false
                     }

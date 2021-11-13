@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
-            android:paddingBottom="128dp">
+            android:paddingBottom="256dp">
 
             <include
                 android:id="@+id/mainActivityHome"

@@ -15,7 +15,7 @@
                 android:title="Sötét téma" />
             <item
                 android:icon="@drawable/ic_color_lens"
-                android:title="Dinamikus színek" />
+                android:title="Dinamikus színek beállítása" />
         </menu>
     </item>
 </menu>

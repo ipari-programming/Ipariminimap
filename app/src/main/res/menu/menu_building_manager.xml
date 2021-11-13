@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Mentés" />
-    <item android:title="Visszalépés mentés nélkül" />
+    <item android:title="Elvetés" />
     <item android:title="Törlés" />
 </menu>
