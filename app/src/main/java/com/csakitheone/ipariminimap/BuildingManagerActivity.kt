@@ -27,6 +27,14 @@ class BuildingManagerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_building_manager)
 
         if (!Prefs.getIsAdmin()) finish()
+
+        buildingSeekPlaceLevel.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) { }
+            override fun onStartTrackingTouch(p0: SeekBar?) { }
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                Toast.makeText(this@BuildingManagerActivity, p0?.progress.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onResume() {
@@ -141,6 +149,7 @@ class BuildingManagerActivity : AppCompatActivity() {
             "place" -> {
                 val place = Data.getAllPlaces().find { r -> r.name == name } ?: Data.Place("")
                 buildingEditPlaceName.text = SpannableStringBuilder(place.name)
+                buildingSeekPlaceLevel.progress = place.level
                 checkRadio(buildingGroupPlaceBuilding, Data.buildings.indexOfFirst { r -> r.places.contains(place) })
                 place.destinations.map { checkChip(buildingGroupPlaceDestinations, Data.getAllPlaces().indexOfFirst { r -> r.name == it }) }
                 buildingEditPlaceHelp.text = SpannableStringBuilder(place.help)
@@ -167,7 +176,24 @@ class BuildingManagerActivity : AppCompatActivity() {
                 Data.buildings.add(building)
             }
             "place" -> {
+                val buildingOld = Data.buildings.find { r -> r.places.any { place -> place.name == selectedItemName } }
+                val building = Data.buildings.find { r -> r.name == buildingGroupPlaceBuilding.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
 
+                val place = Data.getAllPlaces().find { r -> r.name == selectedItemName } ?: Data.Place("")
+
+                val destinations = mutableListOf<String>()
+                for (chip in buildingGroupPlaceDestinations.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
+                    destinations.add(chip.text.toString())
+                }
+
+                place.apply {
+                    name = buildingEditPlaceName.text.toString()
+                    this.destinations = destinations
+                    level = buildingSeekPlaceLevel.progress
+                    help = buildingEditPlaceHelp.text.toString()
+                }
+                buildingOld?.places?.removeAll { r -> r.name == selectedItemName }
+                building?.places?.add(place)
             }
             "room" -> {
                 val placeOld = Data.getAllPlaces().find { r -> r.rooms.any { room -> room.id == selectedItemName } }
