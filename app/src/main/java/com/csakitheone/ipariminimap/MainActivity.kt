@@ -212,17 +212,20 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Gyakori kérdések")
             .setMessage(
                 "Barátomnak iPhone-ja van. Ő le tudja tölteni az appot?\n\n" +
-                        "Sajnos nem. 😕 Egy Apple fejlesztői fiók elég drága havidíjjal rendelkezik. " +
-                        "Ezen kívül iOS fejlesztésben sincs még tapasztalatom.\n\n" +
+                        "Sajnos nem. Egy Apple fejlesztői fiók elég drága havidíjjal rendelkezik és " +
+                        "iOS fejlesztésben sincs még tapasztalatom.\n\n" +
                         "Barátomnak Huawei telefonja van. Ő honnan tudja megszerezni az appot?\n\n" +
                         "Ha nála nem elérhető a Play áruház akkor APK formájában tudja beszerezni valakitől." +
-                        " Írjon nekem vagy valaki csomagoljon egy APK-t és küldje el neki, hogy tudja " +
-                        "sideload-olni. Nyilván így nem fog frissülni, de legalább meglesz.\n\n" +
-                        "Miért van reklám az appban? Kapsz érte valamit?\n\n" +
-                        "Nagyon sok munka van az app fejlesztéssel és nem szeretnék senkitől pénzt kérni. " +
-                        "Ezért döntöttem a reklámok mellett. Nyilván nem akarlak idegesíteni titeket, én " +
-                        "sem szeretem a reklámokat, de szerintem így a legjobb mindenkinek.Viszont ne " +
-                        "gondoljatok nagy dolgokra, jobb napokon kb. 20Ft-ot kapok maximum."
+                        " Írjon nekem vagy valaki küldje el neki, hogy tudja sideload-olni. " +
+                        "Így nem fog frissülni, de legalább meglesz.\n\n" +
+                        "Miért van reklám az appban?\n\n" +
+                        "Sok munka van az app fejlesztéssel és nem szeretnék pénzt kérni. " +
+                        "Nyilván nem akarlak idegesíteni titeket, én sem szeretem a reklámokat, " +
+                        "de szerintem így a legjobb mindenkinek.\n\n" +
+                        "Gépen / laptopon megy az app?\n\n" +
+                        "Alapból nem. Win11-en csak olyan alkalmazások mennek, amikhez nem kellenek " +
+                        "a Google Play szolgáltatások. Ennek az appnak az adatbázis és reklámok " +
+                        "miatt kell. Viszont egy hack-elt WSA-val talán megy, még nem teszteltem."
             )
             .create().show()
     }
