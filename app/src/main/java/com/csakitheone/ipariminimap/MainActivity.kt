@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         mainSwitchService.isChecked = Prefs.getIsServiceAllowed()
         runServiceIfAllowed()
 
+        mainBtnSupport.text = "Támogatás videóval (${Prefs.getAdCount()})"
+
         refreshTasks()
         refreshBadges()
 

@@ -1,16 +1,12 @@
 package com.csakitheone.ipariminimap
 
-import android.app.Activity
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.NonNull
-import androidx.preference.PreferenceManager
+import com.csakitheone.ipariminimap.data.Prefs
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
@@ -18,15 +14,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_reward_ad.*
 
 class RewardAdActivity : AppCompatActivity() {
-    lateinit var prefs: SharedPreferences
     var mainRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reward_ad)
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val adCount = prefs.getInt("mainRewardedAd.watchCount", 0)
+        val adCount = Prefs.getAdCount()
 
         if (adCount < 10) rewardAdText.text = "${rewardAdText.text}\nKövetkező kitűzőig: ${10 - adCount}"
         else if (adCount < 100) rewardAdText.text = "${rewardAdText.text}\nKövetkező kitűzőig: ${100 - adCount}"
@@ -55,12 +49,10 @@ class RewardAdActivity : AppCompatActivity() {
             return
         }
         mainRewardedAd!!.show(this) {
-            prefs.edit().apply {
-                putInt("mainRewardedAd.watchCount", prefs.getInt("mainRewardedAd.watchCount", 0) + 1)
-                apply()
-            }
-            if (prefs.getInt("mainRewardedAd.watchCount", 0) > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
-            if (prefs.getInt("mainRewardedAd.watchCount", 0) > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
+            Prefs.increaseAdCount()
+            val adCount = Prefs.getAdCount()
+            if (adCount > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
+            if (adCount > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
 
             finish()
         }

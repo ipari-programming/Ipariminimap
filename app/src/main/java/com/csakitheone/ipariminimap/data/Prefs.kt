@@ -26,34 +26,24 @@ class Prefs {
             }
         }
 
-        fun getIsUsingDynamicColors(): Boolean {
-            return prefs.getBoolean("is_using_dynamic_colors", true)
-        }
+        fun getIsUsingDynamicColors(): Boolean = prefs.getBoolean("is_using_dynamic_colors", true)
+        fun setIsUsingDynamicColors(value: Boolean) = prefs.edit()
+            .putBoolean("is_using_dynamic_colors", value).apply()
 
-        fun setIsUsingDynamicColors(value: Boolean) {
-            prefs.edit().putBoolean("is_using_dynamic_colors", value).apply()
-        }
+        fun getAdCount(): Int = prefs.getInt("mainRewardedAd.watchCount", 0)
+        fun increaseAdCount() = prefs.edit()
+            .putInt("mainRewardedAd.watchCount", getAdCount() + 1).apply()
 
-        fun getIsServiceAllowed(): Boolean {
-            return prefs.getBoolean("is_service_allowed", false)
-        }
+        fun getIsServiceAllowed(): Boolean = prefs.getBoolean("is_service_allowed", false)
+        fun setIsServiceAllowed(value: Boolean) = prefs.edit()
+            .putBoolean("is_service_allowed", value).apply()
 
-        fun setIsServiceAllowed(value: Boolean) {
-            prefs.edit().putBoolean("is_service_allowed", value).apply()
-        }
+        fun getTasks(): MutableList<Task> = prefs.getStringSet("tasks", setOf())
+            ?.map { r -> Task(r) }?.toMutableList() ?: mutableListOf()
+        fun setTasks(tasks: List<Task>) = prefs.edit()
+            .putStringSet("tasks", tasks.map { r -> r.toString() }.toSet()).apply()
 
-        fun getTasks(): MutableList<Task> {
-            return prefs.getStringSet("tasks", setOf())?.map { r -> Task(r) }?.toMutableList() ?: mutableListOf()
-        }
-
-        fun setTasks(tasks: List<Task>) {
-            prefs.edit().putStringSet("tasks", tasks.map { r -> r.toString() }.toSet()).apply()
-        }
-
-        fun getIsAdmin(): Boolean {
-            return prefs.getBoolean("is_admin", false)
-        }
-
+        fun getIsAdmin(): Boolean = prefs.getBoolean("is_admin", false)
         fun setIsAdmin(value: Boolean, password: String = ""): Boolean {
             if (value && password != Rings.getCurrentLesson()) return false
             prefs.edit().putBoolean("is_admin", value).apply()
