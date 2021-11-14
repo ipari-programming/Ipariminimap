@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:hint="Terem szám, hely, címke"
+                android:hint="Keress teremre, helyre, címkére, linkre"
                 android:inputType="text" />
 
             <ImageButton
@@ -83,6 +83,21 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/searchTextLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Linkek"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <LinearLayout
+                android:id="@+id/searchLayoutLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+
+            <TextView
+                android:id="@+id/searchTextRooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"

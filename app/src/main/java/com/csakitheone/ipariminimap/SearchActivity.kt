@@ -1,6 +1,7 @@
 package com.csakitheone.ipariminimap
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -45,28 +46,52 @@ class SearchActivity : AppCompatActivity() {
         searchEdit.isEnabled = true
 
         searchEdit.addTextChangedListener {
-            searchLayoutRooms.removeAllViews()
-            if (it.isNullOrBlank()) return@addTextChangedListener
-            
             searchCardImage.visibility = View.GONE
             searchScroll.visibility = View.VISIBLE
 
-            for (room in Data.getAllRooms().filter { r -> r.toString().contains(searchEdit.text, true) }) {
+            searchLayoutLinks.removeAllViews()
+            searchTextLinks.visibility = View.GONE
+            searchLayoutRooms.removeAllViews()
+            searchTextRooms.visibility = View.GONE
+            if (it.isNullOrBlank()) return@addTextChangedListener
+
+            //#region Links
+            Data.links.filter { r -> r.toString().contains(searchEdit.text, true) }.map { link ->
+                searchTextLinks.visibility = View.VISIBLE
+                val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
+                v.searchResultTitle.text = link.key
+                v.searchResultDesc.text = link.value
+                v.setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
+                }
+                searchLayoutLinks.addView(v)
+            }
+            //#endregion
+
+            //#region Rooms
+            Data.getAllRooms().filter { r -> "$r ${r.tags.joinToString()}".contains(searchEdit.text, true) }.map { room ->
+                searchTextRooms.visibility = View.VISIBLE
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
                 v.searchResultTitle.text = room.toString()
                 v.searchResultDesc.text = room.tags.joinToString()
-                v.setOnClickListener { 
+                v.setOnClickListener {
                     startActivity(Intent(this, RoomActivity::class.java).apply { putExtra("room_sign", room.id) })
                 }
                 searchLayoutRooms.addView(v)
             }
+            //#endregion
         }
 
-        if (!intent.getStringExtra(EXTRA_QUERY).isNullOrEmpty()) searchEdit.text = SpannableStringBuilder(intent.getStringExtra(EXTRA_QUERY))
+        if (!intent.getStringExtra(EXTRA_QUERY).isNullOrEmpty()) {
+            searchEdit.text = SpannableStringBuilder(intent.getStringExtra(EXTRA_QUERY))
+            return
+        }
 
         searchEdit.requestFocus()
-        val imm: InputMethodManager = getSystemService(InputMethodManager::class.java)
-        imm.showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
+        searchEdit.postDelayed({
+            val imm: InputMethodManager = getSystemService(InputMethodManager::class.java)
+            imm.showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
+        }, 300)
     }
 
     fun onBtnCancelClick(view: View) {
