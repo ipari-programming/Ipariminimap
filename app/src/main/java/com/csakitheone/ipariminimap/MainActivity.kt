@@ -2,12 +2,11 @@ package com.csakitheone.ipariminimap
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.TypedArray
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.util.TypedValue
 import android.view.Gravity
@@ -28,7 +27,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,9 +37,14 @@ import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_map.*
 import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
 import kotlinx.android.synthetic.main.layout_task.view.*
+import java.util.*
+import kotlin.concurrent.timerTask
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
+    private var timerBell = Timer()
+    private var tasks = mutableListOf<Task>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,10 +79,20 @@ class MainActivity : AppCompatActivity() {
         mainSwitchService.isChecked = Prefs.getIsServiceAllowed()
         runServiceIfAllowed()
 
-        initBellTable()
-
         refreshTasks()
         refreshBadges()
+
+        timerBell = Timer("timerBell").apply {
+            schedule(timerTask {
+                runOnUiThread { refreshBell() }
+            }, 0L, 1000L)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        timerBell.cancel()
     }
 
     private fun initAds() {
@@ -242,7 +255,26 @@ class MainActivity : AppCompatActivity() {
 
     //#region Bell
 
-    private fun initBellTable() {
+    private fun createCell(row: TableRow, content: String, doHighlight: Boolean = false) {
+        TextView(this).apply {
+            text = content
+            setPadding(8.toPx.toInt())
+            gravity = Gravity.CENTER
+            row.addView(this)
+            (layoutParams as TableRow.LayoutParams).apply {
+                width = TableRow.LayoutParams.MATCH_PARENT
+                weight = 1f
+            }
+            if (doHighlight) setTextColor(Color.WHITE)
+        }
+    }
+
+    private fun refreshBell() {
+        mainTextBellTitle.text = if (mainBellTable.visibility == View.GONE)
+            "Csengetési rend • ${Rings.getCurrentLesson()}"
+        else
+            "Csengetési rend • ${Rings.getTimeUntilNext()}"
+
         mainBellTable.removeAllViews()
         val timetable = """
             0. óra | 07:00 | 07:40
@@ -250,44 +282,30 @@ class MainActivity : AppCompatActivity() {
             2. óra | 08:40 | 09:25
             3. óra | 09:35 | 10:20
             4. óra | 10:30 | 11:15
-            Nagyszünet | 11:15 | 11:30
             5. óra | 11:30 | 12:15
             6. óra | 12:25 | 13:10
             7. óra | 13:20 | 14:05
             8. óra | 14:15 | 15:00
         """.trimIndent()
 
-        fun createCell(row: TableRow, content: String) {
-            TextView(this).apply {
-                text = content
-                setPadding(6.toPx.toInt())
-                gravity = Gravity.CENTER
-                row.addView(this)
-                (layoutParams as TableRow.LayoutParams).apply {
-                    width = TableRow.LayoutParams.MATCH_PARENT
-                    weight = 1f
-                }
-            }
-        }
-
         for (line in timetable.lines()) {
             val row = TableRow(this)
             mainBellTable.addView(row)
 
             val data = line.split("|").map { r -> r.trim() }
-            createCell(row, data[0])
-            createCell(row, data[1])
-            createCell(row, data[2])
+            val isRowCurrentTime = data[0][0].digitToIntOrNull() ?: -2 == Rings.getCurrentLessonValue().roundToInt()
 
-            if (data[0][0].digitToIntOrNull() ?: -2 == Rings.getCurrentLessonValue().roundToInt()) {
+            createCell(row, data[0], isRowCurrentTime)
+            createCell(row, data[1], isRowCurrentTime)
+            createCell(row, data[2], isRowCurrentTime)
+
+            if (isRowCurrentTime) {
                 val colorAttribute = TypedValue()
                 theme.resolveAttribute(R.attr.colorPrimaryDark, colorAttribute, true)
                 row.setBackgroundColor(getColor(colorAttribute.resourceId))
             }
         }
     }
-
-    private var tasks = mutableListOf<Task>()
 
     private fun refreshTasks() {
         tasks = Prefs.getTasks()
@@ -313,6 +331,10 @@ class MainActivity : AppCompatActivity() {
             Badge.userAdd(this, Badge.BADGE_JOTANULO.toString())
             refreshBadges()
         }
+    }
+
+    fun onCardBellClick(view: View) {
+        mainBellTable.visibility = if (mainBellTable.visibility == View.GONE) View.VISIBLE else View.GONE
     }
 
     fun onBtnNewTaskClick(view: View) {

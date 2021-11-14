@@ -68,8 +68,7 @@
                         android:layout_weight="0"
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://m.me/CsakiTheOne"
-                        app:srcCompat="@drawable/ic_messenger"
-                        app:tint="?attr/colorPrimary" />
+                        app:srcCompat="@drawable/ic_messenger" />
 
                     <ImageButton
                         style="@style/ImageButton"
@@ -78,8 +77,7 @@
                         android:layout_weight="0"
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://www.instagram.com/nagyceg/"
-                        app:srcCompat="@drawable/ic_instagram"
-                        app:tint="?attr/colorPrimary" />
+                        app:srcCompat="@drawable/ic_instagram" />
 
                     <ImageButton
                         style="@style/ImageButton"
@@ -88,8 +86,7 @@
                         android:layout_weight="0"
                         android:onClick="onBtnOpenLinkClick"
                         android:tag="https://play.google.com/store/apps/dev?id=5554124272482096869"
-                        app:srcCompat="@drawable/ic_android"
-                        app:tint="?attr/colorPrimary" />
+                        app:srcCompat="@drawable/ic_android" />
 
                     <Button
                         android:id="@+id/mainBtnSupport"

@@ -33,7 +33,7 @@ class Rings {
             val hs = if (h < 10) "0$h" else h.toString()
             val ms = if (m < 10) "0$m" else m.toString()
             val ss = if (s < 10) "0$s" else s.toString()
-            return "$hs:$ms:$ss"
+            return if (hs == "00") "$ms:$ss" else "$hs:$ms:$ss"
         }
         fun calToInt(c: Calendar) : Int = c[Calendar.HOUR_OF_DAY] * 3600 + c[Calendar.MINUTE] * 60 + c[Calendar.SECOND]
 
@@ -58,7 +58,7 @@ class Rings {
 
             val index = times.values.indexOfFirst { r -> now < r } - 1
             var value = times.keys.elementAt(index)[0].digitToInt().toFloat()
-            if (times.keys.elementAt(index).contains("szünet")) value += .1f
+            if (times.keys.elementAt(index).contains("szünet")) value += .9f
             return value
         }
 

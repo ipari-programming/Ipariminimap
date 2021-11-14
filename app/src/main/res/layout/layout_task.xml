@@ -30,8 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/ic_edit"
-                app:tint="?attr/colorPrimary" />
+                app:srcCompat="@drawable/ic_edit" />
 
             <ImageButton
                 android:id="@+id/taskBtnRemove"
@@ -41,7 +40,6 @@
                 android:layout_weight="0"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_close"
-                app:tint="?attr/colorPrimary"
                 tools:visibility="visible" />
         </LinearLayout>
 
