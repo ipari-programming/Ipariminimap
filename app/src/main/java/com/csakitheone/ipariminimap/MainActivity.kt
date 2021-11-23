@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity() {
 
             if (isRowCurrentTime) {
                 val colorAttribute = TypedValue()
-                theme.resolveAttribute(R.attr.colorPrimaryDark, colorAttribute, true)
+                theme.resolveAttribute(android.R.attr.colorPrimaryDark, colorAttribute, true)
                 row.setBackgroundColor(getColor(colorAttribute.resourceId))
             }
         }
