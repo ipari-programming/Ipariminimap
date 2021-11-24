@@ -17,10 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
-import com.csakitheone.ipariminimap.data.DB
-import com.csakitheone.ipariminimap.data.Data
-import com.csakitheone.ipariminimap.data.Prefs
-import com.csakitheone.ipariminimap.data.Web
+import com.csakitheone.ipariminimap.data.*
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.helper.Rings
 import com.csakitheone.ipariminimap.services.RingService
@@ -95,6 +92,8 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread { refreshBell() }
             }, 0L, 1000L)
         }
+
+        mainBannerAd.visibility = if (Temp.isAdWatched) View.GONE else View.VISIBLE
     }
 
     override fun onPause() {

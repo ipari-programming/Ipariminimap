@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.csakitheone.ipariminimap.data.Prefs
+import com.csakitheone.ipariminimap.data.Temp
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
@@ -53,6 +54,8 @@ class RewardAdActivity : AppCompatActivity() {
             val adCount = Prefs.getAdCount()
             if (adCount > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
             if (adCount > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
+
+            Temp.isAdWatched = true
 
             finish()
         }
