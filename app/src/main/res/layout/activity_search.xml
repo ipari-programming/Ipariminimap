@@ -89,7 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:onClick="onBtnDownloadStudentsClick"
-                android:text="Keresés diákok között is" />
+                android:text="Keresés diákok között is"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/searchTextLinks"
