@@ -74,6 +74,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         refreshLinks()
+
+        refreshCalendar()
     }
 
     override fun onResume() {
@@ -203,6 +205,20 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 )
+            }
+        }
+    }
+
+    private fun refreshCalendar() {
+        mainLayoutEvents.removeAllViews()
+        Web.getCalendar {
+            runOnUiThread {
+                it.map { event ->
+                    mainLayoutEvents.addView(TextView(this).apply {
+                        text = event.toString()
+                        setPadding(16.toPx.toInt())
+                    })
+                }
             }
         }
     }
