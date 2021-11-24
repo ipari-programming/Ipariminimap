@@ -18,7 +18,7 @@ class Web {
             students = mutableListOf()
             GlobalScope.launch(Dispatchers.IO) {
                 for (grade in 9..13) {
-                    for (major in listOf("A", "B", "C", "D", "E", "f", "F", "G", "ny")) {
+                    for (major in listOf("A", "B", "C", "D", "E", "F", "G", "NY")) {
                         val temp = mutableListOf<Student>()
                         val gradeMajor = "${if (grade == 9) "09" else grade}$major"
                         try {
@@ -29,7 +29,7 @@ class Web {
                                 .replace("<li>|</li>".toRegex(), "")
                                 .split("\n")
                                 .filter { r -> r.trim().isNotBlank() }
-                                .map { r -> temp.add(Student(r.trim(), "$grade.${major.toUpperCase()}")) }
+                                .map { r -> temp.add(Student(r.trim(), "$grade.$major")) }
                             students.addAll(temp)
                         }
                         catch (ex: Exception) { }
