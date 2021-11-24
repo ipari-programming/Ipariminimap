@@ -20,6 +20,7 @@ import androidx.core.view.setPadding
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Prefs
+import com.csakitheone.ipariminimap.data.Web
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.helper.Rings
 import com.csakitheone.ipariminimap.services.RingService
@@ -71,6 +72,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         refreshLinks()
+
+        Web.getStudents {
+
+        }
     }
 
     override fun onResume() {
