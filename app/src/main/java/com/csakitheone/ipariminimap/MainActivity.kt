@@ -65,6 +65,11 @@ class MainActivity : AppCompatActivity() {
                 "Adatbázis" -> {
                     mainActivityDatabase.visibility = View.VISIBLE
                     updateDBStats()
+                    Web.getStudents {
+                        runOnUiThread {
+                            mainTextWebStats.text = "Diákok: ${it.size}"
+                        }
+                    }
                 }
                 else -> return@setOnItemSelectedListener false
             }
@@ -72,10 +77,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         refreshLinks()
-
-        Web.getStudents {
-
-        }
     }
 
     override fun onResume() {

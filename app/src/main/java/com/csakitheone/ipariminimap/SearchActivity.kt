@@ -1,5 +1,6 @@
 package com.csakitheone.ipariminimap
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,8 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
+import com.csakitheone.ipariminimap.data.Web
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.layout_search_result.view.*
 
@@ -31,6 +34,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun checkAndDownloadData() {
+        checkStudents()
         if (!Data.getIsLoaded()) {
             DB.downloadBuildingData {
                 if (it) initSearch()
@@ -42,8 +46,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkStudents() {
+        if (Web.getStudentsNoDownload().isEmpty()) {
+            searchBtnDownloadStudents.visibility = View.VISIBLE
+        }
+    }
+
     private fun initSearch() {
         searchEdit.isEnabled = true
+        searchEdit.hint = "Keress teremre, linkre, diákra"
 
         searchEdit.addTextChangedListener {
             searchCardImage.visibility = View.GONE
@@ -53,7 +64,9 @@ class SearchActivity : AppCompatActivity() {
             searchTextLinks.visibility = View.GONE
             searchLayoutRooms.removeAllViews()
             searchTextRooms.visibility = View.GONE
-            if (it.isNullOrBlank()) return@addTextChangedListener
+            searchLayoutStudents.removeAllViews()
+            searchTextStudents.visibility = View.GONE
+            if (it?.length ?: 0 < 3) return@addTextChangedListener
 
             //#region Links
             Data.links.filter { r -> r.toString().contains(searchEdit.text, true) }.map { link ->
@@ -80,6 +93,26 @@ class SearchActivity : AppCompatActivity() {
                 searchLayoutRooms.addView(v)
             }
             //#endregion
+
+            //#region Students
+            Web.getStudentsNoDownload().filter { r -> r.toString().contains(searchEdit.text, true) }.map { student ->
+                searchTextStudents.visibility = View.VISIBLE
+                val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
+                v.searchResultTitle.text = student.name
+                v.searchResultDesc.text = student.gradeMajor
+                v.setOnClickListener {
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(student.name)
+                        .setMessage(student.gradeMajor)
+                        .setPositiveButton("Osztálytársak mutatása") { _: DialogInterface, _: Int ->
+                            searchEdit.text = SpannableStringBuilder(student.gradeMajor)
+                        }
+                        .setNeutralButton("Bezárás")  { _: DialogInterface, _: Int -> }
+                        .create().show()
+                }
+                searchLayoutStudents.addView(v)
+            }
+            //#endregion
         }
 
         if (!intent.getStringExtra(EXTRA_QUERY).isNullOrEmpty()) {
@@ -97,5 +130,16 @@ class SearchActivity : AppCompatActivity() {
     fun onBtnCancelClick(view: View) {
         if (searchEdit.text.isNullOrBlank()) finish()
         else searchEdit.text.clear()
+    }
+
+    fun onBtnDownloadStudentsClick(view: View) {
+        searchBtnDownloadStudents.isEnabled = false
+        searchBtnDownloadStudents.text = "Diákok lekérése..."
+        Web.getStudents {
+            runOnUiThread {
+                searchBtnDownloadStudents.visibility = View.GONE
+                initSearch()
+            }
+        }
     }
 }

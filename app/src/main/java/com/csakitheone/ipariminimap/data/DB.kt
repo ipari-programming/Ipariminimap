@@ -7,8 +7,10 @@ class DB {
     companion object {
         var databaseVersion: String = "1"
 
-        private val rtdb = FirebaseDatabase.getInstance().reference
-        private val db = rtdb.child("databases/$databaseVersion")
+        private val rtdb = FirebaseDatabase.getInstance().apply {
+            setPersistenceEnabled(true)
+        }
+        private val db = rtdb.reference.child("databases/$databaseVersion")
 
         fun getLinks(callback: (Map<String, String>) -> Unit) {
             db.child("links").get().addOnCompleteListener {
@@ -29,6 +31,7 @@ class DB {
         }
 
         fun downloadBuildingData(callback: (Boolean) -> Unit) {
+            db.child("buildings").keepSynced(true)
             db.get().addOnCompleteListener {
                 if (!it.isSuccessful || it.result == null) {
                     callback(false)

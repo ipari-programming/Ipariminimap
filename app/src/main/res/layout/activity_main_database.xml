@@ -14,12 +14,27 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
 
-        <TextView
-            android:id="@+id/mainTextDatabaseStats"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Nem sikerült csatlakozni az adatbázishoz." />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mainTextDatabaseStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Csatlakozás az adatbázishoz..." />
+
+            <TextView
+                android:id="@+id/mainTextWebStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Adatok lekérése a suli weboldaláról..." />
+
+        </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout

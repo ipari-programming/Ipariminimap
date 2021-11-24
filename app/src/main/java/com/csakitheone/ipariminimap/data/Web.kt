@@ -4,34 +4,44 @@ import kotlinx.coroutines.*
 import java.net.URL
 
 class Web {
-    data class Student(var name: String, var gradeMajor: String)
+    data class Student(var name: String, var gradeMajor: String) {
+        override fun toString(): String {
+            return "$name - $gradeMajor"
+        }
+    }
 
     companion object {
-        private var students: List<Student> = listOf()
+        private var students: MutableList<Student> = mutableListOf()
 
         @DelicateCoroutinesApi
         private fun downloadStudents(callback: (Boolean) -> Unit) {
-            val temp = mutableListOf<Student>()
+            students = mutableListOf()
             GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val raw = URL("https://www.ipariszakkozep.hu/09A")
-                        .readText()
-                        .split("<ol class=\"tk2\">")[1]
-                        .split("</ol>")[0]
-                        .replace("<li>|</li>".toRegex(), "")
-                        .split("\n")
-                        .filter { r -> r.trim().isNotBlank() }
-                        .map { r -> temp.add(Student(r.trim(), "9.A")) }
-                    students = temp
-                    callback(true)
+                for (grade in 9..13) {
+                    for (major in listOf("A", "B", "C", "D", "E", "f", "F", "G", "ny")) {
+                        val temp = mutableListOf<Student>()
+                        val gradeMajor = "${if (grade == 9) "09" else grade}$major"
+                        try {
+                            URL("https://www.ipariszakkozep.hu/$gradeMajor")
+                                .readText()
+                                .split("<ol class=\"tk2\">")[1]
+                                .split("</ol>")[0]
+                                .replace("<li>|</li>".toRegex(), "")
+                                .split("\n")
+                                .filter { r -> r.trim().isNotBlank() }
+                                .map { r -> temp.add(Student(r.trim(), "$grade.${major.toUpperCase()}")) }
+                            students.addAll(temp)
+                        }
+                        catch (ex: Exception) { }
+                    }
                 }
-                catch (ex: Exception) {
-                    callback(false)
-                }
+                callback(students.isNotEmpty())
             }
         }
 
-        fun getStudents(callback: (List<Student>) -> Unit) {
+        fun getStudentsNoDownload(): MutableList<Student> = students
+
+        fun getStudents(callback: (MutableList<Student>) -> Unit) {
             if (students.isEmpty()) {
                 downloadStudents {
                     callback(students)
