@@ -17,7 +17,7 @@ class Web {
     }
 
     companion object {
-        //#region Calendar
+        /*/#region Calendar
         private var events: MutableList<Event> = mutableListOf()
 
         @DelicateCoroutinesApi
@@ -59,7 +59,7 @@ class Web {
             }
             else callback(events)
         }
-        //#endregion
+        //#endregion*/
 
         //#region Students
         private var students: MutableList<Student> = mutableListOf()
