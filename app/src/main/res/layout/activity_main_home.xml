@@ -8,21 +8,6 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        style="?attr/materialCardViewFilledStyle">
-
-        <Switch
-            android:id="@+id/mainSwitchService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onSwitchServiceClick"
-            android:padding="16dp"
-            android:text="Futtatás a háttérbeen\n(Android leállíthatja)" />
-    </com.google.android.material.card.MaterialCardView>
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -134,6 +119,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Kitűzők"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <LinearLayout
+                android:id="@+id/mainLayoutBadges"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onBtnGetBadgeClick"
+                android:text="Kitűzők beszerzése" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

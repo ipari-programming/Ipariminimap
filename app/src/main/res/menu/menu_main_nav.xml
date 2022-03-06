@@ -15,8 +15,8 @@
         android:title="Csengő"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/ic_done"
-        android:title="Kitűzők"
+        android:icon="@drawable/ic_people"
+        android:title="Diákok"
         app:showAsAction="always" />
     <item
         android:icon="@drawable/ic_storage"

@@ -25,10 +25,11 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main_badges.*
+import kotlinx.android.synthetic.main.activity_main_students.*
 import kotlinx.android.synthetic.main.activity_main_bell.*
 import kotlinx.android.synthetic.main.activity_main_database.*
 import kotlinx.android.synthetic.main.activity_main_home.*
@@ -58,7 +59,26 @@ class MainActivity : AppCompatActivity() {
                 "Főoldal" -> mainActivityHome.visibility = View.VISIBLE
                 "Térkép" -> mainActivityMap.visibility = View.VISIBLE
                 "Csengő" -> mainActivityBell.visibility = View.VISIBLE
-                "Kitűzők" -> mainActivityBadges.visibility = View.VISIBLE
+                "Diákok" -> {
+                    mainActivityStudents.visibility = View.VISIBLE
+                    Web.getStudents {
+                        runOnUiThread {
+                            mainLayoutClasses.removeAllViews()
+                            it.groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
+                                val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
+                                    text = gradeMajor
+                                    setOnClickListener {
+                                        startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
+                                            putExtra(SearchActivity.EXTRA_QUERY, gradeMajor)
+                                        })
+                                    }
+                                }
+                                mainLayoutClasses.addView(btnClass)
+                                btnClass.layoutParams.width = ChipGroup.LayoutParams.WRAP_CONTENT
+                            }
+                        }
+                    }
+                }
                 "Adatbázis" -> {
                     mainActivityDatabase.visibility = View.VISIBLE
                     updateDBStats()

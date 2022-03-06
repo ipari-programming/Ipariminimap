@@ -54,6 +54,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -64,12 +65,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <Switch
+                android:id="@+id/mainSwitchService"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onSwitchServiceClick"
                 android:padding="16dp"
-                android:text="Automatizálás"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:text="Automatizálás" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -91,8 +91,8 @@
                 android:visibility="gone" />
 
             <include
-                android:id="@+id/mainActivityBadges"
-                layout="@layout/activity_main_badges"
+                android:id="@+id/mainActivityStudents"
+                layout="@layout/activity_main_students"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
