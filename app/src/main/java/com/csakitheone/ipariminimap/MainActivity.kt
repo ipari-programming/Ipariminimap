@@ -34,7 +34,6 @@ import kotlinx.android.synthetic.main.activity_main_bell.*
 import kotlinx.android.synthetic.main.activity_main_database.*
 import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_map.*
-import kotlinx.android.synthetic.main.layout_get_badges_dialog.view.*
 import kotlinx.android.synthetic.main.layout_task.view.*
 import java.util.*
 import kotlin.concurrent.timerTask
@@ -105,7 +104,6 @@ class MainActivity : AppCompatActivity() {
         mainBtnSupport.text = "Támogatás videóval (${Prefs.getAdCount()})"
 
         refreshTasks()
-        refreshBadges()
 
         timerBell = Timer("timerBell").apply {
             schedule(timerTask {
@@ -356,11 +354,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveTasks() {
         Prefs.setTasks(tasks)
-        if (tasks.any { r -> r.state && r.condition == "minden óra elején" && r.action == "telefon rezgőre" })
-        {
-            Badge.userAdd(this, Badge.BADGE_JOTANULO.toString())
-            refreshBadges()
-        }
     }
 
     fun onCardBellClick(view: View) {
@@ -371,39 +364,6 @@ class MainActivity : AppCompatActivity() {
         tasks.add(Task())
         saveTasks()
         refreshTasks()
-    }
-
-    //#endregion
-
-    //#region Badges
-
-    private fun refreshBadges() {
-        mainLayoutBadges.removeAllViews()
-        Badge.userGet(this).map { r -> mainLayoutBadges.addView(r.createLayout(this, true) { refreshBadges() }) }
-    }
-
-    fun onBtnGetBadgeClick(view: View) {
-        val getBadges = layoutInflater.inflate(R.layout.layout_get_badges_dialog, null, false)
-        Badge.all.filter { r -> r.isVisible && !Badge.userContains(this, r.id) }.map {
-            getBadges.getbadgesLayout.addView(it.createLayout(this, true))
-        }
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Kitűzők")
-            .setView(getBadges)
-            .setPositiveButton("Kód beváltása") { _: DialogInterface, _: Int ->
-                if (getBadges.getbadgesEdit.text.toString().isNotEmpty() && Badge.all.any { r -> !r.code.isNullOrEmpty() && r.code!!.contains(getBadges.getbadgesEdit.text.toString().toLowerCase()) }) {
-                    Badge.all
-                        .filter { r -> !r.code.isNullOrEmpty() && r.code!!.split('|').contains(getBadges.getbadgesEdit.text.toString().toLowerCase()) }
-                        .map { r -> Badge.userAdd(this, r.toString()) }
-                    Toast.makeText(this, "Kitűzőt szereztél!", Toast.LENGTH_SHORT).show()
-                    refreshBadges()
-                }
-                else {
-                    Toast.makeText(this, "Nincs ilyen kód.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .create().show()
-        refreshBadges()
     }
 
     //#endregion

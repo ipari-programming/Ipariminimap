@@ -52,8 +52,6 @@ class RewardAdActivity : AppCompatActivity() {
         mainRewardedAd!!.show(this) {
             Prefs.increaseAdCount()
             val adCount = Prefs.getAdCount()
-            if (adCount > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
-            if (adCount > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
 
             Temp.isAdWatched = true
 
