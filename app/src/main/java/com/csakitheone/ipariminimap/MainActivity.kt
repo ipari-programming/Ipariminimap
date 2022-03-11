@@ -60,23 +60,7 @@ class MainActivity : AppCompatActivity() {
                 "Csengő" -> mainActivityBell.visibility = View.VISIBLE
                 "Diákok" -> {
                     mainActivityStudents.visibility = View.VISIBLE
-                    Web.getStudents {
-                        runOnUiThread {
-                            mainLayoutClasses.removeAllViews()
-                            it.groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
-                                val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
-                                    text = gradeMajor
-                                    setOnClickListener {
-                                        startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
-                                            putExtra(SearchActivity.EXTRA_QUERY, gradeMajor)
-                                        })
-                                    }
-                                }
-                                mainLayoutClasses.addView(btnClass)
-                                btnClass.layoutParams.width = ChipGroup.LayoutParams.WRAP_CONTENT
-                            }
-                        }
-                    }
+                    initStudents()
                 }
                 "Adatbázis" -> {
                     mainActivityDatabase.visibility = View.VISIBLE
@@ -364,6 +348,48 @@ class MainActivity : AppCompatActivity() {
         tasks.add(Task())
         saveTasks()
         refreshTasks()
+    }
+
+    //#endregion
+
+    //#region Students
+
+    private fun initStudents() {
+        Web.getStudents { students ->
+            runOnUiThread {
+
+                mainProgressStudents.visibility = View.GONE
+
+                Web.getNameDay { name ->
+                    runOnUiThread {
+
+                        val nameCount = students.count { student -> student.name.contains(name) }
+                        mainTextNameday.text = "Mai névnap: $name\n$nameCount diáknak van ma névnapja."
+                        mainTextNameday.setOnClickListener {
+                            startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
+                                putExtra(SearchActivity.EXTRA_QUERY, name)
+                            })
+                        }
+
+                    }
+                }
+
+                mainLayoutClasses.removeAllViews()
+                students.groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
+                    val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
+                        text = gradeMajor
+                        setOnClickListener {
+                            startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
+                                putExtra(SearchActivity.EXTRA_QUERY, gradeMajor)
+                            })
+                        }
+                    }
+                    mainLayoutClasses.addView(btnClass)
+                    btnClass.layoutParams.width = ChipGroup.LayoutParams.WRAP_CONTENT
+                }
+
+            }
+        }
     }
 
     //#endregion
