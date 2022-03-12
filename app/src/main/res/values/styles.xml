@@ -2,20 +2,14 @@
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryContainer">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/colorDark</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryDark</item>
+        <item name="colorSecondaryContainer">@color/colorSecondaryDark</item>
         <item name="colorOnSecondary">@color/colorLight</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
-        <!-- For text input fields -->
-        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
-        <!-- For radio buttons -->
-        <!-- item name="radioButtonStyle">@style/Widget.TipTime.CompoundButton.RadioButton</item-->
-        <!-- For switches -->
-        <!-- item name="switchStyle">@style/Widget.TipTime.CompoundButton.Switch</item-->
 
         <item name="styleTextButton">@style/Widget.Material3.Button.TextButton</item>
     </style>

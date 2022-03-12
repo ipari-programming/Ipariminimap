@@ -18,12 +18,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Főmenü"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                android:onClick="onBtnMercenariesClick"
+                android:text="Mercenaries"
+                app:icon="@drawable/ic_sword_cross"
+                app:iconGravity="textStart" />
 
             <Button
                 style="@style/Widget.Material3.Button.TextButton"
@@ -35,13 +37,6 @@
                 app:iconGravity="textStart" />
 
             <Button
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onBtnAutomateClick"
-                android:text="Automatizálás" />
-
-            <Button
                 android:id="@+id/mainBtnSupport"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
@@ -50,6 +45,13 @@
                 android:text="Támogatás videóval"
                 app:icon="@drawable/ic_favorite"
                 app:iconGravity="textStart" />
+
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onBtnAutomateClick"
+                android:text="Automatizálás" />
 
             <View
                 android:layout_width="match_parent"
@@ -67,48 +69,28 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:onClick="onCardBellClick">
+        android:layout_margin="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/mainTextBellTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/mainTextBellTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawablePadding="8dp"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:text="Csengetési rend"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    app:drawableStartCompat="@drawable/ic_alarm_bell" />
-
-                <ImageView
-                    style="@style/ImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_unfold" />
-            </LinearLayout>
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="Csengetési rend"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:drawableStartCompat="@drawable/ic_alarm_bell" />
 
             <TableLayout
                 android:id="@+id/mainBellTable"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

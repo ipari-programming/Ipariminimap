@@ -182,41 +182,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onBtnExploreKRESZClick(view: View) {
-        startActivity(Intent(this, KreszActivity::class.java))
-    }
-
-    fun onBtnAutomateClick(view: View) {
-        startActivity(Intent(this, TasksActivity::class.java))
-    }
-
-    fun onBtnSupportClick(view: View) {
-        startActivity(Intent(this, RewardAdActivity::class.java))
-    }
-
-    //#endregion
-
-    //#region Bell
-
-    private fun createCell(row: TableRow, content: String, doHighlight: Boolean = false) {
-        TextView(this).apply {
-            text = content
-            setPadding(8.toPx.toInt())
-            gravity = Gravity.CENTER
-            row.addView(this)
-            (layoutParams as TableRow.LayoutParams).apply {
-                width = TableRow.LayoutParams.MATCH_PARENT
-                weight = 1f
-            }
-            if (doHighlight) setTextColor(Color.WHITE)
-        }
-    }
-
     private fun refreshBell() {
-        mainTextBellTitle.text = if (mainBellTable.visibility == View.GONE)
-            "Csengetési rend • ${Rings.getCurrentLesson()}"
-        else
-            "Csengetési rend • ${Rings.getTimeUntilNext()}"
+        mainTextBellTitle.text = "Csengetési rend • ${Rings.getCurrentLesson()} • ${Rings.getTimeUntilNext()}"
 
         mainBellTable.removeAllViews()
         val timetable = """
@@ -230,6 +197,20 @@ class MainActivity : AppCompatActivity() {
             7. óra | 13:20 | 14:05
             8. óra | 14:15 | 15:00
         """.trimIndent()
+
+        fun createCell(row: TableRow, content: String, doHighlight: Boolean = false) {
+            TextView(this).apply {
+                text = content
+                setPadding(8.toPx.toInt())
+                gravity = Gravity.CENTER
+                row.addView(this)
+                (layoutParams as TableRow.LayoutParams).apply {
+                    width = TableRow.LayoutParams.MATCH_PARENT
+                    weight = 1f
+                }
+                if (doHighlight) setTextColor(Color.WHITE)
+            }
+        }
 
         for (line in timetable.lines()) {
             val row = TableRow(this)
@@ -250,8 +231,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onCardBellClick(view: View) {
-        mainBellTable.visibility = if (mainBellTable.visibility == View.GONE) View.VISIBLE else View.GONE
+    fun onBtnMercenariesClick(view: View) {
+        startActivity(Intent(this, MercMainActivity::class.java))
+    }
+
+    fun onBtnExploreKRESZClick(view: View) {
+        startActivity(Intent(this, KreszActivity::class.java))
+    }
+
+    fun onBtnSupportClick(view: View) {
+        startActivity(Intent(this, RewardAdActivity::class.java))
+    }
+
+    fun onBtnAutomateClick(view: View) {
+        startActivity(Intent(this, TasksActivity::class.java))
     }
 
     //#endregion
