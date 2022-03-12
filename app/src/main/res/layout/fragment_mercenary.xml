@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="110dp"
+    android:layout_height="120dp"
+    android:padding="8dp"
+    tools:context=".fragments.MercenaryFragment">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mercFragmentCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        app:contentPadding="4dp">
+
+        <TextView
+            android:id="@+id/mercFragmentTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="13\nCsáktornyai Ádám József\nInfós"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/mercFragmentTextAttack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:text="⚔️2" />
+
+        <TextView
+            android:id="@+id/mercFragmentTextHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:text="20🩸" />
+
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>
