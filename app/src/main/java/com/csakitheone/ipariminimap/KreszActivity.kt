@@ -26,8 +26,6 @@ class KreszActivity : AppCompatActivity() {
         if (kreszRadio4.isChecked) score++
         if (kreszRadio5.isChecked) score++
 
-        if (score >= 5) Badge.userAdd(this, Badge.BADGE_KRESZ.toString())
-
         AlertDialog.Builder(this)
             .setTitle("KRESZ teszt eredménye")
             .setMessage("$score/5 pont")

@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Web
+import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.layout_search_result.view.*
@@ -25,6 +26,21 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        val quickChips = mutableListOf(
+            "Mosdó", "Igazgatói iroda", "Gazdasági iroda"
+        )
+        quickChips.addAll(Data.buildings.map { it.name })
+        quickChips.addAll(Data.getAllPlaces().map { it.name })
+        searchGroupChips.removeAllViews()
+        quickChips.map {
+            searchGroupChips.addView(Chip(this).apply {
+                text = it
+                setOnClickListener { _ ->
+                    searchEdit.text = SpannableStringBuilder(it)
+                }
+            })
+        }
     }
 
     override fun onResume() {

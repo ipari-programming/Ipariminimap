@@ -21,18 +21,6 @@ class RewardAdActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reward_ad)
 
-        val adCount = Prefs.getAdCount()
-
-        if (adCount < 10) rewardAdText.text = "${rewardAdText.text}\nKövetkező kitűzőig: ${10 - adCount}"
-        else if (adCount < 100) rewardAdText.text = "${rewardAdText.text}\nKövetkező kitűzőig: ${100 - adCount}"
-
-        MobileAds.setRequestConfiguration(
-            RequestConfiguration.Builder()
-                .setTestDeviceIds(listOf("24E9E518AB9DBE2924B9B93F22361702"))
-                .build()
-        )
-        MobileAds.initialize(this)
-
         RewardedAd.load(this, "ca-app-pub-5995992409743558/3639482674", AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 finish()
@@ -50,13 +38,7 @@ class RewardAdActivity : AppCompatActivity() {
             return
         }
         mainRewardedAd!!.show(this) {
-            Prefs.increaseAdCount()
-            val adCount = Prefs.getAdCount()
-            if (adCount > 9) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_TAMOGATO.toString())
-            if (adCount > 99) Badge.userAdd(this@RewardAdActivity, Badge.BADGE_BEFEKTETO.toString())
-
             Temp.isAdWatched = true
-
             finish()
         }
     }

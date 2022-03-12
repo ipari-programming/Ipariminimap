@@ -1,26 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:onClick="onBtnExploreKRESZ"
-        android:text="Iskola KRESZ"
-        app:icon="@drawable/ic_directions"
-        app:iconGravity="textStart" />
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Főmenü"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onBtnExploreKRESZClick"
+                android:text="Iskola KRESZ"
+                app:icon="@drawable/ic_directions"
+                app:iconGravity="textStart" />
+
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onBtnAutomateClick"
+                android:text="Automatizálás" />
+
+            <Button
+                android:id="@+id/mainBtnSupport"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onBtnSupportClick"
+                android:text="Támogatás videóval"
+                app:icon="@drawable/ic_favorite"
+                app:iconGravity="textStart" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:id="@+id/mainLayoutLinks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="onCardBellClick">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,128 +84,33 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/mainTextBellTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
                     android:padding="16dp"
-                    android:text="Kapcsolat és támogatás"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    android:text="Csengetési rend"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    app:drawableStartCompat="@drawable/ic_alarm_bell" />
 
-                <ImageButton
+                <ImageView
                     style="@style/ImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
-                    android:onClick="onBtnOpenLinkClick"
-                    android:tag="https://m.me/CsakiTheOne"
-                    app:srcCompat="@drawable/ic_messenger" />
-
-                <ImageButton
-                    style="@style/ImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:onClick="onBtnOpenLinkClick"
-                    android:tag="https://www.instagram.com/nagyceg/"
-                    app:srcCompat="@drawable/ic_instagram" />
-
-                <ImageButton
-                    style="@style/ImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:onClick="onBtnOpenLinkClick"
-                    android:tag="https://play.google.com/store/apps/dev?id=5554124272482096869"
-                    app:srcCompat="@drawable/ic_android" />
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/ic_unfold" />
             </LinearLayout>
 
-            <LinearLayout
+            <TableLayout
+                android:id="@+id/mainBellTable"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onBtnFAQClick"
-                    android:text="GY.I.K." />
-
-                <Button
-                    android:id="@+id/mainBtnSupport"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onBtnSupportClick"
-                    android:text="Támogatás videóval"
-                    app:icon="@drawable/ic_favorite"
-                    app:iconGravity="textStart" />
-
-            </LinearLayout>
-
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Linkek"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-            <LinearLayout
-                android:id="@+id/mainLayoutLinks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Kitűzők"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-            <LinearLayout
-                android:id="@+id/mainLayoutBadges"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <Button
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onBtnGetBadgeClick"
-                android:text="Kitűzők beszerzése" />
-
-        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
