@@ -7,52 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mainBtnSearch"
-        style="?attr/materialCardViewElevatedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:minHeight="48dp"
-        android:onClick="onBtnSearchClick"
-        android:scaleY="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:padding="12dp"
-                android:text="Kereséshez kopp ide"
-                app:drawableStartCompat="@drawable/ic_search" />
-
-            <ImageButton
-                android:id="@+id/mainBtnMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:onClick="onBtnMenuClick"
-                android:padding="8dp"
-                app:srcCompat="@drawable/ic_more_vert" />
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
     <ScrollView
         android:id="@+id/mainScroll"
         android:layout_width="0dp"
@@ -60,49 +14,84 @@
         app:layout_constraintBottom_toTopOf="@+id/mainNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainBtnSearch">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/mainFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            android:paddingBottom="256dp">
+            android:orientation="vertical">
 
-            <include
-                android:id="@+id/mainActivityHome"
-                layout="@layout/activity_main_home"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                android:id="@+id/mainActivityMap"
-                layout="@layout/activity_main_map"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/searchCard"
+                style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="48dp"
+                android:onClick="onBtnSearchClick">
 
-            <include
-                android:id="@+id/mainActivityBell"
-                layout="@layout/activity_main_bell"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="4dp"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Kereséshez kopp ide"
+                        app:drawableStartCompat="@drawable/ic_search" />
+
+                    <ImageButton
+                        android:id="@+id/mainBtnMenu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:onClick="onBtnMenuClick"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_more_vert" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/mainFrame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingBottom="256dp">
 
-            <include
-                android:id="@+id/mainActivityStudents"
-                layout="@layout/activity_main_students"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                <include
+                    android:id="@+id/mainActivityHome"
+                    layout="@layout/activity_main_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <include
-                android:id="@+id/mainActivityDatabase"
-                layout="@layout/activity_main_database"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
+                <include
+                    android:id="@+id/mainActivityStudents"
+                    layout="@layout/activity_main_students"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/mainActivityDatabase"
+                    layout="@layout/activity_main_database"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -123,8 +112,7 @@
         android:id="@+id/mainNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="64dp"
-        app:labelVisibilityMode="unlabeled"
+        app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

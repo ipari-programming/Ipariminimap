@@ -2,7 +2,6 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?attr/materialCardViewFilledStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -25,31 +24,19 @@
                 android:text="X. óra elején telefon rezgőre." />
 
             <ImageButton
-                android:id="@+id/taskBtnEdit"
-                style="@style/ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                app:srcCompat="@drawable/ic_edit" />
-
-            <ImageButton
                 android:id="@+id/taskBtnRemove"
                 style="@style/ImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_close"
-                tools:visibility="visible" />
+                app:srcCompat="@drawable/ic_close" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/taskLayoutEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:orientation="vertical">
 
             <Spinner
                 android:id="@+id/taskSpinnerCondition"

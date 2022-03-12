@@ -12,36 +12,31 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import com.csakitheone.ipariminimap.data.*
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.helper.Rings
-import com.csakitheone.ipariminimap.services.RingService
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main_students.*
-import kotlinx.android.synthetic.main.activity_main_bell.*
 import kotlinx.android.synthetic.main.activity_main_database.*
 import kotlinx.android.synthetic.main.activity_main_home.*
-import kotlinx.android.synthetic.main.activity_main_map.*
+import kotlinx.android.synthetic.main.activity_main_students.*
 import kotlinx.android.synthetic.main.layout_task.view.*
 import java.util.*
 import kotlin.concurrent.timerTask
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
+
     private var timerBell = Timer()
-    private var tasks = mutableListOf<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +51,6 @@ class MainActivity : AppCompatActivity() {
 
             when (it.title) {
                 "Főoldal" -> mainActivityHome.visibility = View.VISIBLE
-                "Térkép" -> mainActivityMap.visibility = View.VISIBLE
-                "Csengő" -> mainActivityBell.visibility = View.VISIBLE
                 "Diákok" -> {
                     mainActivityStudents.visibility = View.VISIBLE
                     initStudents()
@@ -82,13 +75,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        mainSwitchService.isChecked = Prefs.getIsServiceAllowed()
-        runServiceIfAllowed()
-
-        mainBtnSupport.text = "Támogatás videóval (${Prefs.getAdCount()})"
-
-        refreshTasks()
-
         timerBell = Timer("timerBell").apply {
             schedule(timerTask {
                 runOnUiThread { refreshBell() }
@@ -108,7 +94,6 @@ class MainActivity : AppCompatActivity() {
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
                 .setTestDeviceIds(listOf(
-                    "A95A3A512D1FE5693AE2EF06BAFC5E42",
                     "1B0B102828598F5DC553C280FE8A3020"
                 ))
                 .build()
@@ -126,9 +111,6 @@ class MainActivity : AppCompatActivity() {
         PopupMenu(this, mainBtnMenu).apply {
             setOnMenuItemClickListener {
                 when (it.title) {
-                    "Rendszer követése" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    "Világos téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_NO)
-                    "Sötét téma" -> Prefs.setNightTheme(AppCompatDelegate.MODE_NIGHT_YES)
                     "Dinamikus színek beállítása" -> {
                         MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle("Dinamikus színek")
@@ -151,15 +133,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     //#region Home
-
-    private fun runServiceIfAllowed() {
-        if (Prefs.getIsServiceAllowed()) {
-            ContextCompat.startForegroundService(this, Intent(this, RingService::class.java))
-        }
-        else {
-            stopService(Intent(this, RingService::class.java))
-        }
-    }
 
     private fun refreshLinks() {
         DB.getLinks { links ->
@@ -209,58 +182,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onSwitchServiceClick(view: View) {
-        Prefs.setIsServiceAllowed(mainSwitchService.isChecked)
-        runServiceIfAllowed()
+    fun onBtnExploreKRESZClick(view: View) {
+        startActivity(Intent(this, KreszActivity::class.java))
     }
 
-    fun onBtnFAQClick(view: View) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Gyakori kérdések")
-            .setMessage(
-                "Barátomnak iPhone-ja van. Ő le tudja tölteni az appot?\n\n" +
-                        "Sajnos nem. Egy Apple fejlesztői fiók elég drága havidíjjal rendelkezik és " +
-                        "iOS fejlesztésben sincs még tapasztalatom.\n\n" +
-                        "Barátomnak Huawei telefonja van. Ő honnan tudja megszerezni az appot?\n\n" +
-                        "Ha nála nem elérhető a Play áruház akkor APK formájában tudja beszerezni valakitől." +
-                        " Írjon nekem vagy valaki küldje el neki, hogy tudja sideload-olni. " +
-                        "Így nem fog frissülni, de legalább meglesz.\n\n" +
-                        "Miért van reklám az appban?\n\n" +
-                        "Sok munka van az app fejlesztéssel és nem szeretnék pénzt kérni. " +
-                        "Nyilván nem akarlak idegesíteni titeket, én sem szeretem a reklámokat, " +
-                        "de szerintem így a legjobb mindenkinek.\n\n" +
-                        "Gépen / laptopon megy az app?\n\n" +
-                        "Alapból nem. Win11-en csak olyan alkalmazások mennek, amikhez nem kellenek " +
-                        "a Google Play szolgáltatások. Ennek az appnak az adatbázis és reklámok " +
-                        "miatt kell. Viszont egy hack-elt WSA-val talán megy, még nem teszteltem."
-            )
-            .create().show()
+    fun onBtnAutomateClick(view: View) {
+        startActivity(Intent(this, TasksActivity::class.java))
     }
 
     fun onBtnSupportClick(view: View) {
         startActivity(Intent(this, RewardAdActivity::class.java))
-    }
-
-    fun onBtnExploreKRESZ(view: View) {
-        startActivity(Intent(this, KreszActivity::class.java))
-    }
-
-    fun onBtnOpenLinkClick(view: View) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(view.tag.toString())))
-    }
-
-    //#endregion
-
-    //#region Map
-
-    fun onBtnEnteranceClick(view: View) {
-        Snackbar.make(mainFrame, "Üdv az Ipariban!", Snackbar.LENGTH_SHORT).show()
-    }
-
-    fun onSearchBtnClick(view: View) {
-        startActivity(Intent(this, SearchActivity::class.java).apply {
-            putExtra(SearchActivity.EXTRA_QUERY, (view as MaterialButton).text)
-        })
     }
 
     //#endregion
@@ -319,35 +250,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshTasks() {
-        tasks = Prefs.getTasks()
-        mainLayoutTasks.removeAllViews()
-        tasks.map {
-            val v = it.createLayout(this)
-            v.taskBtnRemove.setOnClickListener { _ ->
-                tasks.remove(it)
-                saveTasks()
-                refreshTasks()
-            }
-            mainLayoutTasks.addView(v)
-            (v.layoutParams as LinearLayout.LayoutParams).apply { setMargins(4.toPx.toInt()) }
-            it.onModified.add { saveTasks() }
-        }
-        saveTasks()
-    }
-
-    private fun saveTasks() {
-        Prefs.setTasks(tasks)
-    }
-
     fun onCardBellClick(view: View) {
         mainBellTable.visibility = if (mainBellTable.visibility == View.GONE) View.VISIBLE else View.GONE
-    }
-
-    fun onBtnNewTaskClick(view: View) {
-        tasks.add(Task())
-        saveTasks()
-        refreshTasks()
     }
 
     //#endregion
@@ -376,7 +280,7 @@ class MainActivity : AppCompatActivity() {
 
                 mainLayoutClasses.removeAllViews()
                 students.groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
-                    val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
+                    val btnClass = Chip(this).apply {
                         text = gradeMajor
                         setOnClickListener {
                             startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {

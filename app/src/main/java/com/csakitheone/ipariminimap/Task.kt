@@ -56,17 +56,12 @@ class Task() {
             state = l.taskSwitch.isChecked
             modify()
         }
-        l.taskBtnEdit.setOnClickListener {
-            l.taskLayoutEdit.visibility = if (l.taskLayoutEdit.visibility == View.GONE) View.VISIBLE else View.GONE
-            l.taskBtnRemove.visibility = l.taskLayoutEdit.visibility
-            l.taskBtnEdit.setImageDrawable(ContextCompat.getDrawable(activity, if (l.taskLayoutEdit.visibility == View.VISIBLE) R.drawable.ic_done else R.drawable.ic_edit))
-            modify()
-        }
         l.taskSpinnerCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 condition = activity.resources.getStringArray(R.array.task_conditions)[position]
                 conditionPos = position
                 l.taskSwitch.text = "$condition $action $data"
+                modify()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
@@ -75,12 +70,14 @@ class Task() {
                 action = activity.resources.getStringArray(R.array.task_actions)[position]
                 actionPos = position
                 l.taskSwitch.text = "$condition $action $data"
+                modify()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
         l.taskEditData.addTextChangedListener {
             data = it.toString()
             l.taskSwitch.text = "$condition $action $data"
+            modify()
         }
 
         return l

@@ -14,25 +14,11 @@ class Prefs {
 
         fun init(context: Context) {
             prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-
-            setNightTheme(prefs.getInt("night_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM))
-        }
-
-        fun setNightTheme(nightMode: Int) {
-            AppCompatDelegate.setDefaultNightMode(nightMode)
-            prefs.edit {
-                putInt("night_mode", nightMode)
-                apply()
-            }
         }
 
         fun getIsUsingDynamicColors(): Boolean = prefs.getBoolean("is_using_dynamic_colors", true)
         fun setIsUsingDynamicColors(value: Boolean) = prefs.edit()
             .putBoolean("is_using_dynamic_colors", value).apply()
-
-        fun getAdCount(): Int = prefs.getInt("mainRewardedAd.watchCount", 0)
-        fun increaseAdCount() = prefs.edit()
-            .putInt("mainRewardedAd.watchCount", getAdCount() + 1).apply()
 
         fun getIsServiceAllowed(): Boolean = prefs.getBoolean("is_service_allowed", false)
         fun setIsServiceAllowed(value: Boolean) = prefs.edit()

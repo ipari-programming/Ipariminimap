@@ -5,6 +5,10 @@ import java.net.URL
 
 class Web {
     data class Student(var name: String, var gradeMajor: String) {
+        fun getGrade(): Int = gradeMajor.substringBefore('.').toIntOrNull() ?: 9
+
+        fun getMajor(): String = gradeMajor.substringAfter('.')
+
         override fun toString(): String {
             return "$name - $gradeMajor"
         }
