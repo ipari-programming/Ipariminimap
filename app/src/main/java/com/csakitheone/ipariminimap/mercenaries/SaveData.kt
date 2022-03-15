@@ -1,6 +1,8 @@
 package com.csakitheone.ipariminimap.mercenaries
 
 import android.app.Activity
+import android.app.SharedElementCallback
+import android.content.Context
 import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.data.Web
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -14,18 +16,32 @@ class SaveData {
 
         var instance = SaveData()
 
-        fun Merc.isInTeam(): Boolean {
-            return instance.team.any { it.name == this.name && it.mercClass.name == this.mercClass.name }
-        }
-
-        fun isTeamReady(): Boolean = instance.team.size == 3
-
         fun save() {
             Prefs.setMercenariesSaveData(instance)
         }
 
         fun load() {
             instance = Prefs.getMercenariesSaveData()
+            instance.collection.map { it.refreshData() }
+            instance.team.map { it.refreshData() }
+        }
+
+        fun Merc.isInTeam(): Boolean {
+            return instance.team.any { it.name == this.name && it.mercClass.name == this.mercClass.name }
+        }
+
+        fun isTeamReady(): Boolean = instance.team.size == 3
+
+        fun addToCollection(context: Context, merc: Merc, callback: () -> Unit = {}) {
+            MaterialAlertDialogBuilder(context)
+                .setTitle("Válassz első képességet ${merc.name} számára!")
+                .setCancelable(false)
+                .setItems(merc.mercClass.abilities.map { it.toString() }.toTypedArray()) { _, i ->
+                    merc.abilities.add(merc.mercClass.abilities[i])
+                    instance.collection.add(merc)
+                    callback()
+                }
+                .create().show()
         }
 
         fun setup(activity: Activity, onSuccess: () -> Unit) {
@@ -33,7 +49,7 @@ class SaveData {
 
             MaterialAlertDialogBuilder(activity)
                 .setTitle("Üdv a Mercenaries játékban!")
-                .setMessage("Mindent elmagyarázok, de először kell toboroznunk neked egy csapatot.")
+                .setMessage("Mindent elmagyarázok, de először kell toboroznunk neked embereket.")
                 .setPositiveButton("Kezdjük!") { _, _ ->
 
                     val selectedMercs = mutableListOf<Merc>()
@@ -57,9 +73,9 @@ class SaveData {
                                         selectedMercs.add(Merc.createFromStudent(Web.getStudentsNoDownload().filter { major.contains(it.getMajor().toLowerCase()) }[i]))
                                         if (selectedMercs.size < 3) showSelectMercDialog()
                                         else {
-                                            instance.collection.addAll(selectedMercs)
-                                            instance.team.addAll(selectedMercs)
-                                            onSuccess()
+                                            selectedMercs.map {
+                                                addToCollection(activity, it) { onSuccess() }
+                                            }
                                         }
                                     }
                                     .setOnCancelListener {

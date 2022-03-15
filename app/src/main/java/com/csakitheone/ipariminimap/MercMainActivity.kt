@@ -1,10 +1,11 @@
 package com.csakitheone.ipariminimap
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import androidx.fragment.app.FragmentTransaction
+import android.widget.TextView
 import com.csakitheone.ipariminimap.data.Web
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
 import com.csakitheone.ipariminimap.mercenaries.Merc
@@ -49,10 +50,18 @@ class MercMainActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
         mercLayoutTeam.removeAllViews()
+
+        if (!SaveData.isTeamReady()) {
+            mercLayoutTeam.addView(TextView(this).apply {
+                text = "Vegyél fel 3 embert,\nhogy tudj játszani!"
+            })
+        }
+
         SaveData.instance.team.map {
             it.prepareForGame()
             val fragment = MercenaryFragment.newInstance(it, MercenaryFragment.MODE_EDIT)
-            fragment.onTeamChanged = {
+            fragment.onMercChanged = {
+                SaveData.save()
                 refreshUI()
             }
             fragmentTransaction.add(R.id.mercLayoutTeam, fragment)
@@ -62,7 +71,8 @@ class MercMainActivity : AppCompatActivity() {
         SaveData.instance.collection.map {
             it.prepareForGame()
             val fragment = MercenaryFragment.newInstance(it, MercenaryFragment.MODE_EDIT)
-            fragment.onTeamChanged = {
+            fragment.onMercChanged = {
+                SaveData.save()
                 refreshUI()
             }
             fragmentTransaction.add(R.id.mercLayoutCollection, fragment)
@@ -75,8 +85,12 @@ class MercMainActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Készülj fel a harcra!")
             .setMessage("Válassz nehézségi szintet:")
-            .setPositiveButton("Könnyed") { _, _ -> }
-            .setNegativeButton("Kihívás") { _, _ -> }
+            .setPositiveButton("Könnyed") { _, _ ->
+                startActivity(Intent(this, MercGameActivity::class.java))
+            }
+            .setNegativeButton("Kihívás") { _, _ ->
+                startActivity(Intent(this, MercGameActivity::class.java))
+            }
             .setNeutralButton("Mégsem") { _, _ -> }
             .create().show()
     }
@@ -87,6 +101,16 @@ class MercMainActivity : AppCompatActivity() {
             .setMessage("Ez a mód még nincs kész, de lesz rá lehetőség.")
             .setPositiveButton("Kösz Csáki") { _, _ -> }
             .create().show()
+    }
+
+    fun onBtnDebugEveryoneToCollectionClick(view: View) {
+        SaveData.instance.collection = mutableListOf()
+        repeat(6) {
+            SaveData.addToCollection(this, Merc.createFromStudent(Web.getStudentsNoDownload().random())) {
+                SaveData.save()
+                refreshUI()
+            }
+        }
     }
 
     fun onBtnDeleteDataClick(view: View) {
