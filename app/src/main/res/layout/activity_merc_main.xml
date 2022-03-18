@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:onClick="onBtnStartClick"
-                android:text="Játék indítása" />
+                android:text="Solo kalandok" />
 
             <Button
                 android:id="@+id/mercBtnPvp"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:onClick="onBtnPvpClick"
-                android:text="PvP" />
+                android:text="Aréna" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

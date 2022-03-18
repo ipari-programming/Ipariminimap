@@ -47,13 +47,17 @@ class Ability(
         code += "$ACTION_STUN $target;"
         return this
     }
-    fun summon(): Ability {
-        code += "$ACTION_SUMMON;"
+    fun summon(mercClass: MercClass, instantAbilityIndex: Int = -1): Ability {
+        code += "$ACTION_SUMMON ${mercClass.id} $instantAbilityIndex;"
+        return this
+    }
+    fun loop(): Ability {
+        code += "$ACTION_LOOP;"
         return this
     }
 
     override fun toString(): String {
-        return "$name (⏳$speed): $description (${variables.toString().replace("""[{}]""".toRegex(), "")})"
+        return "(⏳$speed) $name: $description $variables"
     }
 
     companion object {
@@ -66,6 +70,7 @@ class Ability(
         const val ACTION_STRENGTHEN = "strengthen"
         const val ACTION_STUN = "stun"
         const val ACTION_SUMMON = "summon"
+        const val ACTION_LOOP = "loop"
     }
 
     class Target {

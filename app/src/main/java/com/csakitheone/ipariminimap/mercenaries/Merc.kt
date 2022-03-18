@@ -19,7 +19,7 @@ class Merc(
 
     fun refreshData() {
         selectedAbility = null
-        mercClass = MercClass.classes.first { it.id == mercClass.id }
+        mercClass = MercClass.getAll().first { it.id == mercClass.id }
         abilities = abilities.mapNotNull { ability -> mercClass.abilities.firstOrNull { it.name == ability.name } }.toMutableList()
     }
 
@@ -27,6 +27,10 @@ class Merc(
         currentAttack = getMaxAttack()
         currentHealth = getMaxHealth()
         abilities.map { it.prepareForGame(level) }
+    }
+
+    fun learnAllAbilities() {
+        abilities = mercClass.abilities
     }
 
     fun getCurrentAttack(): Int = currentAttack
@@ -50,6 +54,7 @@ class Merc(
     fun heal(amount: Int) {
         if (!isAlive()) return
         currentHealth += amount
+        if (currentHealth > getMaxHealth()) currentHealth = getMaxHealth()
     }
 
     override fun toString(): String {

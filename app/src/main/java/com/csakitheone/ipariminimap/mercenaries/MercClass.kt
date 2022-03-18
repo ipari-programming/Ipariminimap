@@ -10,6 +10,10 @@ class MercClass(
 ) {
     var abilities = mutableListOf<Ability>()
 
+    init {
+        allClasses.add(this)
+    }
+
     fun setAbilities(vararg abilities: Ability): MercClass {
         this.abilities = abilities.toMutableList()
         this.abilities.map { it.prepareForGame(1) }
@@ -17,6 +21,23 @@ class MercClass(
     }
 
     companion object {
+        private var allClasses = mutableListOf<MercClass>()
+
+        fun getAll(): List<MercClass> = allClasses
+
+        val classCompanionAnimal = MercClass("classCompanionAnimal", "Háziállat", 1, 3, 1, 1)
+            .setAbilities(
+                Ability("Harapj!", 2)
+            )
+        val classBird = MercClass("classBird", "Madár", 1, 2, 1, 1)
+            .setAbilities(
+                Ability("Célozz a szemére!", 5)
+            )
+        val classRobot = MercClass("classRobot", "Robot", 1, 4, 1, 1)
+            .setAbilities(
+                Ability("attack(random)", 5, "Megtámad egy random ellenséget").attack(Ability.Target.Enemy.RANDOM),
+                Ability("while(isAlive)", 8, "Addig támad random ellenségeket, amíg meg nem hal").attack(Ability.Target.Enemy.RANDOM).loop()
+            )
 
         val classStudent = MercClass("classStudent", "Diák", 2, 15)
             .setAbilities(
@@ -25,19 +46,19 @@ class MercClass(
 
         val classVegyesz = MercClass("classVegyesz", "Vegyész", 1, 20) // 21 caster
             .setAbilities(
-                Ability("Marás", 5, "Egy maró vegyületet dob az ellenségre", mapOf(Ability.varAmount() to 3))
+                Ability("Marás", 5, "Egy maró vegyületet dob egy ellenségre", mapOf(Ability.varAmount() to 3))
                     .attack(Ability.Target.CHOICE, Ability.varAmount()),
-                Ability("Gyengítés", 4, "Csökkenti az ellenség sebzését", mapOf(Ability.varAmount() to 2))
+                Ability("Gyengítés", 4, "Csökkenti egy ellenség sebzését", mapOf(Ability.varAmount() to 2))
                     .weaken(Ability.Target.CHOICE, Ability.varAmount()),
-                Ability("Kábítás", 3, "Elkábítja az ellenséget a kör végéig").stun(Ability.Target.CHOICE)
+                Ability("Kábítás", 3, "Elkábít egy ellenséget a kör végéig").stun(Ability.Target.CHOICE)
             )
         val classKornyezetes = MercClass("classKornyezetes", "Környezetes", 2, 15) // 17 summoner
             .setAbilities(
-                Ability("Támadj!", 5, "Megüti az ellenséget és idéz egy háziállatot")
+                Ability("Támadj!", 5, "Megüt egy választott ellenséget és idéz egy háziállatot")
                     .attack(Ability.Target.CHOICE)
-                    .summon(),
+                    .summon(classCompanionAnimal),
                 Ability("Célozz a szemére!", 5, "Idéz egy madarat, ami azonnal támad")
-                    .summon()
+                    .summon(classBird)
             )
         val classInfos = MercClass("classInfos", "Infós", 1, 20) // 21 caster
             .setAbilities(
@@ -58,13 +79,13 @@ class MercClass(
         val classMechas = MercClass("classMechas", "Mechás", 2, 15) // 17 summoner
             .setAbilities(
                 Ability("Engineer gaming", 5, "Épít egy robotot, ami megtámad egy random ellenséget")
-                    .summon(),
+                    .summon(classRobot),
                 Ability("Végtelen ciklus", 6, "Épít egy robotot, ami addig sebzi az ellenségeket, amíg bele nem hal")
-                    .summon()
+                    .summon(classRobot)
             )
         val classMuanyagos = MercClass("classMuanyagos", "Műanyagos",   3, 18) // 21 caster
             .setAbilities(
-                Ability("Gyenge marás", 5, "Egy maró vegyületet dob az ellenségre", mapOf(Ability.varAmount() to 2))
+                Ability("Gyenge marás", 5, "Egy gyenge maró vegyületet dob egy ellenségre", mapOf(Ability.varAmount() to 2))
                     .attack(Ability.Target.CHOICE, Ability.varAmount()),
                 Ability("Gyengítés", 4, "Csökkenti az ellenség sebzését", mapOf(Ability.varAmount() to 1))
                     .weaken(Ability.Target.CHOICE, Ability.varAmount())
@@ -79,15 +100,6 @@ class MercClass(
                     .attack(Ability.Target.CHOICE)
                     .heal(Ability.Target.SELF, Ability.varAmount())
             )
-
-        val classCompanionAnimal = MercClass("classCompanionAnimal", "Háziállat", 2, 5, 1, 1)
-        val classBird = MercClass("classBird", "Madár", 2, 4, 1, 1)
-        val classRobot = MercClass("classRobot", "Robot", 2, 6, 1, 1)
-
-        val classes = listOf(
-            classStudent, classVegyesz, classKornyezetes, classInfos, classGepesz, classMechas,
-            classMuanyagos, classGondozo, classCompanionAnimal, classBird, classRobot
-        )
 
         fun fromMajor(major: String): MercClass {
             return when (major.toLowerCase()) {

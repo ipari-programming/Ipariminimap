@@ -3,10 +3,10 @@ package com.csakitheone.ipariminimap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
 import com.csakitheone.ipariminimap.mercenaries.Ability
 import com.csakitheone.ipariminimap.mercenaries.Merc
+import com.csakitheone.ipariminimap.mercenaries.MercClass
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_merc_game.*
@@ -19,6 +19,7 @@ class MercGameActivity : AppCompatActivity() {
     var mercs = mutableListOf<Merc>()
 
     var roundCount = 1
+    var abilityQueue = mutableListOf<Merc>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,12 +94,12 @@ class MercGameActivity : AppCompatActivity() {
         else if (mercs.isEmpty()) gameOver(false)
     }
 
-    private fun executeAbilities(queue: MutableList<Merc>) {
-        if (queue.isEmpty()) {
+    private fun executeAbilities() {
+        if (abilityQueue.isEmpty()) {
             runOnUiThread { endRound() }
             return
         }
-        val currentMerc = queue.removeFirst()
+        val currentMerc = abilityQueue.removeFirst()
 
         runOnUiThread {
             if (currentMerc.isAlive()) {
@@ -107,18 +108,17 @@ class MercGameActivity : AppCompatActivity() {
                 log(logMessage)
 
                 runActions(currentMerc)
-                currentMerc.selectedAbility = null
                 refreshUI()
             }
         }
 
         Timer().schedule(timerTask {
-            executeAbilities(queue)
+            executeAbilities()
         }, 2000L)
     }
 
     private fun runActions(merc: Merc) {
-        if (merc.selectedAbility == null) return
+        if (!merc.isAlive() || merc.selectedAbility == null) return
         val code = merc.selectedAbility?.code ?: return
 
         fun locateTargets(targetString: String): List<Merc> {
@@ -159,9 +159,12 @@ class MercGameActivity : AppCompatActivity() {
             val keywords = action.split(" ")
             when (keywords[0]) {
                 Ability.ACTION_ATTACK -> {
+                    val isPhysical = keywords[2] == Ability.varMercAttack()
                     locateTargets(keywords[1]).map {
                         val isKillingBlow = it.damage(resolveVariable(keywords[2]))
+                        val isDeadByBackfire = if (isPhysical) merc.damage(it.getCurrentAttack()) else false
                         if (isKillingBlow) log("${it.name} meghalt ${merc.name} által")
+                        if (isDeadByBackfire) log("${merc.name} belehalt a támadásba")
                     }
                 }
                 Ability.ACTION_HEAL -> {
@@ -177,10 +180,24 @@ class MercGameActivity : AppCompatActivity() {
                     locateTargets(keywords[1]).map { it.selectedAbility = null }
                 }
                 Ability.ACTION_SUMMON -> {
-                    //TODO
+                    val mercClassToSummon = MercClass.getAll().first { it.id == keywords[1] }
+                    val mercToSummon = Merc(mercClassToSummon.name, mercClassToSummon, merc.level)
+                    mercToSummon.prepareForGame()
+                    mercToSummon.learnAllAbilities()
+                    if (enemies.contains(merc)) {
+                        enemies.add(mercToSummon)
+                    }
+                    else if (mercs.contains(merc)) {
+                        mercs.add(mercToSummon)
+                    }
+                }
+                Ability.ACTION_LOOP -> {
+                    abilityQueue.add(merc)
+                    return
                 }
             }
         }
+        merc.selectedAbility = null
     }
 
     fun onBtnFightClick(view: View) {
@@ -189,13 +206,13 @@ class MercGameActivity : AppCompatActivity() {
         // 0. prepare
         log("--- $roundCount. kör ---")
         // 1. sort abilities
-        var queue = mutableListOf<Merc>()
+        val queue = mutableListOf<Merc>()
         queue.addAll(enemies.filter { it.selectedAbility != null })
         queue.addAll(mercs.filter { it.selectedAbility != null })
         queue.shuffle()
-        queue = queue.sortedBy { it.selectedAbility!!.speed }.toMutableList()
+        abilityQueue = queue.sortedBy { it.selectedAbility!!.speed }.toMutableList()
         // 2. execute ability actions
-        executeAbilities(queue)
+        executeAbilities()
 
     }
 

@@ -18,9 +18,16 @@
         <TextView
             android:id="@+id/mercFragmentTextName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="13\nCsáktornyai Ádám József\nInfós"
+            android:text="Csáktornyai Ádám József"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/mercFragmentTextLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="lvl13 Üzemmérnök"
             android:textSize="11sp" />
 
         <TextView

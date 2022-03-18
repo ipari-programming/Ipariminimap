@@ -83,22 +83,18 @@ class MercMainActivity : AppCompatActivity() {
 
     fun onBtnStartClick(view: View) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Készülj fel a harcra!")
-            .setMessage("Válassz nehézségi szintet:")
-            .setPositiveButton("Könnyed") { _, _ ->
+            .setTitle("Solo kalandok")
+            .setItems(arrayOf("Story #1: Üdv az Ipariban!")) { _, _ ->
                 startActivity(Intent(this, MercGameActivity::class.java))
             }
-            .setNegativeButton("Kihívás") { _, _ ->
-                startActivity(Intent(this, MercGameActivity::class.java))
-            }
-            .setNeutralButton("Mégsem") { _, _ -> }
+            .setNegativeButton("Vissza") { _, _ -> }
             .create().show()
     }
 
     fun onBtnPvpClick(view: View) {
         MaterialAlertDialogBuilder(this)
             .setTitle("Szeretnél más emberek ellen játszani?")
-            .setMessage("Ez a mód még nincs kész, de lesz rá lehetőség.")
+            .setMessage("Ez a mód még nincs kész, de dolgozom rajta.")
             .setPositiveButton("Kösz Csáki") { _, _ -> }
             .create().show()
     }

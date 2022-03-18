@@ -232,7 +232,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onBtnMercenariesClick(view: View) {
-        startActivity(Intent(this, MercMainActivity::class.java))
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Figyelem! Korai alpha tesztelés!")
+            .setMessage("Ez a funkció még nagyon korai állapotban van, még tele van hibákkal, hiányosságokkal!")
+            .setPositiveButton("Megértettem") { _, _ ->
+                startActivity(Intent(this, MercMainActivity::class.java))
+            }
+            .setNegativeButton("Vissza") { _, _ -> }
+            .create().show()
     }
 
     fun onBtnExploreKRESZClick(view: View) {

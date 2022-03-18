@@ -33,8 +33,9 @@ class MercenaryFragment : Fragment() {
         val v = inflater.inflate(R.layout.fragment_mercenary, container, false)
         merc = Gson().fromJson(arguments?.getString("mercenary"), Merc::class.java)
 
-        v.mercFragmentTextName.text = if (merc.selectedAbility == null) "${merc.level}\n${merc.name}\n${merc.mercClass.name}"
-        else "${merc.level}\n${merc.name}\n${merc.mercClass.name}\n✅\n${merc.selectedAbility?.name}(⏳${merc.selectedAbility?.speed})"
+        v.mercFragmentTextName.text = if (merc.selectedAbility == null) merc.name
+        else "${merc.name}\n✅\n(⏳${merc.selectedAbility?.speed})${merc.selectedAbility?.name}"
+        v.mercFragmentTextLevel.text = "lvl${merc.level} ${merc.mercClass.name}"
         v.mercFragmentTextAttack.text = "⚔️${merc.getCurrentAttack()}"
         v.mercFragmentTextHealth.text = "${merc.getCurrentHealth()}🩸"
 
@@ -97,8 +98,8 @@ class MercenaryFragment : Fragment() {
 
     fun edit() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("${merc.name} (${merc.level})")
-            .setMessage("${merc.mercClass.id} ${merc.mercClass.name}\nTámadás: ${merc.getCurrentAttack()} Élet: ${merc.getMaxHealth()}\nKépességek:\n${merc.abilities.joinToString("\n")}")
+            .setTitle("(${merc.level}) ${merc.name}")
+            .setMessage("${merc.mercClass.name}\nTámadás: ${merc.getCurrentAttack()} Élet: ${merc.getMaxHealth()}\nKépességek:\n${merc.abilities.joinToString("\n")}")
             .setPositiveButton("Ok") { _, _ -> }
             .setNegativeButton(if (merc.isInTeam()) "Kidobás csapatból" else "Felvétel a csapatba") { _, _ ->
                 if (merc.isInTeam()) SaveData.instance.team.removeAll { it.name == merc.name && it.mercClass.name == merc.mercClass.name }
