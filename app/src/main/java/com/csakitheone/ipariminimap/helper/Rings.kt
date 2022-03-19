@@ -62,13 +62,13 @@ class Rings {
             return value
         }
 
-        fun getTimeUntilNext() : String? {
+        fun getTimeUntilNext() : String {
             val now = calToInt(Calendar.getInstance())
             if (times.values.any { r -> now < r }) {
                 val next = times.values.first { r -> now < r }
                 return  intToTimeS(next - now)
             }
-            return null
+            return ""
         }
 
         fun isLessonStart() : Boolean {

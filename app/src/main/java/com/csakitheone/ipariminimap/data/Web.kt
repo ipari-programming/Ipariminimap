@@ -1,6 +1,7 @@
 package com.csakitheone.ipariminimap.data
 
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.net.URL
 
 class Web {
@@ -17,14 +18,15 @@ class Web {
     companion object {
 
         @DelicateCoroutinesApi
-        fun getNameDay(callback: (String) -> Unit) {
+        fun getNameDay(callback: (List<String>) -> Unit) {
             GlobalScope.launch(Dispatchers.IO) {
-                val name = URL("https://mai-nevnap.hu/")
-                    .readText()
-                    .substringAfter("<h2>")
-                    .substringAfter("\">")
-                    .substringBefore("</a>")
-                callback(name)
+                val response = JSONObject(URL("https://api.nevnapok.eu/ma").readText())
+                val jsonArray = response.getJSONArray(response.keys().next())
+                val names = mutableListOf<String>()
+                for (i in 0 until jsonArray.length()) {
+                    names.add(jsonArray.getString(i))
+                }
+                callback(names)
             }
         }
 

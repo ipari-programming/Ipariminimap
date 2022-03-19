@@ -24,10 +24,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_database.*
-import kotlinx.android.synthetic.main.activity_main_home.*
 import kotlinx.android.synthetic.main.activity_main_students.*
 import kotlinx.android.synthetic.main.layout_task.view.*
 import java.util.*
@@ -183,7 +181,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshBell() {
-        mainTextBellTitle.text = "Csengetési rend • ${Rings.getCurrentLesson()} • ${Rings.getTimeUntilNext()}"
+        mainTextBellTitle.text = "${Rings.getCurrentLesson()} • ${Rings.getTimeUntilNext()}"
 
         mainBellTable.removeAllViews()
         val timetable = """
@@ -247,7 +245,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onBtnSupportClick(view: View) {
-        startActivity(Intent(this, RewardAdActivity::class.java))
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Támogatás")
+            .setItems(arrayOf("Videó nézése (elrejti a szalaghírdetést következő indításig)")) { _, i ->
+                when (i) {
+                    0 -> startActivity(Intent(this, RewardAdActivity::class.java))
+                }
+            }
+            .create().show()
     }
 
     fun onBtnAutomateClick(view: View) {
@@ -264,16 +269,14 @@ class MainActivity : AppCompatActivity() {
 
                 mainProgressStudents.visibility = View.GONE
 
-                Web.getNameDay { name ->
+                Web.getNameDay { names ->
                     runOnUiThread {
 
-                        val nameCount = students.count { student -> student.name.contains(name) }
-                        mainTextNameday.text = "Mai névnap: $name\n$nameCount diáknak van ma névnapja."
-                        mainTextNameday.setOnClickListener {
-                            startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
-                                putExtra(SearchActivity.EXTRA_QUERY, name)
-                            })
+                        val nameCount = students.count { student ->
+                            val studentName = student.name.split(" ")
+                            names.any { studentName.contains(it) }
                         }
+                        mainTextNameday.text = "Mai névnap(ok): ${names.joinToString()}\n$nameCount diáknak van ma névnapja."
 
                     }
                 }

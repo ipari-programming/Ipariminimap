@@ -69,13 +69,129 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:paddingBottom="256dp">
+                android:paddingBottom="128dp">
 
-                <include
+                <LinearLayout
                     android:id="@+id/mainActivityHome"
-                    layout="@layout/activity_main_home"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/colorSecondaryDark"
+                                android:onClick="onBtnMercenariesClick"
+                                android:text="Mercenaries"
+                                android:textColor="?attr/colorOnSecondary"
+                                app:icon="@drawable/ic_sword_cross"
+                                app:iconGravity="top"
+                                app:iconPadding="8dp"
+                                app:iconTint="?attr/colorOnSecondary" />
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/colorPrimary"
+                                android:onClick="onBtnExploreKRESZClick"
+                                android:text="Iskola KRESZ"
+                                app:icon="@drawable/ic_directions"
+                                app:iconGravity="top"
+                                app:iconPadding="8dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/colorPrimary"
+                                android:onClick="onBtnAutomateClick"
+                                android:text="Automatizálás"
+                                app:icon="@drawable/ic_refresh"
+                                app:iconGravity="top"
+                                app:iconPadding="8dp" />
+
+                            <Button
+                                android:id="@+id/mainBtnSupport"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/colorSecondaryDark"
+                                android:onClick="onBtnSupportClick"
+                                android:text="Támogatás"
+                                android:textColor="?attr/colorOnSecondary"
+                                app:icon="@drawable/ic_favorite"
+                                app:iconGravity="top"
+                                app:iconPadding="8dp"
+                                app:iconTint="?attr/colorOnSecondary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/mainLayoutLinks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/mainTextBellTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:text="Csengetési rend"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                                app:drawableStartCompat="@drawable/ic_alarm_bell" />
+
+                            <TableLayout
+                                android:id="@+id/mainBellTable"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
 
                 <include
                     android:id="@+id/mainActivityStudents"
