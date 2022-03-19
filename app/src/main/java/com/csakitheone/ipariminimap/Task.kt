@@ -7,11 +7,11 @@ import android.media.AudioManager
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.content.ContextCompat
+import androidx.annotation.NonNull
 import androidx.core.widget.addTextChangedListener
+import com.csakitheone.ipariminimap.databinding.LayoutTaskBinding
 import com.csakitheone.ipariminimap.helper.Notifications
 import com.csakitheone.ipariminimap.services.RingService
-import kotlinx.android.synthetic.main.layout_task.view.*
 
 class Task() {
     var state: Boolean = false
@@ -43,44 +43,45 @@ class Task() {
         if (data.isNotEmpty()) Notifications.sendTaskNotification(context, data)
     }
 
-    fun createLayout(activity: Activity) : View {
+    fun createLayout(activity: Activity): LayoutTaskBinding {
         val l = activity.layoutInflater.inflate(R.layout.layout_task, null, false)
+        val binding = LayoutTaskBinding.bind(l)
 
-        l.taskSwitch.text = "$condition $action $data"
-        l.taskSwitch.isChecked = state
-        l.taskSpinnerCondition.setSelection(conditionPos)
-        l.taskSpinnerAction.setSelection(actionPos)
-        l.taskEditData.text = SpannableStringBuilder(data)
+        binding.taskSwitch.text = "$condition $action $data"
+        binding.taskSwitch.isChecked = state
+        binding.taskSpinnerCondition.setSelection(conditionPos)
+        binding.taskSpinnerAction.setSelection(actionPos)
+        binding.taskEditData.text = SpannableStringBuilder(data)
 
-        l.taskSwitch.setOnClickListener {
-            state = l.taskSwitch.isChecked
+        binding.taskSwitch.setOnClickListener {
+            state = binding.taskSwitch.isChecked
             modify()
         }
-        l.taskSpinnerCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.taskSpinnerCondition.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 condition = activity.resources.getStringArray(R.array.task_conditions)[position]
                 conditionPos = position
-                l.taskSwitch.text = "$condition $action $data"
+                binding.taskSwitch.text = "$condition $action $data"
                 modify()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
-        l.taskSpinnerAction.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.taskSpinnerAction.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 action = activity.resources.getStringArray(R.array.task_actions)[position]
                 actionPos = position
-                l.taskSwitch.text = "$condition $action $data"
+                binding.taskSwitch.text = "$condition $action $data"
                 modify()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
-        l.taskEditData.addTextChangedListener {
+        binding.taskEditData.addTextChangedListener {
             data = it.toString()
-            l.taskSwitch.text = "$condition $action $data"
+            binding.taskSwitch.text = "$condition $action $data"
             modify()
         }
 
-        return l
+        return binding
     }
 
     private fun modify() {

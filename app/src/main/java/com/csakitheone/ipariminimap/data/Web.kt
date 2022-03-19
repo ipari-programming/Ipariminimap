@@ -32,6 +32,7 @@ class Web {
 
         //#region Students
         private var students: MutableList<Student> = mutableListOf()
+        var studentsIsDownloaded = false
 
         @DelicateCoroutinesApi
         private fun downloadStudents(callback: (Boolean) -> Unit) {
@@ -62,7 +63,8 @@ class Web {
         fun getStudentsNoDownload(): MutableList<Student> = students
 
         fun getStudents(callback: (MutableList<Student>) -> Unit) {
-            if (students.isEmpty()) {
+            if (students.isEmpty() && !studentsIsDownloaded) {
+                studentsIsDownloaded = true
                 downloadStudents {
                     callback(students)
                 }

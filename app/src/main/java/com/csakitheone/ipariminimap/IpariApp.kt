@@ -11,8 +11,10 @@ class IpariApp: Application() {
         Prefs.init(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
+        /*
         if (Prefs.getIsUsingDynamicColors()) {
             DynamicColors.applyToActivitiesIfAvailable(this)
         }
+        */
     }
 }

@@ -8,36 +8,39 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Web
+import com.csakitheone.ipariminimap.databinding.ActivitySearchBinding
+import com.csakitheone.ipariminimap.databinding.LayoutSearchResultBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.layout_search_result.view.*
 
 class SearchActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivitySearchBinding
+
     companion object {
         const val EXTRA_QUERY = "query"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val quickChips = mutableListOf(
             "Mosdó", "Igazgatói iroda", "Gazdasági iroda"
         )
         quickChips.addAll(Data.buildings.map { it.name })
         quickChips.addAll(Data.getAllPlaces().map { it.name })
-        searchGroupChips.removeAllViews()
+        binding.searchGroupChips.removeAllViews()
         quickChips.map {
-            searchGroupChips.addView(Chip(this).apply {
+            binding.searchGroupChips.addView(Chip(this).apply {
                 text = it
                 setOnClickListener { _ ->
-                    searchEdit.text = SpannableStringBuilder(it)
+                    binding.searchEdit.text = SpannableStringBuilder(it)
                 }
             })
         }
@@ -64,96 +67,99 @@ class SearchActivity : AppCompatActivity() {
 
     private fun checkStudents() {
         if (Web.getStudentsNoDownload().isEmpty()) {
-            searchBtnDownloadStudents.visibility = View.VISIBLE
+            binding.searchBtnDownloadStudents.visibility = View.VISIBLE
         }
     }
 
     private fun initSearch() {
-        searchEdit.isEnabled = true
-        searchEdit.hint = "Keress teremre, linkre, diákra"
+        binding.searchEdit.isEnabled = true
+        binding.searchEdit.hint = "Keress teremre, linkre, diákra"
 
-        searchEdit.addTextChangedListener {
-            searchCardImage.visibility = View.GONE
-            searchScroll.visibility = View.VISIBLE
+        binding.searchEdit.addTextChangedListener {
+            binding.searchCardImage.visibility = View.GONE
+            binding.searchScroll.visibility = View.VISIBLE
 
-            searchLayoutLinks.removeAllViews()
-            searchTextLinks.visibility = View.GONE
-            searchLayoutRooms.removeAllViews()
-            searchTextRooms.visibility = View.GONE
-            searchLayoutStudents.removeAllViews()
-            searchTextStudents.visibility = View.GONE
+            binding.searchLayoutLinks.removeAllViews()
+            binding.searchTextLinks.visibility = View.GONE
+            binding.searchLayoutRooms.removeAllViews()
+            binding.searchTextRooms.visibility = View.GONE
+            binding.searchLayoutStudents.removeAllViews()
+            binding.searchTextStudents.visibility = View.GONE
             if (it?.length ?: 0 < 3) return@addTextChangedListener
 
             //#region Links
-            Data.links.filter { r -> r.toString().contains(searchEdit.text, true) }.map { link ->
-                searchTextLinks.visibility = View.VISIBLE
+            Data.links.filter { r -> r.toString().contains(binding.searchEdit.text, true) }.map { link ->
+                binding.searchTextLinks.visibility = View.VISIBLE
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
-                v.searchResultTitle.text = link.key
-                v.searchResultDesc.text = link.value
+                val vb = LayoutSearchResultBinding.bind(v)
+                vb.searchResultTitle.text = link.key
+                vb.searchResultDesc.text = link.value
                 v.setOnClickListener {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link.value)))
                 }
-                searchLayoutLinks.addView(v)
+                binding.searchLayoutLinks.addView(v)
             }
             //#endregion
 
             //#region Rooms
-            Data.getAllRooms().filter { r -> "$r ${r.tags.joinToString()}".contains(searchEdit.text, true) }.map { room ->
-                searchTextRooms.visibility = View.VISIBLE
+            Data.getAllRooms().filter { r -> "$r ${r.tags.joinToString()}".contains(binding.searchEdit.text, true) }.map { room ->
+                binding.searchTextRooms.visibility = View.VISIBLE
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
-                v.searchResultTitle.text = room.toString()
-                v.searchResultDesc.text = room.tags.joinToString()
+                val vb = LayoutSearchResultBinding.bind(v)
+                vb.searchResultTitle.text = room.toString()
+                vb.searchResultDesc.text = room.tags.joinToString()
                 v.setOnClickListener {
                     startActivity(Intent(this, RoomActivity::class.java).apply { putExtra("room_sign", room.id) })
                 }
-                searchLayoutRooms.addView(v)
+                binding.searchLayoutRooms.addView(v)
             }
             //#endregion
 
             //#region Students
-            Web.getStudentsNoDownload().filter { r -> r.toString().contains(searchEdit.text, true) }.map { student ->
-                searchTextStudents.visibility = View.VISIBLE
+            Web.getStudentsNoDownload().filter { r -> r.toString().contains(binding.searchEdit.text, true) }.map { student ->
+                binding.searchTextStudents.visibility = View.VISIBLE
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
-                v.searchResultTitle.text = student.name
-                v.searchResultDesc.text = student.gradeMajor
+                val vb = LayoutSearchResultBinding.bind(v)
+                vb.searchResultTitle.text = student.name
+                vb.searchResultDesc.text = student.gradeMajor
                 v.setOnClickListener {
                     MaterialAlertDialogBuilder(this)
                         .setTitle(student.name)
                         .setMessage(student.gradeMajor)
                         .setPositiveButton("Osztálytársak mutatása") { _: DialogInterface, _: Int ->
-                            searchEdit.text = SpannableStringBuilder(student.gradeMajor)
+                            binding.searchEdit.text = SpannableStringBuilder(student.gradeMajor)
                         }
                         .setNeutralButton("Bezárás")  { _: DialogInterface, _: Int -> }
                         .create().show()
                 }
-                searchLayoutStudents.addView(v)
+                binding.searchLayoutStudents.addView(v)
             }
             //#endregion
         }
 
         if (!intent.getStringExtra(EXTRA_QUERY).isNullOrEmpty()) {
-            searchEdit.text = SpannableStringBuilder(intent.getStringExtra(EXTRA_QUERY))
+            binding.searchEdit.text = SpannableStringBuilder(intent.getStringExtra(EXTRA_QUERY))
             return
         }
 
-        searchEdit.requestFocus()
-        searchEdit.postDelayed({
+        binding.searchEdit.requestFocus()
+        binding.searchEdit.postDelayed({
             val imm: InputMethodManager = getSystemService(InputMethodManager::class.java)
-            imm.showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
+            imm.showSoftInput(binding.searchEdit, InputMethodManager.SHOW_IMPLICIT)
         }, 300)
     }
 
     fun onBtnCancelClick(view: View) {
-        if (searchEdit.text.isNullOrBlank()) finish()
-        else searchEdit.text.clear()
+        if (binding.searchEdit.text.isNullOrBlank()) finish()
+        else binding.searchEdit.text.clear()
     }
 
     fun onBtnDownloadStudentsClick(view: View) {
-        searchBtnDownloadStudents.isEnabled = false
-        searchBtnDownloadStudents.text = "Diákok lekérése..."
+        binding.searchBtnDownloadStudents.isEnabled = false
+        binding.searchBtnDownloadStudents.text = "Diákok lekérése..."
         Web.getStudents {
             runOnUiThread {
-                searchBtnDownloadStudents.visibility = View.GONE
+                binding.searchBtnDownloadStudents.visibility = View.GONE
                 initSearch()
             }
         }

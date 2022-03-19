@@ -4,34 +4,38 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
-import kotlinx.android.synthetic.main.activity_kresz.*
+import com.csakitheone.ipariminimap.databinding.ActivityKreszBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class KreszActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityKreszBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kresz)
+        binding = ActivityKreszBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun kreszBtnStartExam(view: View) {
-        kreszLayoutRules.visibility = View.GONE
-        kreszLayoutExam.visibility = View.VISIBLE
+        binding.kreszLayoutRules.visibility = View.GONE
+        binding.kreszLayoutExam.visibility = View.VISIBLE
     }
 
     fun kreszBtnScoreClick(view: View) {
         var score = 0
-        if (kreszRadio1.isChecked) score++
-        if (kreszRadio2.isChecked) score++
-        if (kreszRadio3.isChecked) score++
-        if (kreszRadio4.isChecked) score++
-        if (kreszRadio5.isChecked) score++
+        if (binding.kreszRadio1.isChecked) score++
+        if (binding.kreszRadio2.isChecked) score++
+        if (binding.kreszRadio3.isChecked) score++
+        if (binding.kreszRadio4.isChecked) score++
+        if (binding.kreszRadio5.isChecked) score++
 
-        AlertDialog.Builder(this)
+        MaterialAlertDialogBuilder(this)
             .setTitle("KRESZ teszt eredménye")
             .setMessage("$score/5 pont")
             .setPositiveButton("Szabályok") { _: DialogInterface, _: Int ->
-                kreszLayoutRules.visibility = View.VISIBLE
-                kreszLayoutExam.visibility = View.GONE
+                binding.kreszLayoutRules.visibility = View.VISIBLE
+                binding.kreszLayoutExam.visibility = View.GONE
             }
             .setNegativeButton("Kilépés") { _: DialogInterface, _: Int ->
                 finish()

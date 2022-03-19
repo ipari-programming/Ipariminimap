@@ -8,25 +8,28 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.setMargins
 import com.csakitheone.ipariminimap.data.Prefs
+import com.csakitheone.ipariminimap.databinding.ActivityTasksBinding
+import com.csakitheone.ipariminimap.databinding.LayoutTaskBinding
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.services.RingService
-import kotlinx.android.synthetic.main.activity_tasks.*
-import kotlinx.android.synthetic.main.layout_task.view.*
 
 class TasksActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityTasksBinding
 
     private var tasks = mutableListOf<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tasks)
+        binding = ActivityTasksBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onResume() {
         super.onResume()
 
         runServiceIfAllowed()
-        tasksSwitch.isChecked = Prefs.getIsServiceAllowed()
+        binding.tasksSwitch.isChecked = Prefs.getIsServiceAllowed()
         refreshTasks()
     }
 
@@ -41,7 +44,7 @@ class TasksActivity : AppCompatActivity() {
 
     private fun refreshTasks() {
         tasks = Prefs.getTasks()
-        tasksLayout.removeAllViews()
+        binding.tasksLayout.removeAllViews()
         tasks.map {
             val v = it.createLayout(this)
             v.taskBtnRemove.setOnClickListener { _ ->
@@ -49,8 +52,8 @@ class TasksActivity : AppCompatActivity() {
                 saveTasks()
                 refreshTasks()
             }
-            tasksLayout.addView(v)
-            (v.layoutParams as LinearLayout.LayoutParams).apply { setMargins(8.toPx.toInt()) }
+            binding.tasksLayout.addView(v.root)
+            (v.root.layoutParams as LinearLayout.LayoutParams).apply { setMargins(8.toPx.toInt()) }
             it.onModified.add { saveTasks() }
         }
         saveTasks()
@@ -61,7 +64,7 @@ class TasksActivity : AppCompatActivity() {
     }
 
     fun onSwitchServiceClick(view: View) {
-        Prefs.setIsServiceAllowed(tasksSwitch.isChecked)
+        Prefs.setIsServiceAllowed(binding.tasksSwitch.isChecked)
         runServiceIfAllowed()
     }
 

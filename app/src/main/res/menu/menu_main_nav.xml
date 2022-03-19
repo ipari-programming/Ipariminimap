@@ -3,14 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/menuMainNavHome"
         android:icon="@drawable/ipari_icon"
         android:title="Főoldal"
         app:showAsAction="always" />
     <item
+        android:id="@+id/menuMainNavStudents"
         android:icon="@drawable/ic_people"
         android:title="Diákok"
         app:showAsAction="always" />
     <item
+        android:id="@+id/menuMainNavDatabase"
         android:icon="@drawable/ic_storage"
         android:title="Adatbázis"
         app:showAsAction="always" />

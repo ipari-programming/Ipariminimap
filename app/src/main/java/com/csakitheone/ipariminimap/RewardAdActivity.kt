@@ -3,23 +3,23 @@ package com.csakitheone.ipariminimap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.data.Temp
+import com.csakitheone.ipariminimap.databinding.ActivityRewardAdBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_reward_ad.*
 
 class RewardAdActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityRewardAdBinding
+
     var mainRewardedAd: RewardedAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reward_ad)
+        binding = ActivityRewardAdBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         RewardedAd.load(this, "ca-app-pub-5995992409743558/3639482674", AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(p0: LoadAdError) {

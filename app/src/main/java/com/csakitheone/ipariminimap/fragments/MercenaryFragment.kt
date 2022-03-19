@@ -6,16 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.csakitheone.ipariminimap.R
+import com.csakitheone.ipariminimap.databinding.FragmentMercenaryBinding
 import com.csakitheone.ipariminimap.mercenaries.Ability
 import com.csakitheone.ipariminimap.mercenaries.Merc
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.csakitheone.ipariminimap.mercenaries.SaveData.Companion.isInTeam
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_mercenary.view.*
 
 class MercenaryFragment : Fragment() {
+
+    lateinit var binding: FragmentMercenaryBinding
 
     private lateinit var merc: Merc
 
@@ -30,16 +31,16 @@ class MercenaryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_mercenary, container, false)
+        binding = FragmentMercenaryBinding.inflate(inflater, container, false)
         merc = Gson().fromJson(arguments?.getString("mercenary"), Merc::class.java)
 
-        v.mercFragmentTextName.text = if (merc.selectedAbility == null) merc.name
+        binding.mercFragmentTextName.text = if (merc.selectedAbility == null) merc.name
         else "${merc.name}\n✅\n(⏳${merc.selectedAbility?.speed})${merc.selectedAbility?.name}"
-        v.mercFragmentTextLevel.text = "lvl${merc.level} ${merc.mercClass.name}"
-        v.mercFragmentTextAttack.text = "⚔️${merc.getCurrentAttack()}"
-        v.mercFragmentTextHealth.text = "${merc.getCurrentHealth()}🩸"
+        binding.mercFragmentTextLevel.text = "lvl${merc.level} ${merc.mercClass.name}"
+        binding.mercFragmentTextAttack.text = "⚔️${merc.getCurrentAttack()}"
+        binding.mercFragmentTextHealth.text = "${merc.getCurrentHealth()}🩸"
 
-        v.mercFragmentCard.setOnClickListener {
+        binding.mercFragmentCard.setOnClickListener {
             when (arguments?.getString("mode")) {
                 MODE_VIEW -> showDetails()
                 MODE_COMMAND -> command()
@@ -47,7 +48,7 @@ class MercenaryFragment : Fragment() {
             }
         }
 
-        return v
+        return binding.root
     }
 
     fun showDetails() {

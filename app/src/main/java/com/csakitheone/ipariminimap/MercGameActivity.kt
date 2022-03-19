@@ -3,17 +3,19 @@ package com.csakitheone.ipariminimap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.csakitheone.ipariminimap.databinding.ActivityMercGameBinding
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
 import com.csakitheone.ipariminimap.mercenaries.Ability
 import com.csakitheone.ipariminimap.mercenaries.Merc
 import com.csakitheone.ipariminimap.mercenaries.MercClass
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_merc_game.*
 import java.util.*
 import kotlin.concurrent.timerTask
 
 class MercGameActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityMercGameBinding
 
     var enemies = mutableListOf<Merc>()
     var mercs = mutableListOf<Merc>()
@@ -23,6 +25,7 @@ class MercGameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMercGameBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_merc_game)
 
         repeat(2) {
@@ -42,15 +45,15 @@ class MercGameActivity : AppCompatActivity() {
     private fun refreshUI() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-        mercGameLayoutEnemies.removeAllViews()
+        binding.mercGameLayoutEnemies.removeAllViews()
         enemies.map {
             val fragment = MercenaryFragment.newInstance(it, MercenaryFragment.MODE_VIEW)
             fragmentTransaction.add(R.id.mercGameLayoutEnemies, fragment)
         }
 
-        mercGameLayoutMercs.removeAllViews()
+        binding.mercGameLayoutMercs.removeAllViews()
         for (i in mercs.indices) {
-            val fragment = MercenaryFragment.newInstance(mercs[i], if (mercGameBtnFight.isEnabled) MercenaryFragment.MODE_COMMAND else MercenaryFragment.MODE_VIEW)
+            val fragment = MercenaryFragment.newInstance(mercs[i], if (binding.mercGameBtnFight.isEnabled) MercenaryFragment.MODE_COMMAND else MercenaryFragment.MODE_VIEW)
             fragment.onMercChanged = {
                 mercs[i] = it
                 refreshUI()
@@ -63,9 +66,9 @@ class MercGameActivity : AppCompatActivity() {
     }
 
     private fun log(message: String) {
-        mercGameTextLog.text = "${mercGameTextLog.text}\n$message\n"
-        mercGameScrollLog.post {
-            mercGameScrollLog.fullScroll(View.FOCUS_DOWN)
+        binding.mercGameTextLog.text = "${binding.mercGameTextLog.text}\n$message\n"
+        binding.mercGameScrollLog.post {
+            binding.mercGameScrollLog.fullScroll(View.FOCUS_DOWN)
         }
     }
 
@@ -86,7 +89,7 @@ class MercGameActivity : AppCompatActivity() {
         mercs.removeAll { !it.isAlive() }
         enemies.map { it.selectedAbility = it.mercClass.abilities.random() }
 
-        mercGameBtnFight.isEnabled = true
+        binding.mercGameBtnFight.isEnabled = true
         roundCount++
         refreshUI()
 
@@ -201,7 +204,7 @@ class MercGameActivity : AppCompatActivity() {
     }
 
     fun onBtnFightClick(view: View) {
-        mercGameBtnFight.isEnabled = false
+        binding.mercGameBtnFight.isEnabled = false
 
         // 0. prepare
         log("--- $roundCount. kör ---")

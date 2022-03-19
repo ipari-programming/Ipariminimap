@@ -6,15 +6,19 @@ import android.os.Bundle
 import android.view.View
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Data.*
+import com.csakitheone.ipariminimap.databinding.ActivityRoomBinding
 import com.google.android.material.chip.Chip
-import kotlinx.android.synthetic.main.activity_room.*
 
 class RoomActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityRoomBinding
+
     lateinit var room: Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_room)
+        binding = ActivityRoomBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onResume() {
@@ -24,31 +28,31 @@ class RoomActivity : AppCompatActivity() {
         loadRoom()
     }
 
-    fun loadRoom() {
+    private fun loadRoom() {
         val place = Data.getAllPlaces().find { r -> r.rooms.contains(room) } ?: Data.getAllPlaces().first()
         val building = Data.buildings.find { r -> r.places.contains(place) } ?: Data.buildings.first()
 
-        roomTextSign.text = room.id.toUpperCase()
-        roomTextDescription.text = room.name
-        roomTextDescription.visibility = if (room.name.isEmpty()) View.GONE else View.VISIBLE
-        chipBuilding.text = building.name
-        chipPlace.text = place.name
+        binding.roomTextSign.text = room.id.toUpperCase()
+        binding.roomTextDescription.text = room.name
+        binding.roomTextDescription.visibility = if (room.name.isEmpty()) View.GONE else View.VISIBLE
+        binding.chipBuilding.text = building.name
+        binding.chipPlace.text = place.name
         val level = place.level.toString()
-        roomTextBuilding.text = "Épület: "
-        roomTextLevel.text = " $level. emelet"
+        binding.roomTextBuilding.text = "Épület: "
+        binding.roomTextLevel.text = " $level. emelet"
 
-        roomTextHelp.visibility = if (place.help.isEmpty()) View.GONE else View.VISIBLE
-        roomTextHelp.text = place.help
+        binding.roomTextHelp.visibility = if (place.help.isEmpty()) View.GONE else View.VISIBLE
+        binding.roomTextHelp.text = place.help
 
-        roomChipGroupTags.removeAllViews()
+        binding.roomChipGroupTags.removeAllViews()
         for (tag in room.tags) {
             val chip = Chip(this)
             chip.text = tag
             chip.setOnClickListener { chipClick(it) }
-            roomChipGroupTags.addView(chip)
+            binding.roomChipGroupTags.addView(chip)
         }
 
-        roomChipGroupPlace.removeAllViews()
+        binding.roomChipGroupPlace.removeAllViews()
         for (r in place.rooms) {
             val chip = Chip(this)
             var roomText = r.id.toUpperCase()
@@ -56,15 +60,15 @@ class RoomActivity : AppCompatActivity() {
             if (r.tags.isNotEmpty()) roomText += ":${r.tags.joinToString()}"
             chip.text = roomText
             chip.setOnClickListener { chipClick(it) }
-            roomChipGroupPlace.addView(chip)
+            binding.roomChipGroupPlace.addView(chip)
         }
 
-        roomChipGroupDestinations.removeAllViews()
-        for (d in place!!.destinations) {
+        binding.roomChipGroupDestinations.removeAllViews()
+        for (d in place.destinations) {
             val chip = Chip(this)
             chip.text = d
             chip.setOnClickListener { chipClick(it) }
-            roomChipGroupDestinations.addView(chip)
+            binding.roomChipGroupDestinations.addView(chip)
         }
     }
 

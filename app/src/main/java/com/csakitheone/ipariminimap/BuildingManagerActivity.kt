@@ -8,27 +8,30 @@ import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.*
 import androidx.core.view.children
-import androidx.core.view.setPadding
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
 import com.csakitheone.ipariminimap.data.Prefs
+import com.csakitheone.ipariminimap.databinding.ActivityBuildingManagerBinding
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.activity_building_manager.*
 
 class BuildingManagerActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityBuildingManagerBinding
+
     var selectedItemType = ""
     var selectedItemName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_building_manager)
+        binding = ActivityBuildingManagerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (!Prefs.getIsAdmin()) finish()
 
-        buildingSeekPlaceLevel.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.buildingSeekPlaceLevel.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) { }
             override fun onStartTrackingTouch(p0: SeekBar?) { }
             override fun onStopTrackingTouch(p0: SeekBar?) {
@@ -43,41 +46,41 @@ class BuildingManagerActivity : AppCompatActivity() {
     }
 
     private fun refreshList() {
-        buildingFabAdd.setImageIcon(Icon.createWithResource(this, R.drawable.ic_add))
+        binding.buildingFabAdd.setImageIcon(Icon.createWithResource(this, R.drawable.ic_add))
 
-        buildingLayoutList.visibility = View.VISIBLE
-        buildingCardBuilding.visibility = View.GONE
-        buildingCardPlace.visibility = View.GONE
-        buildingCardRoom.visibility = View.GONE
+        binding.buildingLayoutList.visibility = View.VISIBLE
+        binding.buildingCardBuilding.visibility = View.GONE
+        binding.buildingCardPlace.visibility = View.GONE
+        binding.buildingCardRoom.visibility = View.GONE
 
         DB.downloadBuildingData {
             fillList()
 
-            buildingGroupPlaceBuilding.removeAllViews()
+            binding.buildingGroupPlaceBuilding.removeAllViews()
             for (building in Data.buildings) {
-                buildingGroupPlaceBuilding.addView(RadioButton(this).apply {
+                binding.buildingGroupPlaceBuilding.addView(RadioButton(this).apply {
                     text = building.name
                 })
             }
 
-            buildingGroupPlaceDestinations.removeAllViews()
+            binding.buildingGroupPlaceDestinations.removeAllViews()
             for (place in Data.getAllPlaces()) {
-                buildingGroupPlaceDestinations.addView(Chip(this).apply {
+                binding.buildingGroupPlaceDestinations.addView(Chip(this).apply {
                     text = place.name
                     isCheckable = true
                 })
             }
 
-            buildingGroupRoomPlace.removeAllViews()
+            binding.buildingGroupRoomPlace.removeAllViews()
             for (place in Data.getAllPlaces()) {
-                buildingGroupRoomPlace.addView(RadioButton(this).apply {
+                binding.buildingGroupRoomPlace.addView(RadioButton(this).apply {
                     text = place.name
                 })
             }
 
-            buildingGroupRoomTags.removeAllViews()
+            binding.buildingGroupRoomTags.removeAllViews()
             for (tag in Data.tags) {
-                buildingGroupRoomTags.addView(Chip(this).apply {
+                binding.buildingGroupRoomTags.addView(Chip(this).apply {
                     text = tag
                     isCheckable = true
                 })
@@ -86,7 +89,7 @@ class BuildingManagerActivity : AppCompatActivity() {
     }
 
     private fun fillList() {
-        buildingLayoutList.removeAllViews()
+        binding.buildingLayoutList.removeAllViews()
 
         var view: TextView
         for (building in Data.buildings) {
@@ -96,7 +99,7 @@ class BuildingManagerActivity : AppCompatActivity() {
                 setPadding(16.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                 setOnClickListener { editItem("building", building.name) }
             }
-            buildingLayoutList.addView(view)
+            binding.buildingLayoutList.addView(view)
 
             for (place in building.places) {
                 view = TextView(this).apply {
@@ -105,7 +108,7 @@ class BuildingManagerActivity : AppCompatActivity() {
                     setPadding(48.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                     setOnClickListener { editItem("place", place.name) }
                 }
-                buildingLayoutList.addView(view)
+                binding.buildingLayoutList.addView(view)
 
                 for (room in place.rooms) {
                     view = TextView(this).apply {
@@ -114,7 +117,7 @@ class BuildingManagerActivity : AppCompatActivity() {
                         setPadding(80.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt(), 8.toPx.toInt())
                         setOnClickListener { editItem("room", room.id) }
                     }
-                    buildingLayoutList.addView(view)
+                    binding.buildingLayoutList.addView(view)
                 }
 
             }
@@ -133,8 +136,8 @@ class BuildingManagerActivity : AppCompatActivity() {
     }
 
     private fun editItem(type: String, name: String) {
-        buildingFabAdd.setImageIcon(Icon.createWithResource(this, R.drawable.ic_more_vert))
-        buildingLayoutList.visibility = View.GONE
+        binding.buildingFabAdd.setImageIcon(Icon.createWithResource(this, R.drawable.ic_more_vert))
+        binding.buildingLayoutList.visibility = View.GONE
 
         selectedItemType = type
         selectedItemName = name
@@ -142,26 +145,26 @@ class BuildingManagerActivity : AppCompatActivity() {
         when (type) {
             "building" -> {
                 val building = Data.buildings.find { r -> r.name == name } ?: Data.Building("building-${System.currentTimeMillis()}", "")
-                buildingTextBuildingId.text = building.id
-                buildingEditBuildingName.text = SpannableStringBuilder(building.name)
-                buildingCardBuilding.visibility = View.VISIBLE
+                binding.buildingTextBuildingId.text = building.id
+                binding.buildingEditBuildingName.text = SpannableStringBuilder(building.name)
+                binding.buildingCardBuilding.visibility = View.VISIBLE
             }
             "place" -> {
                 val place = Data.getAllPlaces().find { r -> r.name == name } ?: Data.Place("")
-                buildingEditPlaceName.text = SpannableStringBuilder(place.name)
-                buildingSeekPlaceLevel.progress = place.level
-                checkRadio(buildingGroupPlaceBuilding, Data.buildings.indexOfFirst { r -> r.places.contains(place) })
-                place.destinations.map { checkChip(buildingGroupPlaceDestinations, Data.getAllPlaces().indexOfFirst { r -> r.name == it }) }
-                buildingEditPlaceHelp.text = SpannableStringBuilder(place.help)
-                buildingCardPlace.visibility = View.VISIBLE
+                binding.buildingEditPlaceName.text = SpannableStringBuilder(place.name)
+                binding.buildingSeekPlaceLevel.progress = place.level
+                checkRadio(binding.buildingGroupPlaceBuilding, Data.buildings.indexOfFirst { r -> r.places.contains(place) })
+                place.destinations.map { checkChip(binding.buildingGroupPlaceDestinations, Data.getAllPlaces().indexOfFirst { r -> r.name == it }) }
+                binding.buildingEditPlaceHelp.text = SpannableStringBuilder(place.help)
+                binding.buildingCardPlace.visibility = View.VISIBLE
             }
             "room" -> {
                 val room = Data.getAllRooms().find { r -> r.id == name } ?: Data.Room("")
-                buildingEditRoomId.text = SpannableStringBuilder(room.id)
-                buildingEditRoomName.text = SpannableStringBuilder(room.name)
-                checkRadio(buildingGroupRoomPlace, Data.getAllPlaces().indexOfFirst { r -> r.rooms.contains(room) })
-                room.tags.map { checkChip(buildingGroupRoomTags, Data.tags.indexOfFirst { r -> r == it }) }
-                buildingCardRoom.visibility = View.VISIBLE
+                binding.buildingEditRoomId.text = SpannableStringBuilder(room.id)
+                binding.buildingEditRoomName.text = SpannableStringBuilder(room.name)
+                checkRadio(binding.buildingGroupRoomPlace, Data.getAllPlaces().indexOfFirst { r -> r.rooms.contains(room) })
+                room.tags.map { checkChip(binding.buildingGroupRoomTags, Data.tags.indexOfFirst { r -> r == it }) }
+                binding.buildingCardRoom.visibility = View.VISIBLE
             }
         }
     }
@@ -169,43 +172,43 @@ class BuildingManagerActivity : AppCompatActivity() {
     private fun saveItem() {
         when(selectedItemType) {
             "building" -> {
-                val building = Data.buildings.find { r -> r.id == buildingTextBuildingId.text } ?:
-                    Data.Building(buildingTextBuildingId.text.toString(), "")
-                building.name = buildingEditBuildingName.text.toString()
-                Data.buildings.removeAll { r -> r.id == buildingTextBuildingId.text }
+                val building = Data.buildings.find { r -> r.id == binding.buildingTextBuildingId.text } ?:
+                    Data.Building(binding.buildingTextBuildingId.text.toString(), "")
+                building.name = binding.buildingEditBuildingName.text.toString()
+                Data.buildings.removeAll { r -> r.id == binding.buildingTextBuildingId.text }
                 Data.buildings.add(building)
             }
             "place" -> {
                 val buildingOld = Data.buildings.find { r -> r.places.any { place -> place.name == selectedItemName } }
-                val building = Data.buildings.find { r -> r.name == buildingGroupPlaceBuilding.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
+                val building = Data.buildings.find { r -> r.name == binding.buildingGroupPlaceBuilding.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
 
                 val place = Data.getAllPlaces().find { r -> r.name == selectedItemName } ?: Data.Place("")
 
                 val destinations = mutableListOf<String>()
-                for (chip in buildingGroupPlaceDestinations.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
+                for (chip in binding.buildingGroupPlaceDestinations.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
                     destinations.add(chip.text.toString())
                 }
 
                 place.apply {
-                    name = buildingEditPlaceName.text.toString()
+                    name = binding.buildingEditPlaceName.text.toString()
                     this.destinations = destinations
-                    level = buildingSeekPlaceLevel.progress
-                    help = buildingEditPlaceHelp.text.toString()
+                    level = binding.buildingSeekPlaceLevel.progress
+                    help = binding.buildingEditPlaceHelp.text.toString()
                 }
                 buildingOld?.places?.removeAll { r -> r.name == selectedItemName }
                 building?.places?.add(place)
             }
             "room" -> {
                 val placeOld = Data.getAllPlaces().find { r -> r.rooms.any { room -> room.id == selectedItemName } }
-                val place = Data.getAllPlaces().find { r -> r.name == buildingGroupRoomPlace.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
+                val place = Data.getAllPlaces().find { r -> r.name == binding.buildingGroupRoomPlace.children.map { radio -> radio as RadioButton }.find { radio -> radio.isChecked }?.text }
 
                 val tags = mutableListOf<String>()
-                for (chip in buildingGroupRoomTags.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
+                for (chip in binding.buildingGroupRoomTags.children.map { r -> r as Chip }.filter { r -> r.isChecked }) {
                     tags.add(chip.text.toString())
                 }
                 val room = Data.Room(
-                    buildingEditRoomId.text.toString(),
-                    buildingEditRoomName.text.toString(),
+                    binding.buildingEditRoomId.text.toString(),
+                    binding.buildingEditRoomName.text.toString(),
                     tags
                 )
                 placeOld?.rooms?.removeAll { r -> r.id == selectedItemName }
@@ -226,8 +229,8 @@ class BuildingManagerActivity : AppCompatActivity() {
     }
 
     fun onFabNewClick(view: View) {
-        if (buildingLayoutList.visibility == View.GONE) {
-            PopupMenu(this, buildingFabAdd).apply {
+        if (binding.buildingLayoutList.visibility == View.GONE) {
+            PopupMenu(this, binding.buildingFabAdd).apply {
                 inflate(R.menu.menu_building_manager)
                 setOnMenuItemClickListener {
                     when (it.title) {
