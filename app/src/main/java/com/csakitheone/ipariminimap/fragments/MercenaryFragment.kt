@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.csakitheone.ipariminimap.databinding.FragmentMercenaryBinding
+import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.mercenaries.Ability
 import com.csakitheone.ipariminimap.mercenaries.Merc
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.csakitheone.ipariminimap.mercenaries.SaveData.Companion.isInTeam
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class MercenaryFragment : Fragment() {
 
@@ -49,6 +52,20 @@ class MercenaryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    fun getMerc(): Merc = merc
+
+    fun elevate(callback: () -> Unit = {}) {
+        binding.mercFragmentCard.elevation = 16.toPx
+        binding.mercFragmentCard.translationY = (-8).toPx
+        Timer().schedule(timerTask {
+            activity?.runOnUiThread {
+                binding.mercFragmentCard.elevation = 0f
+                binding.mercFragmentCard.translationY = 0f
+                callback()
+            }
+        }, 500)
     }
 
     fun showDetails() {
@@ -119,12 +136,16 @@ class MercenaryFragment : Fragment() {
         const val MODE_EDIT = "edit"
 
         @JvmStatic
-        fun newInstance(mercenary: Merc, mode: String) =
-            MercenaryFragment().apply {
+        fun newInstance(mercenary: Merc, mode: String): MercenaryFragment {
+            val finalMode = if (mercenary.forceAutoAttack && mode == MODE_COMMAND) MODE_VIEW
+            else mode
+            return MercenaryFragment().apply {
                 arguments = Bundle().apply {
                     putString("mercenary", Gson().toJson(mercenary))
-                    putString("mode", mode)
+                    putString("mode", finalMode)
                 }
             }
+        }
+
     }
 }

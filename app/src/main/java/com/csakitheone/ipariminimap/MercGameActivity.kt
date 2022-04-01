@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.csakitheone.ipariminimap.databinding.ActivityMercGameBinding
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
-import com.csakitheone.ipariminimap.mercenaries.Ability
-import com.csakitheone.ipariminimap.mercenaries.Merc
-import com.csakitheone.ipariminimap.mercenaries.MercClass
-import com.csakitheone.ipariminimap.mercenaries.SaveData
+import com.csakitheone.ipariminimap.mercenaries.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 import kotlin.concurrent.timerTask
@@ -26,34 +23,48 @@ class MercGameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMercGameBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_merc_game)
+        setContentView(binding.root)
 
-        repeat(2) {
-            val enemy = Merc()
+        val mission = Story.missions[intent.getIntExtra("missionIndex", 0)]
+        if (mission.welcomeMessage.isNotBlank()) {
+            MaterialAlertDialogBuilder(this)
+                .setMessage(mission.welcomeMessage)
+                .create().show()
+        }
+
+        enemies.addAll(mission.enemies)
+        enemies.map { enemy ->
             enemy.abilities.addAll(enemy.mercClass.abilities)
             enemy.prepareForGame()
             enemy.selectedAbility = enemy.abilities.first()
-            enemies.add(enemy)
         }
         mercs.addAll(SaveData.instance.team)
         mercs.map {
             it.prepareForGame()
         }
+
+        binding.mercGameTextLog.text = "Kezdődjön a harc!\n"
         refreshUI()
     }
 
+    val fragments = mutableListOf<MercenaryFragment>()
     private fun refreshUI() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
-        binding.mercGameLayoutEnemies.removeAllViews()
+        fragments.map {
+            fragmentTransaction.remove(it)
+        }
+        fragments.clear()
+
         enemies.map {
             val fragment = MercenaryFragment.newInstance(it, MercenaryFragment.MODE_VIEW)
+            fragments.add(fragment)
             fragmentTransaction.add(R.id.mercGameLayoutEnemies, fragment)
         }
 
-        binding.mercGameLayoutMercs.removeAllViews()
         for (i in mercs.indices) {
             val fragment = MercenaryFragment.newInstance(mercs[i], if (binding.mercGameBtnFight.isEnabled) MercenaryFragment.MODE_COMMAND else MercenaryFragment.MODE_VIEW)
+            fragments.add(fragment)
             fragment.onMercChanged = {
                 mercs[i] = it
                 refreshUI()
@@ -66,9 +77,11 @@ class MercGameActivity : AppCompatActivity() {
     }
 
     private fun log(message: String) {
-        binding.mercGameTextLog.text = "${binding.mercGameTextLog.text}\n$message\n"
-        binding.mercGameScrollLog.post {
-            binding.mercGameScrollLog.fullScroll(View.FOCUS_DOWN)
+        runOnUiThread {
+            binding.mercGameTextLog.text = "${binding.mercGameTextLog.text}\n$message\n"
+            binding.mercGameScrollLog.post {
+                binding.mercGameScrollLog.fullScroll(View.FOCUS_DOWN)
+            }
         }
     }
 
@@ -88,6 +101,7 @@ class MercGameActivity : AppCompatActivity() {
         enemies.removeAll { !it.isAlive() }
         mercs.removeAll { !it.isAlive() }
         enemies.map { it.selectedAbility = it.mercClass.abilities.random() }
+        mercs.map { if (it.forceAutoAttack) it.selectedAbility = it.abilities.random() }
 
         binding.mercGameBtnFight.isEnabled = true
         roundCount++
@@ -103,6 +117,7 @@ class MercGameActivity : AppCompatActivity() {
             return
         }
         val currentMerc = abilityQueue.removeFirst()
+        val currentFragment = fragments.firstOrNull { it.getMerc().name == currentMerc.name }
 
         runOnUiThread {
             if (currentMerc.isAlive()) {
@@ -110,6 +125,7 @@ class MercGameActivity : AppCompatActivity() {
                 if (currentMerc.selectedAbility?.target != null) logMessage += " ➡️ ${currentMerc.selectedAbility?.target?.name}"
                 log(logMessage)
 
+                currentFragment?.elevate()
                 runActions(currentMerc)
                 refreshUI()
             }
@@ -185,8 +201,12 @@ class MercGameActivity : AppCompatActivity() {
                 Ability.ACTION_SUMMON -> {
                     val mercClassToSummon = MercClass.getAll().first { it.id == keywords[1] }
                     val mercToSummon = Merc(mercClassToSummon.name, mercClassToSummon, merc.level)
+                    if (action.contains(Ability.SUMMON_TAG_FORCA_AUTO_ATTACK)) mercToSummon.forceAutoAttack = true
                     mercToSummon.prepareForGame()
-                    mercToSummon.learnAllAbilities()
+                    if (action.contains(Ability.SUMMON_LEARN_ABILITY_1)) mercToSummon.abilities.add(mercClassToSummon.abilities[0])
+                    else if (action.contains(Ability.SUMMON_LEARN_ABILITY_2)) mercToSummon.abilities.add(mercClassToSummon.abilities[1])
+                    else if (action.contains(Ability.SUMMON_LEARN_ABILITY_3)) mercToSummon.abilities.add(mercClassToSummon.abilities[2])
+                    else mercToSummon.learnAllAbilities()
                     if (enemies.contains(merc)) {
                         enemies.add(mercToSummon)
                     }

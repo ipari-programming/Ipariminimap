@@ -47,8 +47,8 @@ class Ability(
         code += "$ACTION_STUN $target;"
         return this
     }
-    fun summon(mercClass: MercClass, instantAbilityIndex: Int = -1): Ability {
-        code += "$ACTION_SUMMON ${mercClass.id} $instantAbilityIndex;"
+    fun summon(mercClass: MercClass, vararg tags: String = arrayOf()): Ability {
+        code += "$ACTION_SUMMON ${mercClass.id} ${tags.joinToString()};"
         return this
     }
     fun loop(): Ability {
@@ -71,6 +71,11 @@ class Ability(
         const val ACTION_STUN = "stun"
         const val ACTION_SUMMON = "summon"
         const val ACTION_LOOP = "loop"
+
+        const val SUMMON_TAG_FORCA_AUTO_ATTACK = "force_auto_attack"
+        const val SUMMON_LEARN_ABILITY_1 = "learn_ability_1"
+        const val SUMMON_LEARN_ABILITY_2 = "learn_ability_2"
+        const val SUMMON_LEARN_ABILITY_3 = "learn_ability_3"
     }
 
     class Target {

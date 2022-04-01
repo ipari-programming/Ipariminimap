@@ -79,18 +79,18 @@ class MercClass(
         val classMechas = MercClass("classMechas", "Mechás", 2, 15) // 17 summoner
             .setAbilities(
                 Ability("Engineer gaming", 5, "Épít egy robotot, ami megtámad egy random ellenséget")
-                    .summon(classRobot),
+                    .summon(classRobot, Ability.SUMMON_TAG_FORCA_AUTO_ATTACK, Ability.SUMMON_LEARN_ABILITY_1),
                 Ability("Végtelen ciklus", 6, "Épít egy robotot, ami addig sebzi az ellenségeket, amíg bele nem hal")
-                    .summon(classRobot)
+                    .summon(classRobot, Ability.SUMMON_TAG_FORCA_AUTO_ATTACK, Ability.SUMMON_LEARN_ABILITY_2)
             )
-        val classMuanyagos = MercClass("classMuanyagos", "Műanyagos",   3, 18) // 21 caster
+        val classMuanyagos = MercClass("classMuanyagos", "Műanyagos", 3, 18) // 21 caster
             .setAbilities(
                 Ability("Gyenge marás", 5, "Egy gyenge maró vegyületet dob egy ellenségre", mapOf(Ability.varAmount() to 2))
                     .attack(Ability.Target.CHOICE, Ability.varAmount()),
                 Ability("Gyengítés", 4, "Csökkenti az ellenség sebzését", mapOf(Ability.varAmount() to 1))
                     .weaken(Ability.Target.CHOICE, Ability.varAmount())
             )
-        val classGondozo = MercClass("classGondozo", "Gondozó",     1, 15) // 16 healer
+        val classGondozo = MercClass("classGondozo", "Gondozó", 1, 15) // 16 healer
             .setAbilities(
                 Ability("Bátorítás", 3, "Gyógyít egy barátságos karaktert", mapOf(Ability.varAmount() to 4))
                     .heal(Ability.Target.CHOICE, Ability.varAmount()),

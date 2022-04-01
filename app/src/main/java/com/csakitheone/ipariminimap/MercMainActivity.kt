@@ -11,6 +11,7 @@ import com.csakitheone.ipariminimap.databinding.ActivityMercMainBinding
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
 import com.csakitheone.ipariminimap.mercenaries.Merc
 import com.csakitheone.ipariminimap.mercenaries.SaveData
+import com.csakitheone.ipariminimap.mercenaries.Story
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MercMainActivity : AppCompatActivity() {
@@ -86,13 +87,7 @@ class MercMainActivity : AppCompatActivity() {
     }
 
     fun onBtnStartClick(view: View) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Solo kalandok")
-            .setItems(arrayOf("Story #1: Üdv az Ipariban!")) { _, _ ->
-                startActivity(Intent(this, MercGameActivity::class.java))
-            }
-            .setNegativeButton("Vissza") { _, _ -> }
-            .create().show()
+        Story.selectMission(this)
     }
 
     fun onBtnPvpClick(view: View) {

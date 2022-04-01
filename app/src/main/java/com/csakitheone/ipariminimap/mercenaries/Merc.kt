@@ -4,7 +4,7 @@ import com.csakitheone.ipariminimap.data.Web
 import org.json.JSONObject
 
 class Merc(
-    var name: String = "Táncsicsos",
+    var name: String = "",
     var mercClass: MercClass = MercClass.classStudent,
     var level: Int = 1,
 ) {
@@ -12,8 +12,8 @@ class Merc(
     private var currentHealth = 0
 
     var selectedAbility: Ability? = null
-
     var abilities = mutableListOf<Ability>()
+    var forceAutoAttack = false
 
     fun isAlive(): Boolean = currentHealth > 0
 
