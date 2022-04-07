@@ -25,16 +25,18 @@ class MercGameActivity : AppCompatActivity() {
         binding = ActivityMercGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mission = Story.missions[intent.getIntExtra("missionIndex", 0)]
+        val mission = Story.getMissionByIndex(intent.getIntExtra("missionIndex", 0))
         if (mission.welcomeMessage.isNotBlank()) {
             MaterialAlertDialogBuilder(this)
+                .setTitle(mission.name)
                 .setMessage(mission.welcomeMessage)
+                .setPositiveButton("Kezdjük!") { _, _ -> }
                 .create().show()
         }
 
         enemies.addAll(mission.enemies)
         enemies.map { enemy ->
-            enemy.abilities.addAll(enemy.mercClass.abilities)
+            if (enemy.abilities.isEmpty()) enemy.abilities.addAll(enemy.mercClass.abilities)
             enemy.prepareForGame()
             enemy.selectedAbility = enemy.abilities.first()
         }
@@ -133,7 +135,7 @@ class MercGameActivity : AppCompatActivity() {
 
         Timer().schedule(timerTask {
             executeAbilities()
-        }, 2000L)
+        }, 1000L)
     }
 
     private fun runActions(merc: Merc) {

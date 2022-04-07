@@ -39,7 +39,7 @@ class MercClass(
                 Ability("while(isAlive)", 8, "Addig támad random ellenségeket, amíg meg nem hal").attack(Ability.Target.Enemy.RANDOM).loop()
             )
 
-        val classStudent = MercClass("classStudent", "Diák", 2, 15)
+        val enemy = MercClass("classEnemy", "Ellenség", 2, 15)
             .setAbilities(
                 Ability("Ütés", 5).attack(Ability.Target.Enemy.RANDOM)
             )
@@ -111,7 +111,7 @@ class MercClass(
                 "f" -> classMuanyagos
                 "g" -> classGondozo
                 "ny" -> classGondozo
-                else -> classStudent
+                else -> enemy
             }
         }
 

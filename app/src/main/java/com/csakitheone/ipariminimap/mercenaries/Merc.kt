@@ -1,11 +1,10 @@
 package com.csakitheone.ipariminimap.mercenaries
 
 import com.csakitheone.ipariminimap.data.Web
-import org.json.JSONObject
 
 class Merc(
     var name: String = "",
-    var mercClass: MercClass = MercClass.classStudent,
+    var mercClass: MercClass = MercClass.enemy,
     var level: Int = 1,
 ) {
     private var currentAttack = 0
