@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.csakitheone.ipariminimap"
-        minSdkVersion 23
+        minSdkVersion 25
         targetSdkVersion 31
         versionCode 19
-        versionName "2.2"
+        versionName "3.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -12,6 +12,8 @@ import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.databinding.LayoutTaskBinding
 import com.csakitheone.ipariminimap.helper.Notifications
 import com.csakitheone.ipariminimap.services.RingService
+import com.google.gson.annotations.Expose
+import kotlin.random.Random
 
 class Task() {
     var state: Boolean = false
@@ -21,7 +23,8 @@ class Task() {
     var actionPos: Int = 0
     var data: String = ""
 
-    val onModified: MutableList<(task: Task) -> Unit> = mutableListOf()
+    @Expose(serialize = false, deserialize = false)
+    var onModified: MutableList<(task: Task) -> Unit> = mutableListOf()
 
     constructor(text: String) : this() {
         val textParts = text.split(';')

@@ -2,14 +2,13 @@ package com.csakitheone.ipariminimap.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.csakitheone.ipariminimap.Task
 import com.csakitheone.ipariminimap.helper.Rings
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.google.gson.Gson
-import org.json.JSONObject
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 
 class Prefs {
     companion object {
@@ -27,14 +26,28 @@ class Prefs {
         fun setIsServiceAllowed(value: Boolean) = prefs.edit()
             .putBoolean("is_service_allowed", value).apply()
 
-        fun getMercenariesSaveData(): SaveData = Gson().fromJson(prefs.getString("mercenaries_save_data", null) ?: Gson().toJson(SaveData()), SaveData::class.java)
+        fun getMercenariesSaveData(): SaveData = Gson().fromJson(
+            prefs.getString("mercenaries_save_data", null) ?: Gson().toJson(SaveData()), SaveData::class.java
+        )
         fun setMercenariesSaveData(saveData: SaveData) = prefs.edit()
             .putString("mercenaries_save_data", Gson().toJson(saveData)).apply()
 
-        fun getTasks(): MutableList<Task> = prefs.getStringSet("tasks", setOf())
-            ?.map { r -> Task(r) }?.toMutableList() ?: mutableListOf()
+        fun getTasks(): MutableList<Task> {
+            return try {
+                GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create()
+                    .fromJson(
+                    prefs.getString("tasks", "[]") ?: "[]",
+                    object : TypeToken<MutableList<Task>>() {}.type
+                )
+            }
+            catch (ex: Exception) {
+                prefs.getStringSet("tasks", setOf())?.map { Task(it) }?.toMutableList() ?: mutableListOf()
+            }
+        }
         fun setTasks(tasks: List<Task>) = prefs.edit()
-            .putStringSet("tasks", tasks.map { r -> r.toString() }.toSet()).apply()
+            .putString("tasks", Gson().toJson(tasks)).apply()
 
         fun getIsAdmin(): Boolean = prefs.getBoolean("is_admin", false)
         fun setIsAdmin(value: Boolean, password: String = ""): Boolean {
@@ -42,5 +55,12 @@ class Prefs {
             prefs.edit().putBoolean("is_admin", value).apply()
             return true
         }
+
+        fun getStudentsCache(): List<Web.Student> = Gson().fromJson(
+            prefs.getString("students_cache", null) ?: "[]",
+            object : TypeToken<List<Web.Student>>() {}.type
+        )
+        fun setStudentsCache(students: List<Web.Student>) = prefs.edit()
+            .putString("students_cache", Gson().toJson(students)).apply()
     }
 }

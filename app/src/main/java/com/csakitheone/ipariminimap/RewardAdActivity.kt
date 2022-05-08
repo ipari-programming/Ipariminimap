@@ -2,6 +2,7 @@ package com.csakitheone.ipariminimap
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.Transformation
 import android.widget.Toast
 import com.csakitheone.ipariminimap.data.Temp
 import com.csakitheone.ipariminimap.databinding.ActivityRewardAdBinding
@@ -9,8 +10,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.skydoves.transformationlayout.TransformationAppCompatActivity
 
-class RewardAdActivity : AppCompatActivity() {
+class RewardAdActivity : TransformationAppCompatActivity() {
 
     lateinit var binding: ActivityRewardAdBinding
 

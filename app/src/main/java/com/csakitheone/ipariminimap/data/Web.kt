@@ -31,12 +31,9 @@ class Web {
         }
 
         //#region Students
-        private var students: MutableList<Student> = mutableListOf()
-        var studentsIsDownloaded = false
-
         @DelicateCoroutinesApi
-        private fun downloadStudents(callback: (Boolean) -> Unit) {
-            students.clear()
+        private fun downloadStudents(callback: (Boolean) -> Unit, progressCallback: (Int) -> Unit) {
+            val students = mutableListOf<Student>()
             GlobalScope.launch(Dispatchers.IO) {
                 for (grade in 9..13) {
                     for (major in listOf("A", "B", "C", "D", "E", "F", "G", "NY")) {
@@ -52,24 +49,25 @@ class Web {
                                 .filter { r -> r.trim().isNotBlank() }
                                 .map { r -> temp.add(Student(r.trim(), "$grade.$major")) }
                             students.addAll(temp)
+                            progressCallback(students.size)
                         }
                         catch (ex: Exception) { }
                     }
                 }
+                Prefs.setStudentsCache(students)
                 callback(students.isNotEmpty())
             }
         }
 
-        fun getStudentsNoDownload(): MutableList<Student> = students
+        fun getStudents(forceDownload: Boolean = false, callback: (List<Student>) -> Unit) {
+            getStudents(forceDownload, callback, {})
+        }
 
-        fun getStudents(callback: (MutableList<Student>) -> Unit) {
-            if (students.isEmpty() && !studentsIsDownloaded) {
-                studentsIsDownloaded = true
-                downloadStudents {
-                    callback(students)
-                }
+        fun getStudents(forceDownload: Boolean = false, callback: (List<Student>) -> Unit, progressCallback: (Int) -> Unit) {
+            if (Prefs.getStudentsCache().isEmpty() || forceDownload) {
+                downloadStudents({ callback(Prefs.getStudentsCache()) }, progressCallback)
             }
-            else callback(students)
+            else callback(Prefs.getStudentsCache())
         }
         //#endregion
 

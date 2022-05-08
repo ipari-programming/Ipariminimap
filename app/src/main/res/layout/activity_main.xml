@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/mainLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/mainBannerAd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/searchCard"
+            android:id="@+id/mainCardSearch"
             style="?attr/materialCardViewElevatedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_margin="16dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:minHeight="48dp"
-            android:onClick="onBtnSearchClick">
+            android:onClick="onCardSearchClick">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -95,41 +91,54 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button
+                            <com.skydoves.transformationlayout.TransformationLayout
+                                android:id="@+id/mainTransformationLayoutMercenaries"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_margin="8dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/colorSecondaryDark"
-                                android:onClick="onBtnMercenariesClick"
-                                android:text="Mercenaries\nKorai alpha teszt"
-                                android:textColor="?attr/colorOnSecondary"
-                                app:icon="@drawable/ic_sword_cross"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp"
-                                app:iconTint="?attr/colorOnSecondary" />
+                                app:transformation_fadeMode="cross"
+                                app:transformation_scrimColor="?android:attr/windowBackground">
 
-                            <Button
+                                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="8dp"
+                                    android:backgroundTint="@color/colorSecondaryDark"
+                                    android:onClick="onBtnMercenariesClick"
+                                    android:text="Mercenaries\nKorai alpha teszt"
+                                    android:textColor="?attr/colorOnSecondary"
+                                    app:icon="@drawable/ic_sword_cross"
+                                    app:iconGravity="top"
+                                    app:iconPadding="8dp"
+                                    app:iconTint="?attr/colorOnSecondary" />
+                            </com.skydoves.transformationlayout.TransformationLayout>
+
+                            <com.skydoves.transformationlayout.TransformationLayout
+                                android:id="@+id/mainTransformationLayoutKresz"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_margin="8dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/colorPrimary"
-                                android:onClick="onBtnExploreKRESZClick"
-                                android:text="Iskola KRESZ"
-                                app:icon="@drawable/ic_directions"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp" />
+                                app:transformation_fadeMode="cross"
+                                app:transformation_scrimColor="?android:attr/windowBackground">
+
+                                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="8dp"
+                                    android:backgroundTint="@color/colorPrimary"
+                                    android:onClick="onBtnExploreKRESZClick"
+                                    android:text="Iskola KRESZ"
+                                    android:textColor="?attr/colorOnPrimary"
+                                    app:icon="@drawable/ic_directions"
+                                    app:iconGravity="top"
+                                    app:iconPadding="8dp"
+                                    app:iconTint="?attr/colorOnPrimary" />
+                            </com.skydoves.transformationlayout.TransformationLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -137,34 +146,52 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button
+                            <com.skydoves.transformationlayout.TransformationLayout
+                                android:id="@+id/mainTransformationLayoutAutomate"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_margin="8dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/colorPrimary"
-                                android:onClick="onBtnAutomateClick"
-                                android:text="Automatizálás"
-                                app:icon="@drawable/ic_refresh"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp" />
+                                app:transformation_fadeMode="cross"
+                                app:transformation_scrimColor="?android:attr/windowBackground">
 
-                            <Button
-                                android:id="@+id/mainBtnSupport"
+                                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="8dp"
+                                    android:backgroundTint="@color/colorPrimary"
+                                    android:onClick="onBtnAutomateClick"
+                                    android:text="Automatizálás"
+                                    android:textColor="?attr/colorOnPrimary"
+                                    app:icon="@drawable/ic_refresh"
+                                    app:iconGravity="top"
+                                    app:iconPadding="8dp"
+                                    app:iconTint="?attr/colorOnPrimary" />
+                            </com.skydoves.transformationlayout.TransformationLayout>
+
+                            <com.skydoves.transformationlayout.TransformationLayout
+                                android:id="@+id/mainTransformationLayoutSupport"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_margin="8dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/colorSecondaryDark"
-                                android:onClick="onBtnSupportClick"
-                                android:text="Támogatás\nés visszajelzés"
-                                android:textColor="?attr/colorOnSecondary"
-                                app:icon="@drawable/ic_favorite"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp"
-                                app:iconTint="?attr/colorOnSecondary" />
+                                app:transformation_fadeMode="cross"
+                                app:transformation_scrimColor="?android:attr/windowBackground">
+
+                                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                                    android:id="@+id/mainBtnSupport"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="8dp"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/colorSecondaryDark"
+                                    android:onClick="onBtnSupportClick"
+                                    android:text="Támogatás\nés visszajelzés"
+                                    android:textColor="?attr/colorOnSecondary"
+                                    app:icon="@drawable/ic_favorite"
+                                    app:iconGravity="top"
+                                    app:iconPadding="8dp"
+                                    app:iconTint="?attr/colorOnSecondary" />
+                            </com.skydoves.transformationlayout.TransformationLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
@@ -246,6 +273,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:onClick="onBtnRedownloadStudentsClick"
+                        android:text="Diákok letöltése újra" />
                 </LinearLayout>
             </ScrollView>
 
@@ -260,89 +294,89 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp">
-
-                    <TextView
-                        android:id="@+id/mainTextDatabaseStats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:text="Csatlakozás az adatbázishoz..." />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <LinearLayout
-                    android:id="@+id/mainLayoutAdminLocked"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:onClick="onBtnAdminClick"
-                        android:text="Belépés az admin felületre" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mainLayoutAdminUnlocked"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/mainTextDatabaseStats"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            android:text="Csatlakozás az adatbázishoz..." />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:text="Linkek"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-                            <Switch
-                                android:id="@+id/mainSwitchAdminLinks"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:padding="16dp"
-                                android:text="Szerkesztő mód\nNyomj hosszan egy linkre a főoldalon a szerkesztéshez." />
-
-                            <Button
-                                style="@style/Widget.Material3.Button.TextButton"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:onClick="onBtnAdminLinkAddClick"
-                                android:text="Új link hozzáadása" />
-                        </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <Button
+                    <LinearLayout
+                        android:id="@+id/mainLayoutAdminLocked"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:onClick="onBtnAdminOpenBuildingManagerClick"
-                        android:text="Termek kezelése" />
+                        android:orientation="vertical">
 
-                    <Button
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:onClick="onBtnAdminClick"
+                            android:text="Belépés az admin felületre" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mainLayoutAdminUnlocked"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:backgroundTint="?attr/colorError"
-                        android:onClick="onBtnAdminLockClick"
-                        android:text="Lezárás" />
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="16dp"
+                                    android:text="Linkek"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                                <Switch
+                                    android:id="@+id/mainSwitchAdminLinks"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="16dp"
+                                    android:text="Szerkesztő mód\nNyomj hosszan egy linkre a főoldalon a szerkesztéshez." />
+
+                                <Button
+                                    style="@style/Widget.Material3.Button.TextButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="onBtnAdminLinkAddClick"
+                                    android:text="Új link hozzáadása" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:onClick="onBtnAdminOpenBuildingManagerClick"
+                            android:text="Termek kezelése" />
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:backgroundTint="?attr/colorError"
+                            android:onClick="onBtnAdminLockClick"
+                            android:text="Lezárás" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -355,23 +389,20 @@
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/mainBannerAd"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:background="?android:attr/colorBackground"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-5995992409743558/9243857678"
-        app:layout_constraintBottom_toTopOf="@+id/mainNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:adUnitId="ca-app-pub-5995992409743558/9243857678" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/mainNav"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:minHeight="80dp"
         app:labelVisibilityMode="selected"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_main_nav" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

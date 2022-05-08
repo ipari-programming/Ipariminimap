@@ -69,8 +69,8 @@ class SaveData {
                                 val major = listOf("a", "b", "c", "d", "e", "f", "gny")[majorIndex]
                                 MaterialAlertDialogBuilder(activity)
                                     .setTitle("Válassz egy diákot! (${selectedMercs.size}/3)")
-                                    .setItems(Web.getStudentsNoDownload().filter { major.contains(it.getMajor().toLowerCase()) }.map { it.toString() }.toTypedArray()) { _, i ->
-                                        selectedMercs.add(Merc.createFromStudent(Web.getStudentsNoDownload().filter { major.contains(it.getMajor().toLowerCase()) }[i]))
+                                    .setItems(Prefs.getStudentsCache().filter { major.contains(it.getMajor().toLowerCase()) }.map { it.toString() }.toTypedArray()) { _, i ->
+                                        selectedMercs.add(Merc.createFromStudent(Prefs.getStudentsCache().filter { major.contains(it.getMajor().toLowerCase()) }[i]))
                                         if (selectedMercs.size < 3) showSelectMercDialog()
                                         else {
                                             selectedMercs.map {

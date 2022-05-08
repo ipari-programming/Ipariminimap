@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.text.SpannableStringBuilder
@@ -12,6 +11,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
 import androidx.viewpager.widget.ViewPager
 import com.csakitheone.ipariminimap.data.*
@@ -24,6 +24,8 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.skydoves.transformationlayout.TransformationCompat
+import com.skydoves.transformationlayout.onTransformationStartContainer
 import java.util.*
 import kotlin.concurrent.timerTask
 import kotlin.math.roundToInt
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var timerBell = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        onTransformationStartContainer()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                 "Főoldal" -> binding.mainViewPager.currentItem = 0
                 "Diákok" -> {
                     binding.mainViewPager.currentItem = 1
-                    initStudents()
+                    downloadStudents(true)
                 }
                 "Adatbázis" -> {
                     binding.mainViewPager.currentItem = 2
@@ -107,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainBannerAd.loadAd(AdRequest.Builder().build())
     }
 
-    fun onBtnSearchClick(view: View) {
+    fun onCardSearchClick(view: View) {
         startActivity(Intent(this, SearchActivity::class.java))
     }
 
@@ -214,14 +217,20 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Figyelem! Korai alpha tesztelés!")
             .setMessage("Ez a funkció még nagyon korai állapotban van, még tele van hibákkal, hiányosságokkal!")
             .setPositiveButton("Megértettem") { _, _ ->
-                startActivity(Intent(this, MercMainActivity::class.java))
+                TransformationCompat.startActivity(
+                    binding.mainTransformationLayoutMercenaries,
+                    Intent(this, MercMainActivity::class.java)
+                )
             }
             .setNegativeButton("Vissza") { _, _ -> }
             .create().show()
     }
 
     fun onBtnExploreKRESZClick(view: View) {
-        startActivity(Intent(this, KreszActivity::class.java))
+        TransformationCompat.startActivity(
+            binding.mainTransformationLayoutKresz,
+            Intent(this, KreszActivity::class.java)
+        )
     }
 
     fun onBtnSupportClick(view: View) {
@@ -233,7 +242,12 @@ class MainActivity : AppCompatActivity() {
                 "További appok",
             )) { _, i ->
                 when (i) {
-                    0 -> startActivity(Intent(this, RewardAdActivity::class.java))
+                    0 -> {
+                        TransformationCompat.startActivity(
+                            binding.mainTransformationLayoutSupport,
+                            Intent(this, RewardAdActivity::class.java)
+                        )
+                    }
                     1 -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://m.me/CsakiTheOne")))
                     2 -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=5554124272482096869")))
                 }
@@ -242,7 +256,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onBtnAutomateClick(view: View) {
-        startActivity(Intent(this, TasksActivity::class.java))
+        TransformationCompat.startActivity(
+            binding.mainTransformationLayoutAutomate,
+            Intent(this, TasksActivity::class.java)
+        )
     }
 
     //#endregion
@@ -250,40 +267,60 @@ class MainActivity : AppCompatActivity() {
     //#region Students
 
     private fun initStudents() {
-        if (Web.studentsIsDownloaded) return
+        binding.mainProgressStudents.visibility = View.GONE
+        binding.mainTextStudentsInfo.text = "${Prefs.getStudentsCache().size} diák összesen"
+        binding.mainLayoutClasses.removeAllViews()
 
-        Web.getStudents { students ->
+        Web.getNameDay { names ->
+            val nameCount = Prefs.getStudentsCache().count { student ->
+                val studentName = student.name.split(" ")
+                names.any { studentName.contains(it) }
+            }
             runOnUiThread {
-                binding.mainProgressStudents.visibility = View.GONE
-                binding.mainTextStudentsInfo.text = "${students.size} diák összesen"
-                binding.mainLayoutClasses.removeAllViews()
-            }
-
-            Web.getNameDay { names ->
-                val nameCount = students.count { student ->
-                    val studentName = student.name.split(" ")
-                    names.any { studentName.contains(it) }
-                }
-                runOnUiThread {
-                    binding.mainTextNameday.text = "Mai névnap(ok): ${names.joinToString()}\n$nameCount diáknak van ma névnapja."
-                }
-            }
-
-            students.groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
-                val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
-                    text = gradeMajor
-                    setOnClickListener {
-                        startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
-                            putExtra(SearchActivity.EXTRA_QUERY, gradeMajor)
-                        })
-                    }
-                }
-                runOnUiThread {
-                    binding.mainLayoutClasses.addView(btnClass)
-                    btnClass.layoutParams.width = ChipGroup.LayoutParams.WRAP_CONTENT
-                }
+                binding.mainTextNameday.text = "Mai névnap(ok): ${names.joinToString()}\n$nameCount diáknak van ma névnapja."
             }
         }
+
+        Prefs.getStudentsCache().groupBy { student -> student.gradeMajor }.keys.map { gradeMajor ->
+            val btnClass = MaterialButton(this, null, R.attr.styleTextButton).apply {
+                text = gradeMajor
+                setOnClickListener {
+                    startActivity(Intent(this@MainActivity, SearchActivity::class.java).apply {
+                        putExtra(SearchActivity.EXTRA_QUERY, gradeMajor)
+                    })
+                }
+            }
+            binding.mainLayoutClasses.addView(btnClass)
+            btnClass.layoutParams.width = ChipGroup.LayoutParams.WRAP_CONTENT
+        }
+    }
+
+    private fun downloadStudents(skipIfCached: Boolean = false) {
+        if (skipIfCached && Prefs.getStudentsCache().isNotEmpty()) {
+            return
+        }
+
+        val loadingDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Diákok letöltése...")
+            .setMessage("Keresés...")
+            .setCancelable(false)
+            .create()
+        loadingDialog.show()
+
+        Web.getStudents(true, {
+            runOnUiThread {
+                initStudents()
+                loadingDialog.dismiss()
+            }
+        }, {
+            runOnUiThread {
+                loadingDialog.setMessage(it.toString())
+            }
+        })
+    }
+
+    fun onBtnRedownloadStudentsClick(view: View) {
+        downloadStudents()
     }
 
     //#endregion

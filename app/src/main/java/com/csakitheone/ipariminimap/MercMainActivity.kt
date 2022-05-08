@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.data.Web
 import com.csakitheone.ipariminimap.databinding.ActivityMercMainBinding
 import com.csakitheone.ipariminimap.fragments.MercenaryFragment
@@ -13,8 +14,9 @@ import com.csakitheone.ipariminimap.mercenaries.Merc
 import com.csakitheone.ipariminimap.mercenaries.SaveData
 import com.csakitheone.ipariminimap.mercenaries.Story
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.skydoves.transformationlayout.TransformationAppCompatActivity
 
-class MercMainActivity : AppCompatActivity() {
+class MercMainActivity : TransformationAppCompatActivity() {
 
     lateinit var binding: ActivityMercMainBinding
 
@@ -101,7 +103,7 @@ class MercMainActivity : AppCompatActivity() {
     fun onBtnDebugEveryoneToCollectionClick(view: View) {
         SaveData.instance.collection = mutableListOf()
         repeat(6) {
-            SaveData.addToCollection(this, Merc.createFromStudent(Web.getStudentsNoDownload().random())) {
+            SaveData.addToCollection(this, Merc.createFromStudent(Prefs.getStudentsCache().random())) {
                 SaveData.save()
                 refreshUI()
             }

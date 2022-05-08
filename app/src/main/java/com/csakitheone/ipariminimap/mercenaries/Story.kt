@@ -3,6 +3,7 @@ package com.csakitheone.ipariminimap.mercenaries
 import android.content.Context
 import android.content.Intent
 import com.csakitheone.ipariminimap.MercGameActivity
+import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.data.Web
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -100,7 +101,7 @@ class Story {
             mission.enemies = mission.enemies.map {
                 val level = it.level
                 if (it.name == Mission.MERC_REPLACE_WITH_STUDENT_ONE_ABILITY) {
-                    Merc.createFromStudent(Web.getStudentsNoDownload().random()).apply {
+                    Merc.createFromStudent(Prefs.getStudentsCache().random()).apply {
                         abilities = mutableListOf(this.mercClass.abilities.random())
                         this.level = level
                     }

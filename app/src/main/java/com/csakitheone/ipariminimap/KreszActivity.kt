@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.view.View
 import com.csakitheone.ipariminimap.databinding.ActivityKreszBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.skydoves.transformationlayout.TransformationAppCompatActivity
 
-class KreszActivity : AppCompatActivity() {
+class KreszActivity : TransformationAppCompatActivity() {
 
     lateinit var binding: ActivityKreszBinding
 

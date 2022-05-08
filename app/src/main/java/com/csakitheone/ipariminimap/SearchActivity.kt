@@ -11,11 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import com.csakitheone.ipariminimap.data.DB
 import com.csakitheone.ipariminimap.data.Data
+import com.csakitheone.ipariminimap.data.Prefs
 import com.csakitheone.ipariminimap.data.Web
 import com.csakitheone.ipariminimap.databinding.ActivitySearchBinding
 import com.csakitheone.ipariminimap.databinding.LayoutSearchResultBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.skydoves.transformationlayout.TransformationAppCompatActivity
 
 class SearchActivity : AppCompatActivity() {
 
@@ -66,7 +68,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun checkStudents() {
-        if (Web.getStudentsNoDownload().isEmpty()) {
+        if (Prefs.getStudentsCache().isEmpty()) {
             binding.searchBtnDownloadStudents.visibility = View.VISIBLE
         }
     }
@@ -116,7 +118,7 @@ class SearchActivity : AppCompatActivity() {
             //#endregion
 
             //#region Students
-            Web.getStudentsNoDownload().filter { r -> r.toString().contains(binding.searchEdit.text, true) }.map { student ->
+            Prefs.getStudentsCache().filter { r -> r.toString().contains(binding.searchEdit.text, true) }.map { student ->
                 binding.searchTextStudents.visibility = View.VISIBLE
                 val v = layoutInflater.inflate(R.layout.layout_search_result, null, false)
                 val vb = LayoutSearchResultBinding.bind(v)
