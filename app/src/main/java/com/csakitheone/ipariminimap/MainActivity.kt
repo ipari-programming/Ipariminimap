@@ -215,7 +215,11 @@ class MainActivity : AppCompatActivity() {
     fun onBtnMercenariesClick(view: View) {
         MaterialAlertDialogBuilder(this)
             .setTitle("Figyelem! Korai alpha tesztelés!")
-            .setMessage("Ez a funkció még nagyon korai állapotban van, még tele van hibákkal, hiányosságokkal!")
+            .setMessage(
+                "Ez a \"játék\" még nagyon korai állapotban van, " +
+                        "még tele van hibákkal, hiányosságokkal!\n" +
+                        "(Segíthettek a fejlesztésben GitHub-on)"
+            )
             .setPositiveButton("Megértettem") { _, _ ->
                 TransformationCompat.startActivity(
                     binding.mainTransformationLayoutMercenaries,
