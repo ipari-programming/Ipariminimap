@@ -267,7 +267,6 @@ class MainActivity : AppCompatActivity() {
     //#region Students
 
     private fun initStudents() {
-        binding.mainProgressStudents.visibility = View.GONE
         binding.mainTextStudentsInfo.text = "${Prefs.getStudentsCache().size} diák összesen"
         binding.mainLayoutClasses.removeAllViews()
 
@@ -297,6 +296,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun downloadStudents(skipIfCached: Boolean = false) {
         if (skipIfCached && Prefs.getStudentsCache().isNotEmpty()) {
+            initStudents()
             return
         }
 
