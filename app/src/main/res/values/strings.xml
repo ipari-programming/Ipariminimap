@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ipari 2022</string>
+    <string name="app_name">Ipari 2023</string>
     <string name="shortcut_search">Keresés</string>
     <string-array name="task_conditions">
         <item>minden óra elején</item>

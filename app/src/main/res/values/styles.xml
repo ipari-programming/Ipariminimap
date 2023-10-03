@@ -9,7 +9,7 @@
         <item name="colorSecondaryContainer">@color/colorSecondaryDark</item>
         <item name="colorOnSecondary">@color/colorLight</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
+        <item name="android:statusBarColor" >?attr/colorPrimaryDark</item>
 
         <item name="styleTextButton">@style/Widget.Material3.Button.TextButton</item>
     </style>

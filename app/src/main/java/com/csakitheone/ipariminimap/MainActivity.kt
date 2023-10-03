@@ -12,12 +12,14 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.setPadding
 import androidx.viewpager.widget.ViewPager
 import com.csakitheone.ipariminimap.data.*
 import com.csakitheone.ipariminimap.databinding.ActivityMainBinding
 import com.csakitheone.ipariminimap.helper.Helper.Companion.toPx
 import com.csakitheone.ipariminimap.helper.Rings
+import com.csakitheone.wholesomeware_brand.WholesomeWare
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         onTransformationStartContainer()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
